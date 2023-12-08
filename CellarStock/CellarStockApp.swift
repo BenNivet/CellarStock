@@ -2,7 +2,7 @@
 //  CellarStockApp.swift
 //  CellarStock
 //
-//  Created by CANTE Benjamin (BPCE-SI) on 30/09/2023.
+//  Created by CANTE Benjamin on 30/09/2023.
 //
 
 import SwiftUI
@@ -12,9 +12,10 @@ import SwiftData
 struct CellarStockApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Wine.self,
+            Quantity.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(schema: schema)
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -25,7 +26,7 @@ struct CellarStockApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            InitTabView()
         }
         .modelContainer(sharedModelContainer)
     }

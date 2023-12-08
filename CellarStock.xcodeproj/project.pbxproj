@@ -7,21 +7,74 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEA92B00CCB700C9D828 /* FilterItem.swift */; };
+		2113CEAC2B00CCDC00C9D828 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEAB2B00CCDC00C9D828 /* Wheel.swift */; };
+		2113CEAE2B00D0EC00C9D828 /* SelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEAD2B00D0EC00C9D828 /* SelectionListView.swift */; };
+		214066B32AF2469700E1857F /* Accordion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066B22AF2469700E1857F /* Accordion.swift */; };
+		214066B52AF2473000E1857F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066B42AF2473000E1857F /* Constants.swift */; };
+		214066B72AF24B5C00E1857F /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066B62AF24B5C00E1857F /* TileView.swift */; };
+		214066BA2AF24B9D00E1857F /* ActionClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066B92AF24B9D00E1857F /* ActionClosure.swift */; };
+		214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066BB2AF25D8500E1857F /* InitTabView.swift */; };
+		214066BE2AF2793000E1857F /* RandomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066BD2AF2793000E1857F /* RandomView.swift */; };
+		214066C12AF29EEC00E1857F /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066C02AF29EEC00E1857F /* CongratsView.swift */; };
+		215745922B1CE49B0021745D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745912B1CE49A0021745D /* StatsView.swift */; };
+		215745952B1D17330021745D /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745942B1D17330021745D /* DocumentScannerView.swift */; };
+		215745972B1D176C0021745D /* RoundedRectLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745962B1D176C0021745D /* RoundedRectLabel.swift */; };
+		21598CF12B0D13A200E2A177 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21598CF02B0D13A200E2A177 /* Helper.swift */; };
+		21598CF32B0D200500E2A177 /* YearSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21598CF22B0D200500E2A177 /* YearSelectionListView.swift */; };
 		218588B52AC81A6300730A9D /* CellarStockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218588B42AC81A6300730A9D /* CellarStockApp.swift */; };
 		218588B72AC81A6300730A9D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218588B62AC81A6300730A9D /* ContentView.swift */; };
-		218588B92AC81A6300730A9D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218588B82AC81A6300730A9D /* Item.swift */; };
+		218588B92AC81A6300730A9D /* Wine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218588B82AC81A6300730A9D /* Wine.swift */; };
 		218588BB2AC81A6300730A9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218588BA2AC81A6300730A9D /* Assets.xcassets */; };
 		218588BF2AC81A6300730A9D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218588BE2AC81A6300730A9D /* Preview Assets.xcassets */; };
+		2188F4692B21D36C0030B596 /* ChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4682B21D36C0030B596 /* ChartsView.swift */; };
+		2188F4742B21ED980030B596 /* NeoTabsItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F46D2B21ED980030B596 /* NeoTabsItemModel.swift */; };
+		2188F4752B21ED980030B596 /* NeoTabsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F46E2B21ED980030B596 /* NeoTabsHeaderView.swift */; };
+		2188F4762B21ED980030B596 /* NeoTabsStaticItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F46F2B21ED980030B596 /* NeoTabsStaticItemsView.swift */; };
+		2188F4772B21ED980030B596 /* NeoTabsDynamicItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4702B21ED980030B596 /* NeoTabsDynamicItemsView.swift */; };
+		2188F4782B21ED980030B596 /* NeoTabsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4712B21ED980030B596 /* NeoTabsItemView.swift */; };
+		2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4722B21ED980030B596 /* NeoTabsContentView.swift */; };
+		2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4732B21ED980030B596 /* NeoTabsView.swift */; };
+		21C794872AC88CDA00398FE9 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C794862AC88CDA00398FE9 /* FormView.swift */; };
+		21DE322D2B1E6D5300AA5695 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DE322C2B1E6D5300AA5695 /* AmountView.swift */; };
+		21FFE85E2B234A3C007DBD1A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21FFE85D2B234A3C007DBD1A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2113CEA92B00CCB700C9D828 /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
+		2113CEAB2B00CCDC00C9D828 /* Wheel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
+		2113CEAD2B00D0EC00C9D828 /* SelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionListView.swift; sourceTree = "<group>"; };
+		214066B22AF2469700E1857F /* Accordion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accordion.swift; sourceTree = "<group>"; };
+		214066B42AF2473000E1857F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		214066B62AF24B5C00E1857F /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
+		214066B92AF24B9D00E1857F /* ActionClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionClosure.swift; sourceTree = "<group>"; };
+		214066BB2AF25D8500E1857F /* InitTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitTabView.swift; sourceTree = "<group>"; };
+		214066BD2AF2793000E1857F /* RandomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomView.swift; sourceTree = "<group>"; };
+		214066C02AF29EEC00E1857F /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
+		215745912B1CE49A0021745D /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		215745942B1D17330021745D /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
+		215745962B1D176C0021745D /* RoundedRectLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectLabel.swift; sourceTree = "<group>"; };
+		21598CF02B0D13A200E2A177 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		21598CF22B0D200500E2A177 /* YearSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearSelectionListView.swift; sourceTree = "<group>"; };
 		218588B12AC81A6300730A9D /* CellarStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CellarStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		218588B42AC81A6300730A9D /* CellarStockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellarStockApp.swift; sourceTree = "<group>"; };
 		218588B62AC81A6300730A9D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		218588B82AC81A6300730A9D /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		218588B82AC81A6300730A9D /* Wine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wine.swift; sourceTree = "<group>"; };
 		218588BA2AC81A6300730A9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		218588BC2AC81A6300730A9D /* CellarStock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CellarStock.entitlements; sourceTree = "<group>"; };
 		218588BE2AC81A6300730A9D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2188F4682B21D36C0030B596 /* ChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsView.swift; sourceTree = "<group>"; };
+		2188F46D2B21ED980030B596 /* NeoTabsItemModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsItemModel.swift; sourceTree = "<group>"; };
+		2188F46E2B21ED980030B596 /* NeoTabsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsHeaderView.swift; sourceTree = "<group>"; };
+		2188F46F2B21ED980030B596 /* NeoTabsStaticItemsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsStaticItemsView.swift; sourceTree = "<group>"; };
+		2188F4702B21ED980030B596 /* NeoTabsDynamicItemsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsDynamicItemsView.swift; sourceTree = "<group>"; };
+		2188F4712B21ED980030B596 /* NeoTabsItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsItemView.swift; sourceTree = "<group>"; };
+		2188F4722B21ED980030B596 /* NeoTabsContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsContentView.swift; sourceTree = "<group>"; };
+		2188F4732B21ED980030B596 /* NeoTabsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsView.swift; sourceTree = "<group>"; };
+		21C794862AC88CDA00398FE9 /* FormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
+		21DE322C2B1E6D5300AA5695 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
+		21F8EB6A2B022C72003E7A4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		21FFE85D2B234A3C007DBD1A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +88,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		214066B82AF24B6100E1857F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2188F46C2B21ED980030B596 /* NeoTabsView */,
+				214066B22AF2469700E1857F /* Accordion.swift */,
+				214066B62AF24B5C00E1857F /* TileView.swift */,
+				2113CEA92B00CCB700C9D828 /* FilterItem.swift */,
+				2113CEAB2B00CCDC00C9D828 /* Wheel.swift */,
+				21598CF22B0D200500E2A177 /* YearSelectionListView.swift */,
+				2113CEAD2B00D0EC00C9D828 /* SelectionListView.swift */,
+				21DE322C2B1E6D5300AA5695 /* AmountView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		214066BF2AF2961200E1857F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				218588B82AC81A6300730A9D /* Wine.swift */,
+				21598CF02B0D13A200E2A177 /* Helper.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		215745932B1D171F0021745D /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				215745942B1D17330021745D /* DocumentScannerView.swift */,
+				215745962B1D176C0021745D /* RoundedRectLabel.swift */,
+			);
+			path = Scanner;
+			sourceTree = "<group>";
+		};
 		218588A82AC81A6300730A9D = {
 			isa = PBXGroup;
 			children = (
@@ -55,10 +141,22 @@
 			isa = PBXGroup;
 			children = (
 				218588B42AC81A6300730A9D /* CellarStockApp.swift */,
+				214066BB2AF25D8500E1857F /* InitTabView.swift */,
 				218588B62AC81A6300730A9D /* ContentView.swift */,
-				218588B82AC81A6300730A9D /* Item.swift */,
+				21C794862AC88CDA00398FE9 /* FormView.swift */,
+				214066BD2AF2793000E1857F /* RandomView.swift */,
+				214066C02AF29EEC00E1857F /* CongratsView.swift */,
+				215745912B1CE49A0021745D /* StatsView.swift */,
+				2188F4682B21D36C0030B596 /* ChartsView.swift */,
+				215745932B1D171F0021745D /* Scanner */,
+				214066BF2AF2961200E1857F /* Model */,
+				214066B82AF24B6100E1857F /* Components */,
+				214066B92AF24B9D00E1857F /* ActionClosure.swift */,
+				214066B42AF2473000E1857F /* Constants.swift */,
 				218588BA2AC81A6300730A9D /* Assets.xcassets */,
 				218588BC2AC81A6300730A9D /* CellarStock.entitlements */,
+				21F8EB6A2B022C72003E7A4C /* Info.plist */,
+				21FFE85D2B234A3C007DBD1A /* GoogleService-Info.plist */,
 				218588BD2AC81A6300730A9D /* Preview Content */,
 			);
 			path = CellarStock;
@@ -70,6 +168,20 @@
 				218588BE2AC81A6300730A9D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2188F46C2B21ED980030B596 /* NeoTabsView */ = {
+			isa = PBXGroup;
+			children = (
+				2188F46D2B21ED980030B596 /* NeoTabsItemModel.swift */,
+				2188F46E2B21ED980030B596 /* NeoTabsHeaderView.swift */,
+				2188F46F2B21ED980030B596 /* NeoTabsStaticItemsView.swift */,
+				2188F4702B21ED980030B596 /* NeoTabsDynamicItemsView.swift */,
+				2188F4712B21ED980030B596 /* NeoTabsItemView.swift */,
+				2188F4722B21ED980030B596 /* NeoTabsContentView.swift */,
+				2188F4732B21ED980030B596 /* NeoTabsView.swift */,
+			);
+			path = NeoTabsView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,6 +244,7 @@
 			files = (
 				218588BF2AC81A6300730A9D /* Preview Assets.xcassets in Resources */,
 				218588BB2AC81A6300730A9D /* Assets.xcassets in Resources */,
+				21FFE85E2B234A3C007DBD1A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,9 +255,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2188F4762B21ED980030B596 /* NeoTabsStaticItemsView.swift in Sources */,
+				2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */,
+				2113CEAE2B00D0EC00C9D828 /* SelectionListView.swift in Sources */,
+				2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */,
+				215745952B1D17330021745D /* DocumentScannerView.swift in Sources */,
+				21598CF12B0D13A200E2A177 /* Helper.swift in Sources */,
+				214066BE2AF2793000E1857F /* RandomView.swift in Sources */,
+				2188F4772B21ED980030B596 /* NeoTabsDynamicItemsView.swift in Sources */,
+				2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */,
+				215745972B1D176C0021745D /* RoundedRectLabel.swift in Sources */,
+				2188F4752B21ED980030B596 /* NeoTabsHeaderView.swift in Sources */,
+				21DE322D2B1E6D5300AA5695 /* AmountView.swift in Sources */,
+				2188F4782B21ED980030B596 /* NeoTabsItemView.swift in Sources */,
+				21598CF32B0D200500E2A177 /* YearSelectionListView.swift in Sources */,
+				214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */,
+				2188F4742B21ED980030B596 /* NeoTabsItemModel.swift in Sources */,
+				21C794872AC88CDA00398FE9 /* FormView.swift in Sources */,
 				218588B72AC81A6300730A9D /* ContentView.swift in Sources */,
-				218588B92AC81A6300730A9D /* Item.swift in Sources */,
+				214066B72AF24B5C00E1857F /* TileView.swift in Sources */,
+				2113CEAC2B00CCDC00C9D828 /* Wheel.swift in Sources */,
+				214066B32AF2469700E1857F /* Accordion.swift in Sources */,
+				2188F4692B21D36C0030B596 /* ChartsView.swift in Sources */,
+				218588B92AC81A6300730A9D /* Wine.swift in Sources */,
+				215745922B1CE49B0021745D /* StatsView.swift in Sources */,
+				214066B52AF2473000E1857F /* Constants.swift in Sources */,
+				214066BA2AF24B9D00E1857F /* ActionClosure.swift in Sources */,
 				218588B52AC81A6300730A9D /* CellarStockApp.swift in Sources */,
+				214066C12AF29EEC00E1857F /* CongratsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,23 +409,31 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CellarStock/CellarStock.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
-				DEVELOPMENT_TEAM = 4QVNNP72ND;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WK7T3Z2QPN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CellarStock/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Vino Cave";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Scannez vos bouteilles au lieu de le saisir.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -295,6 +441,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Cella Stock DEV";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -309,23 +457,31 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CellarStock/CellarStock.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
-				DEVELOPMENT_TEAM = 4QVNNP72ND;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WK7T3Z2QPN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CellarStock/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Vino Cave";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Scannez vos bouteilles au lieu de le saisir.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -333,6 +489,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Cella Stock DEV";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
