@@ -10,11 +10,22 @@ import SwiftData
 
 struct InitTabView: View {
     
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [User]
     @Query private var wines: [Wine]
     
     var body: some View {
         if wines.isEmpty {
-            ContentView(tabType: .region)
+            if users.isEmpty {
+                ContentView(tabType: .region)
+            } else {
+                ContentView(tabType: .region)
+                    .onAppear {
+                        if !users.isEmpty {
+                            fetchFromServer()
+                        }
+                    }
+            }
         } else {
             TabView {
                 ContentView(tabType: .region)
@@ -48,6 +59,27 @@ struct InitTabView: View {
             .accentColor(.white)
             .onAppear {
                 UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
+                fetchFromServer()
+            }
+        }
+    }
+    
+    func fetchFromServer() {
+        let firestoreManager = FirestoreManager.shared
+        if let user = users.first {
+            firestoreManager.fetchWines(for: user.documentId) { resultsWines in
+                firestoreManager.fetchQuantities(for: resultsWines) { resultsQuantities in
+                    try? modelContext.delete(model: Quantity.self)
+                    try? modelContext.delete(model: Wine.self)
+                    try? modelContext.save()
+                    for wine in resultsWines {
+                        modelContext.insert(wine)
+                    }
+                    for quantity in resultsQuantities {
+                        modelContext.insert(quantity)
+                    }
+                    try? modelContext.save()
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ struct FormView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
     @Binding var wine: Wine
@@ -183,41 +184,77 @@ private extension FormView {
     
     func save() {
         guard !quantitiesByYear.isEmpty else {
-            for quantity in quantities.filter({ $0.id == wine.id }) {
+            for quantity in quantities where quantity.wineId == wine.wineId {
                 modelContext.delete(quantity)
+                FirestoreManager.shared.deleteQuantity(quantity)
             }
             try? modelContext.save()
             if wines.contains(wine) {
                 modelContext.delete(wine)
+                FirestoreManager.shared.deleteWine(wine)
             }
             try? modelContext.save()
             return
         }
         
-        modelContext.insert(wine)
-        
-        var remainingQuantites = quantitiesByYear
-        for quantity in quantities.filter({ $0.id == wine.id }) {
-            if let newQuantity = quantitiesByYear[quantity.year] {
-                quantity.quantity = newQuantity
-                quantity.price = pricesByYear[quantity.year] ?? 0
-            } else {
-                modelContext.delete(quantity)
+        let dispatchGroup = DispatchGroup()
+        if let user = users.first {
+            wine.userId = user.documentId
+        } else {
+            dispatchGroup.enter()
+            FirestoreManager.shared.createUser(name: "") { resultId in
+                if let resultId {
+                    modelContext.insert(User(documentId: resultId, name: ""))
+                    try? modelContext.save()
+                    wine.userId = resultId
+                }
+                dispatchGroup.leave()
             }
-            remainingQuantites.removeValue(forKey: quantity.year)
         }
-        for (year, quantity) in remainingQuantites {
-            modelContext.insert(Quantity(id: wine.id,
-                                         year: year,
-                                         quantity: quantity,
-                                         price: pricesByYear[year] ?? 0))
+        
+        dispatchGroup.notify(queue: .main) {
+            guard !wine.userId.isEmpty else { return }
+            FirestoreManager.shared.insertOrUpdateWine(wine) { wineId in
+                guard let wineId else { return }
+                wine.wineId = wineId
+                modelContext.insert(wine)
+                
+                var remainingQuantites = quantitiesByYear
+                for quantity in quantities where quantity.wineId == wine.wineId {
+                    if let newQuantity = quantitiesByYear[quantity.year] {
+                        quantity.quantity = newQuantity
+                        quantity.price = pricesByYear[quantity.year] ?? 0
+                        FirestoreManager.shared.updateQuantity(quantity)
+                    } else {
+                        modelContext.delete(quantity)
+                        FirestoreManager.shared.deleteQuantity(quantity)
+                    }
+                    remainingQuantites.removeValue(forKey: quantity.year)
+                }
+                let dispatchGroup = DispatchGroup()
+                for (year, quantity) in remainingQuantites {
+                    let newQuantity = Quantity(wineId: wineId,
+                                               year: year,
+                                               quantity: quantity,
+                                               price: pricesByYear[year] ?? 0)
+                    dispatchGroup.enter()
+                    FirestoreManager.shared.insertQuantity(newQuantity) { documentId in
+                        guard let documentId else { return }
+                        newQuantity.documentId = documentId
+                        modelContext.insert(newQuantity)
+                        dispatchGroup.leave()
+                    }
+                }
+                dispatchGroup.notify(queue: .main) {
+                    try? modelContext.save()
+                }
+            }
         }
-        try? modelContext.save()
     }
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities.filter({ $0.id == wine.id }) {
+        for quantity in quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

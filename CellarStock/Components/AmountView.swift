@@ -2,7 +2,7 @@
 //  AmountView.swift
 //  CellarStock
 //
-//  Created by CANTE Benjamin (BPCE-SI) on 04/12/2023.
+//  Created by CANTE Benjamin on 04/12/2023.
 //
 
 import SwiftUI

@@ -14,7 +14,7 @@ struct RandomView: View {
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
     @State private var rotation: CGFloat = 0.0
-    @State private var showingSheet: (Bool, Wine, Quantity) = (false, Wine(), Quantity(id: UUID()))
+    @State private var showingSheet: (Bool, Wine, Quantity) = (false, Wine(), Quantity())
     @State private var filterRegions: [Int] = []
     @State private var filterTypes: [Int] = []
     @State private var filterYears: [Int] = []
@@ -87,16 +87,16 @@ struct RandomView: View {
         if !filterYears.isEmpty {
             selectableWines = selectableWines.filter { wine in
                 !quantities.filter({ quantity in
-                    quantity.id == wine.id && filterYears.contains(quantity.year)
+                    quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
                 }).isEmpty
             }
         }
         guard let wine = selectableWines.randomElement(),
               let quantity = quantities.filter({ quantity in
                   if !filterYears.isEmpty {
-                      return quantity.id == wine.id && filterYears.contains(quantity.year)
+                      return quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
                   } else {
-                      return quantity.id == wine.id
+                      return quantity.wineId == wine.wineId
                   }
               }).randomElement()
         else { return nil }
@@ -106,7 +106,7 @@ struct RandomView: View {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities.filter({ $0.id == wine.id }) {
+        for quantity in quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

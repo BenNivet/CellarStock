@@ -54,9 +54,14 @@ struct CongratsView: View {
                     quantity.quantity -= 1
                     if quantity.quantity == 0 {
                         modelContext.delete(quantity)
+                        FirestoreManager.shared.deleteQuantity(quantity)
+                    } else {
+                        FirestoreManager.shared.updateQuantity(quantity)
                     }
+                    
                     if quantity(for: wine) == 0 {
                         modelContext.delete(wine)
+                        FirestoreManager.shared.deleteWine(wine)
                     }
                     try? modelContext.save()
                     dismiss()
@@ -84,7 +89,7 @@ struct CongratsView: View {
 private extension CongratsView {
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities.filter({ $0.id == wine.id }) {
+        for quantity in quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

@@ -36,6 +36,9 @@
 		2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4722B21ED980030B596 /* NeoTabsContentView.swift */; };
 		2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4732B21ED980030B596 /* NeoTabsView.swift */; };
 		21C794872AC88CDA00398FE9 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C794862AC88CDA00398FE9 /* FormView.swift */; };
+		21DD02662B236D4F00406621 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 21DD02652B236D4F00406621 /* FirebaseAnalytics */; };
+		21DD02692B2371E200406621 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DD02682B2371E200406621 /* FirestoreManager.swift */; };
+		21DD026B2B23724E00406621 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 21DD026A2B23724E00406621 /* FirebaseFirestore */; };
 		21DE322D2B1E6D5300AA5695 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DE322C2B1E6D5300AA5695 /* AmountView.swift */; };
 		21FFE85E2B234A3C007DBD1A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21FFE85D2B234A3C007DBD1A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -72,6 +75,7 @@
 		2188F4722B21ED980030B596 /* NeoTabsContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsContentView.swift; sourceTree = "<group>"; };
 		2188F4732B21ED980030B596 /* NeoTabsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsView.swift; sourceTree = "<group>"; };
 		21C794862AC88CDA00398FE9 /* FormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
+		21DD02682B2371E200406621 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		21DE322C2B1E6D5300AA5695 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
 		21F8EB6A2B022C72003E7A4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		21FFE85D2B234A3C007DBD1A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21DD02662B236D4F00406621 /* FirebaseAnalytics in Frameworks */,
+				21DD026B2B23724E00406621 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +132,7 @@
 			children = (
 				218588B32AC81A6300730A9D /* CellarStock */,
 				218588B22AC81A6300730A9D /* Products */,
+				21DD02642B236D4F00406621 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,6 +158,7 @@
 				215745932B1D171F0021745D /* Scanner */,
 				214066BF2AF2961200E1857F /* Model */,
 				214066B82AF24B6100E1857F /* Components */,
+				21DD02672B2371C900406621 /* Database */,
 				214066B92AF24B9D00E1857F /* ActionClosure.swift */,
 				214066B42AF2473000E1857F /* Constants.swift */,
 				218588BA2AC81A6300730A9D /* Assets.xcassets */,
@@ -184,6 +192,21 @@
 			path = NeoTabsView;
 			sourceTree = "<group>";
 		};
+		21DD02642B236D4F00406621 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		21DD02672B2371C900406621 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				21DD02682B2371E200406621 /* FirestoreManager.swift */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -200,6 +223,10 @@
 			dependencies = (
 			);
 			name = CellarStock;
+			packageProductDependencies = (
+				21DD02652B236D4F00406621 /* FirebaseAnalytics */,
+				21DD026A2B23724E00406621 /* FirebaseFirestore */,
+			);
 			productName = CellarStock;
 			productReference = 218588B12AC81A6300730A9D /* CellarStock.app */;
 			productType = "com.apple.product-type.application";
@@ -228,6 +255,9 @@
 				Base,
 			);
 			mainGroup = 218588A82AC81A6300730A9D;
+			packageReferences = (
+				2195F5122B23609D005B75C8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 218588B22AC81A6300730A9D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,6 +289,7 @@
 				2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */,
 				2113CEAE2B00D0EC00C9D828 /* SelectionListView.swift in Sources */,
 				2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */,
+				21DD02692B2371E200406621 /* FirestoreManager.swift in Sources */,
 				215745952B1D17330021745D /* DocumentScannerView.swift in Sources */,
 				21598CF12B0D13A200E2A177 /* Helper.swift in Sources */,
 				214066BE2AF2793000E1857F /* RandomView.swift in Sources */,
@@ -521,6 +552,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2195F5122B23609D005B75C8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.19.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		21DD02652B236D4F00406621 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2195F5122B23609D005B75C8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		21DD026A2B23724E00406621 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2195F5122B23609D005B75C8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 218588A92AC81A6300730A9D /* Project object */;
 }

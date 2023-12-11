@@ -10,6 +10,7 @@ import SwiftData
 
 struct StatsView: View {
     
+    @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
     
@@ -48,6 +49,11 @@ struct StatsView: View {
                                      }
                 ])
             }
+            .toolbar {
+                if let userId = users.first?.documentId {
+                    ShareLink(item: userId, preview: SharePreview("Partager le code de ma cave"))
+                }
+            }
             .padding(CharterConstants.margin)
             .navigationTitle("Stats")
         }
@@ -80,7 +86,7 @@ private extension StatsView {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities.filter({ $0.id == wine.id }) {
+        for quantity in quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

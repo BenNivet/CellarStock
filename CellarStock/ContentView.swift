@@ -23,6 +23,8 @@ struct ContentView: View {
     @State private var showingSheet: (Bool, Wine, [Int: Int], [Int: Double], Bool) = (false, Wine(), [:], [:], false)
     @State private var searchText = ""
     @State private var searchIsActive = false
+    @State private var showingCodeAlert = false
+    @State private var codeText = ""
     @State private var showingAlert = false
     
     private var filteredWines: [Wine] {
@@ -64,20 +66,40 @@ struct ContentView: View {
             content
                 .navigationTitle(title)
                 .toolbar {
-                    if !wines.isEmpty {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button {
-                                showingAlert = true
-                            } label: {
-                                Image(systemName: "trash")
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            showingAlert = true
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        .foregroundStyle(.white)
+                        .alert("Supprimer les données", isPresented: $showingAlert) {
+                            Button("Non", role: .cancel) {}
+                            Button("Oui", role: .destructive) {
+                                flush()
                             }
-                            .foregroundStyle(.white)
-                            .alert("Supprimer les données", isPresented: $showingAlert) {
-                                Button("Non", role: .cancel) {}
-                                Button("Oui", role: .destructive) {
-                                    flush()
+                        }
+                    }
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            showingCodeAlert = true
+                        } label: {
+                            Image(systemName: "magnifyingglass")
+                                .font(.title2)
+                        }
+                        .foregroundStyle(.white)
+                        .alert("Rejoindre une cave", isPresented: $showingCodeAlert) {
+                            TextField("Code", text: $codeText)
+                                .autocorrectionDisabled()
+                            Button("OK") {
+                                FirestoreManager.shared.findUser(id: codeText) { userId in
+                                    guard let userId else { return }
+                                    modelContext.insert(User(documentId: userId, name: ""))
+                                    try? modelContext.save()
                                 }
                             }
+                        } message: {
+                            Text("Veuillez entrer le code de la cave")
                         }
                     }
                     ToolbarItem {
@@ -247,7 +269,7 @@ private extension ContentView {
     func quantitiesDict(for wine: Wine) -> ([Int: Int], [Int: Double]) {
         var quantitiesResult: [Int: Int] = [:]
         var pricesResult: [Int: Double] = [:]
-        let array = quantities.filter { $0.id == wine.id }
+        let array = quantities.filter { $0.wineId == wine.wineId }
         for quantity in array {
             quantitiesResult[quantity.year] = quantity.quantity
             pricesResult[quantity.year] = quantity.price
@@ -257,7 +279,7 @@ private extension ContentView {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities.filter({ $0.id == wine.id }) {
+        for quantity in quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result
@@ -298,13 +320,20 @@ private extension ContentView {
     func wines(for year: Int) -> [(Wine, Int)] {
         var result: [(Wine, Int)] = []
         for quantity in quantities where quantity.year == year {
-            guard let wine = filteredWines.first(where: { $0.id == quantity.id }) else { break }
+            guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
             result.append((wine, quantity.quantity))
         }
         return result
     }
     
     func flush() {
+//        for quantity in quantities {
+//            FirestoreManager.shared.deleteQuantity(quantity)
+//        }
+//        for wine in wines {
+//            FirestoreManager.shared.deleteWine(wine)
+//        }
+        try? modelContext.delete(model: User.self)
         try? modelContext.delete(model: Quantity.self)
         try? modelContext.delete(model: Wine.self)
         try? modelContext.save()

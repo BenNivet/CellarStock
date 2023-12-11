@@ -11,6 +11,8 @@ import SwiftData
 @Model
 final class Wine {
     var id: UUID = UUID()
+    var userId: String = ""
+    var wineId: String = ""
     var type: WineType = WineType.rouge
     var region: Region = Region.bourgogne
     var appelation: Appelation = Appelation.pauillac
@@ -18,13 +20,46 @@ final class Wine {
     var owner: String = ""
     var info: String = ""
     
-    init(type: WineType = .rouge, region: Region = .bourgogne, appelation: Appelation = .pauillac, name: String = "", owner: String = "", info: String = "") {
+    init(userId: String = "",
+         wineId: String = "",
+         type: WineType = .rouge,
+         region: Region = .bourgogne,
+         appelation: Appelation = .pauillac,
+         name: String = "",
+         owner: String = "",
+         info: String = "") {
+        self.wineId = wineId
         self.type = type
         self.region = region
         self.appelation = appelation
         self.name = name
         self.owner = owner
         self.info = info
+    }
+    
+    init?(wineServer: WineServer, documentId: String) {
+        guard let type = WineType(rawValue: wineServer.type),
+              let region = Region(rawValue: wineServer.region),
+              let appelation = Appelation(rawValue: wineServer.appelation)
+        else { return nil }
+        self.userId = wineServer.userId
+        self.wineId = documentId
+        self.type = type
+        self.region = region
+        self.appelation = appelation
+        self.name = wineServer.name
+        self.owner = wineServer.owner
+        self.info = wineServer.info
+    }
+    
+    var wineServer: WineServer {
+        WineServer(userId: userId,
+                   type: type.rawValue,
+                   region: region.rawValue,
+                   appelation: appelation.rawValue,
+                   name: name,
+                   owner: owner,
+                   info: info)
     }
     
     func isMatch(for query: String) -> Bool {
@@ -41,15 +76,52 @@ final class Wine {
 @Model
 final class Quantity {
     var id: UUID = UUID()
+    var documentId: String = ""
+    var wineId: String = ""
     var year: Int = 0
     var quantity: Int = 0
     var price: Double = 0
     
-    init(id: UUID, year: Int = 0, quantity: Int = 0, price: Double = 0) {
-        self.id = id
+    init(documentId: String = "", 
+         wineId: String = "",
+         year: Int = 0,
+         quantity: Int = 0,
+         price: Double = 0) {
+        self.wineId = wineId
         self.year = year
         self.quantity = quantity
         self.price = price
+    }
+    
+    init(quantityServer: QuantityServer, documentId: String) {
+        self.documentId = documentId
+        self.wineId = quantityServer.wineId
+        self.year = quantityServer.year
+        self.quantity = quantityServer.quantity
+        self.price = quantityServer.price
+    }
+    
+    var quantityServer: QuantityServer {
+        QuantityServer(wineId: wineId,
+                       year: year,
+                       quantity: quantity,
+                       price: price)
+    }
+}
+
+@Model
+final class User {
+    var id: UUID = UUID()
+    var documentId: String = ""
+    var name: String = ""
+    
+    init(documentId: String = "", name: String = "") {
+        self.documentId = documentId
+        self.name = name
+    }
+    
+    init(userServer: UserServer) {
+        name = userServer.name
     }
 }
 
@@ -247,4 +319,25 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
             "Autre"
         }
     }
+}
+
+struct WineServer: Codable {
+    var userId: String
+    var type: Int
+    var region: Int
+    var appelation: Int
+    var name: String
+    var owner: String
+    var info: String
+}
+
+struct QuantityServer: Codable {
+    var wineId: String
+    var year: Int
+    var quantity: Int
+    var price: Double
+}
+
+struct UserServer: Codable {
+    var name: String
 }
