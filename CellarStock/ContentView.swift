@@ -94,7 +94,8 @@ struct ContentView: View {
                             Button("OK") {
                                 FirestoreManager.shared.findUser(id: codeText) { userId in
                                     guard let userId else { return }
-                                    modelContext.insert(User(documentId: userId, name: ""))
+                                    flush()
+                                    modelContext.insert(User(documentId: userId))
                                     try? modelContext.save()
                                 }
                             }

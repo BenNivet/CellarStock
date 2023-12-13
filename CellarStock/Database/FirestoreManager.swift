@@ -23,6 +23,11 @@ class FirestoreManager {
     }
     
     func findUser(id: String, completion: @escaping (String?) -> Void) {
+        guard !id.isEmpty 
+        else {
+            completion(nil)
+            return
+        }
         db?.collection(Table.users.rawValue).document(id)
             .getDocument { documentSnapshot, error in
                 if let documentSnapshot,
@@ -34,7 +39,7 @@ class FirestoreManager {
             }
     }
     
-    func createUser(name: String, completion: @escaping (String?) -> Void) {
+    func createUser(name: String = "", completion: @escaping (String?) -> Void) {
         var ref: DocumentReference? = nil
         ref = try? db?.collection(Table.users.rawValue)
             .addDocument(from: UserServer(name: name)) { _ in

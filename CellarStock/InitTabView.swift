@@ -21,9 +21,7 @@ struct InitTabView: View {
             } else {
                 ContentView(tabType: .region)
                     .onAppear {
-                        if !users.isEmpty {
-                            fetchFromServer()
-                        }
+                        fetchFromServer()
                     }
             }
         } else {
@@ -43,18 +41,16 @@ struct InitTabView: View {
                         Text("Année")
                         Image("calendar")
                     }
-                if wines.count > 1 {
-                    RandomView()
-                        .tabItem {
-                            Text("Roulette")
-                            Image("dice")
-                        }
-                    StatsView()
-                        .tabItem {
-                            Text("Stats")
-                            Image("stats")
-                        }
-                }
+                RandomView()
+                    .tabItem {
+                        Text("Roulette")
+                        Image("dice")
+                    }
+                StatsView()
+                    .tabItem {
+                        Text("Stats")
+                        Image("stats")
+                    }
             }
             .accentColor(.white)
             .onAppear {

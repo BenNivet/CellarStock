@@ -150,7 +150,7 @@ struct FormView: View {
                     save()
                     dismiss()
                 }
-                .disabled(wine.name.isEmpty)
+                .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
             }
         }
         .sheet(isPresented: $showingSheet) {
@@ -202,9 +202,9 @@ private extension FormView {
             wine.userId = user.documentId
         } else {
             dispatchGroup.enter()
-            FirestoreManager.shared.createUser(name: "") { resultId in
+            FirestoreManager.shared.createUser { resultId in
                 if let resultId {
-                    modelContext.insert(User(documentId: resultId, name: ""))
+                    modelContext.insert(User(documentId: resultId))
                     try? modelContext.save()
                     wine.userId = resultId
                 }

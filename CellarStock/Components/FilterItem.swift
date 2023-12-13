@@ -19,7 +19,7 @@ enum FilterType {
         case .type:
             "Types"
         case .year:
-            "Année"
+            "Années"
         }
     }
 }
