@@ -340,4 +340,5 @@ struct QuantityServer: Codable {
 
 struct UserServer: Codable {
     var name: String
+    var date: String = Helper.shared.creationDate
 }

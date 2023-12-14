@@ -10,9 +10,11 @@ import SwiftData
 
 struct StatsView: View {
     
+    @Environment(\.modelContext) private var modelContext
     @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
+    @State private var showingSettings = false
     
     private var regions: [Region] {
         Array(Set(wines.compactMap { $0.region }))
@@ -51,7 +53,25 @@ struct StatsView: View {
             }
             .toolbar {
                 if let userId = users.first?.documentId {
-                    ShareLink(item: userId, preview: SharePreview("Partager le code de ma cave"))
+                    ToolbarItem {
+                        ShareLink(item: sharedText(id: userId),
+                                  preview: SharePreview("Partager le code de ma cave"))
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        showingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .confirmationDialog("Réglages", isPresented: $showingSettings, titleVisibility: .automatic) {
+                        Button("Supprimer les données", role: .destructive) {
+                            flush()
+                        }
+                        Button("Exporter mes données") {
+                            //
+                        }
+                    }
                 }
             }
             .padding(CharterConstants.margin)
@@ -114,6 +134,22 @@ private extension StatsView {
             result += quantity.quantity
         }
         return result
+    }
+    
+    func sharedText(id: String) -> String {
+        """
+        Vino Cave
+        Je souhaite partager ma cave avec toi !
+        Clic sur le lien ci-dessous pour y acceder :
+        vinocave://code/\(id)
+        """
+    }
+    
+    func flush() {
+        try? modelContext.delete(model: User.self)
+        try? modelContext.delete(model: Quantity.self)
+        try? modelContext.delete(model: Wine.self)
+        try? modelContext.save()
     }
 }
 

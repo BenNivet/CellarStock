@@ -68,20 +68,6 @@ struct ContentView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            showingAlert = true
-                        } label: {
-                            Image(systemName: "trash")
-                        }
-                        .foregroundStyle(.white)
-                        .alert("Supprimer les données", isPresented: $showingAlert) {
-                            Button("Non", role: .cancel) {}
-                            Button("Oui", role: .destructive) {
-                                flush()
-                            }
-                        }
-                    }
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
                             showingCodeAlert = true
                         } label: {
                             Image(systemName: "magnifyingglass")
@@ -92,12 +78,7 @@ struct ContentView: View {
                             TextField("Code", text: $codeText)
                                 .autocorrectionDisabled()
                             Button("OK") {
-                                FirestoreManager.shared.findUser(id: codeText) { userId in
-                                    guard let userId else { return }
-                                    flush()
-                                    modelContext.insert(User(documentId: userId))
-                                    try? modelContext.save()
-                                }
+                                findCellar(code: codeText)
                             }
                         } message: {
                             Text("Veuillez entrer le code de la cave")
@@ -125,6 +106,9 @@ struct ContentView: View {
                         .resizable()
                         .ignoresSafeArea()
                 }
+        }
+        .onOpenURL { url in
+            handleURL(url: url)
         }
         .if(!wines.isEmpty) { view in
             view.addSearchIfNeeded(for: tabType, searchText: $searchText, searchIsActive: $searchIsActive)
@@ -328,16 +312,24 @@ private extension ContentView {
     }
     
     func flush() {
-//        for quantity in quantities {
-//            FirestoreManager.shared.deleteQuantity(quantity)
-//        }
-//        for wine in wines {
-//            FirestoreManager.shared.deleteWine(wine)
-//        }
         try? modelContext.delete(model: User.self)
         try? modelContext.delete(model: Quantity.self)
         try? modelContext.delete(model: Wine.self)
         try? modelContext.save()
+    }
+    
+    func findCellar(code: String) {
+        FirestoreManager.shared.findUser(id: code) { userId in
+            guard let userId else { return }
+            flush()
+            modelContext.insert(User(documentId: userId))
+            try? modelContext.save()
+        }
+    }
+    
+    func handleURL(url: URL) {
+        guard let codeKey = url.host(), codeKey == "code" else { return }
+        findCellar(code: url.lastPathComponent)
     }
 }
 

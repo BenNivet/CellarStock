@@ -15,6 +15,11 @@ class FirestoreManager {
         case quantities = "Quantities"
     }
     
+    enum Column: String {
+        case userId
+        case wineId
+    }
+    
     static let shared = FirestoreManager()
     var db: Firestore?
     
@@ -48,9 +53,8 @@ class FirestoreManager {
     }
     
     func fetchWines(for userId: String, completion: @escaping ([Wine]) -> Void) {
-        print("LOGGER - fetchWines")
         db?.collection(Table.wines.rawValue)
-            .whereField("userId", isEqualTo: userId)
+            .whereField(Column.userId.rawValue, isEqualTo: userId)
             .getDocuments { querySnapshot, err in
                 guard let documents = querySnapshot?.documents
                 else {
@@ -67,7 +71,6 @@ class FirestoreManager {
     }
     
     func fetchQuantities(for wines: [Wine], completion: @escaping ([Quantity]) -> Void) {
-        print("LOGGER - fetchQuantities")
         let winesId = wines.map({ $0.wineId })
         guard !wines.isEmpty 
         else {
@@ -75,7 +78,7 @@ class FirestoreManager {
             return
         }
         db?.collection(Table.quantities.rawValue)
-            .whereField("wineId", in: winesId)
+            .whereField(Column.wineId.rawValue, in: winesId)
             .getDocuments { querySnapshot, err in
                 guard let documents = querySnapshot?.documents
                 else {
