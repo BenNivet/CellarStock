@@ -62,9 +62,9 @@ struct InitTabView: View {
     
     func fetchFromServer() {
         let firestoreManager = FirestoreManager.shared
-        if let user = users.first {
-            firestoreManager.fetchWines(for: user.documentId) { resultsWines in
-                firestoreManager.fetchQuantities(for: resultsWines) { resultsQuantities in
+        if let userId = users.first?.documentId {
+            firestoreManager.fetchWines(for: userId) { resultsWines in
+                firestoreManager.fetchQuantities(for: userId) { resultsQuantities in
                     try? modelContext.delete(model: Quantity.self)
                     try? modelContext.delete(model: Wine.self)
                     try? modelContext.save()

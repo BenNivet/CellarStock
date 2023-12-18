@@ -17,7 +17,6 @@ class FirestoreManager {
     
     enum Column: String {
         case userId
-        case wineId
     }
     
     static let shared = FirestoreManager()
@@ -28,7 +27,7 @@ class FirestoreManager {
     }
     
     func findUser(id: String, completion: @escaping (String?) -> Void) {
-        guard !id.isEmpty 
+        guard !id.isEmpty
         else {
             completion(nil)
             return
@@ -52,6 +51,40 @@ class FirestoreManager {
             }
     }
     
+    func clean() {
+        db?.collection(Table.wines.rawValue)
+            .getDocuments { [weak self] querySnapshot, err in
+                guard let documents = querySnapshot?.documents
+                else { return }
+                let docs = documents
+                    .filter({ doc in
+                        if let toto = doc.data()["userId"] as? String, !toto.isEmpty { return false }
+                        return true
+                    })
+                for doc in docs {
+                    self?.db?.collection(Table.wines.rawValue)
+                        .document(doc.documentID)
+                        .delete()
+                }
+            }
+        
+        db?.collection(Table.quantities.rawValue)
+            .getDocuments { [weak self] querySnapshot, err in
+                guard let documents = querySnapshot?.documents
+                else { return }
+                let docs = documents
+                    .filter({ doc in
+                        if let toto = doc.data()["userId"] as? String, !toto.isEmpty { return false }
+                        return true
+                    })
+                for doc in docs {
+                    self?.db?.collection(Table.quantities.rawValue)
+                        .document(doc.documentID)
+                        .delete()
+                }
+            }
+    }
+    
     func fetchWines(for userId: String, completion: @escaping ([Wine]) -> Void) {
         db?.collection(Table.wines.rawValue)
             .whereField(Column.userId.rawValue, isEqualTo: userId)
@@ -70,15 +103,9 @@ class FirestoreManager {
             }
     }
     
-    func fetchQuantities(for wines: [Wine], completion: @escaping ([Quantity]) -> Void) {
-        let winesId = wines.map({ $0.wineId })
-        guard !wines.isEmpty 
-        else {
-            completion([])
-            return
-        }
+    func fetchQuantities(for userId: String, completion: @escaping ([Quantity]) -> Void) {
         db?.collection(Table.quantities.rawValue)
-            .whereField(Column.wineId.rawValue, in: winesId)
+            .whereField(Column.userId.rawValue, isEqualTo: userId)
             .getDocuments { querySnapshot, err in
                 guard let documents = querySnapshot?.documents
                 else {

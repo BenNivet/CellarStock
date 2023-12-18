@@ -51,17 +51,18 @@ struct CongratsView: View {
             Spacer()
             VStack(spacing: CharterConstants.marginSmall) {
                 Button {
+                    let firestoreManager = FirestoreManager.shared
                     quantity.quantity -= 1
                     if quantity.quantity == 0 {
                         modelContext.delete(quantity)
-                        FirestoreManager.shared.deleteQuantity(quantity)
+                        firestoreManager.deleteQuantity(quantity)
                     } else {
-                        FirestoreManager.shared.updateQuantity(quantity)
+                        firestoreManager.updateQuantity(quantity)
                     }
                     
                     if quantity(for: wine) == 0 {
                         modelContext.delete(wine)
-                        FirestoreManager.shared.deleteWine(wine)
+                        firestoreManager.deleteWine(wine)
                     }
                     try? modelContext.save()
                     dismiss()

@@ -183,15 +183,16 @@ private extension FormView {
     }
     
     func save() {
+        let firestoreManager = FirestoreManager.shared
         guard !quantitiesByYear.isEmpty else {
             for quantity in quantities where quantity.wineId == wine.wineId {
                 modelContext.delete(quantity)
-                FirestoreManager.shared.deleteQuantity(quantity)
+                firestoreManager.deleteQuantity(quantity)
             }
             try? modelContext.save()
             if wines.contains(wine) {
                 modelContext.delete(wine)
-                FirestoreManager.shared.deleteWine(wine)
+                firestoreManager.deleteWine(wine)
             }
             try? modelContext.save()
             return
@@ -202,7 +203,7 @@ private extension FormView {
             wine.userId = user.documentId
         } else {
             dispatchGroup.enter()
-            FirestoreManager.shared.createUser { resultId in
+            firestoreManager.createUser { resultId in
                 if let resultId {
                     modelContext.insert(User(documentId: resultId))
                     try? modelContext.save()
@@ -214,7 +215,7 @@ private extension FormView {
         
         dispatchGroup.notify(queue: .main) {
             guard !wine.userId.isEmpty else { return }
-            FirestoreManager.shared.insertOrUpdateWine(wine) { wineId in
+            firestoreManager.insertOrUpdateWine(wine) { wineId in
                 guard let wineId else { return }
                 wine.wineId = wineId
                 modelContext.insert(wine)
@@ -224,21 +225,22 @@ private extension FormView {
                     if let newQuantity = quantitiesByYear[quantity.year] {
                         quantity.quantity = newQuantity
                         quantity.price = pricesByYear[quantity.year] ?? 0
-                        FirestoreManager.shared.updateQuantity(quantity)
+                        firestoreManager.updateQuantity(quantity)
                     } else {
                         modelContext.delete(quantity)
-                        FirestoreManager.shared.deleteQuantity(quantity)
+                        firestoreManager.deleteQuantity(quantity)
                     }
                     remainingQuantites.removeValue(forKey: quantity.year)
                 }
                 let dispatchGroup = DispatchGroup()
                 for (year, quantity) in remainingQuantites {
-                    let newQuantity = Quantity(wineId: wineId,
+                    let newQuantity = Quantity(userId: wine.userId,
+                                               wineId: wineId,
                                                year: year,
                                                quantity: quantity,
                                                price: pricesByYear[year] ?? 0)
                     dispatchGroup.enter()
-                    FirestoreManager.shared.insertQuantity(newQuantity) { documentId in
+                    firestoreManager.insertQuantity(newQuantity) { documentId in
                         guard let documentId else { return }
                         newQuantity.documentId = documentId
                         modelContext.insert(newQuantity)

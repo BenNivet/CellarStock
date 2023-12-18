@@ -18,6 +18,7 @@ struct ContentView: View {
     let tabType: TabType
     
     @Environment(\.modelContext) private var modelContext
+    @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
     @State private var showingSheet: (Bool, Wine, [Int: Int], [Int: Double], Bool) = (false, Wine(), [:], [:], false)
@@ -66,6 +67,24 @@ struct ContentView: View {
             content
                 .navigationTitle(title)
                 .toolbar {
+//                    ToolbarItem(placement: .topBarLeading) {
+//                        Button {
+//                            importWines()
+//                        } label: {
+//                            Image(systemName: "square.and.arrow.down")
+//                                .font(.title2)
+//                        }
+//                        .foregroundStyle(.white)
+//                    }
+//                    ToolbarItem(placement: .topBarLeading) {
+//                        Button {
+//                            clean()
+//                        } label: {
+//                            Image(systemName: "trash")
+//                                .font(.title2)
+//                        }
+//                        .foregroundStyle(.white)
+//                    }
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             showingCodeAlert = true
@@ -330,6 +349,53 @@ private extension ContentView {
     func handleURL(url: URL) {
         guard let codeKey = url.host(), codeKey == "code" else { return }
         findCellar(code: url.lastPathComponent)
+    }
+    
+    func importWines() {
+        let firestoreManager = FirestoreManager.shared
+        do {
+            guard let userId = users.first?.documentId,
+                  let bundlePath = Bundle.main.path(forResource: "wines", ofType: "json"),
+                  let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8)
+            else { return }
+            let winesImport = try JSONDecoder().decode(Import.self, from: jsonData)
+            let winesDataFlat = winesImport.data.compactMap { $0.data(for: userId) }
+            let winesData = Helper.shared.groupImport(data: winesDataFlat)
+            
+            let dispatch = DispatchGroup()
+            winesData.forEach { wine, quantities in
+                dispatch.enter()
+                firestoreManager.insertOrUpdateWine(wine) { wineId in
+                    guard let wineId else { return }
+                    wine.wineId = wineId
+                    modelContext.insert(wine)
+                    let dispatchGroup = DispatchGroup()
+                    for quantity in quantities {
+                        quantity.wineId = wineId
+                        dispatchGroup.enter()
+                        firestoreManager.insertQuantity(quantity) { documentId in
+                            guard let documentId else { return }
+                            quantity.documentId = documentId
+                            modelContext.insert(quantity)
+                            dispatchGroup.leave()
+                        }
+                    }
+                    dispatchGroup.notify(queue: .main) {
+                        try? modelContext.save()
+                        dispatch.leave()
+                    }
+                }
+            }
+            dispatch.notify(queue: .main) {
+                try? modelContext.save()
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func clean() {
+        FirestoreManager.shared.clean()
     }
 }
 

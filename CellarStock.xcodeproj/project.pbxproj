@@ -35,8 +35,9 @@
 		2188F4782B21ED980030B596 /* NeoTabsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4712B21ED980030B596 /* NeoTabsItemView.swift */; };
 		2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4722B21ED980030B596 /* NeoTabsContentView.swift */; };
 		2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4732B21ED980030B596 /* NeoTabsView.swift */; };
+		21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */; };
+		21989B002B2B2EA700E5637A /* wines.json in Resources */ = {isa = PBXBuildFile; fileRef = 21989AFF2B2B2EA700E5637A /* wines.json */; };
 		21C794872AC88CDA00398FE9 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C794862AC88CDA00398FE9 /* FormView.swift */; };
-		21DD02662B236D4F00406621 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 21DD02652B236D4F00406621 /* FirebaseAnalytics */; };
 		21DD02692B2371E200406621 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DD02682B2371E200406621 /* FirestoreManager.swift */; };
 		21DD026B2B23724E00406621 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 21DD026A2B23724E00406621 /* FirebaseFirestore */; };
 		21DE322D2B1E6D5300AA5695 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DE322C2B1E6D5300AA5695 /* AmountView.swift */; };
@@ -74,6 +75,8 @@
 		2188F4712B21ED980030B596 /* NeoTabsItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsItemView.swift; sourceTree = "<group>"; };
 		2188F4722B21ED980030B596 /* NeoTabsContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsContentView.swift; sourceTree = "<group>"; };
 		2188F4732B21ED980030B596 /* NeoTabsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsView.swift; sourceTree = "<group>"; };
+		21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportHelper.swift; sourceTree = "<group>"; };
+		21989AFF2B2B2EA700E5637A /* wines.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wines.json; sourceTree = "<group>"; };
 		21C794862AC88CDA00398FE9 /* FormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
 		21DD02682B2371E200406621 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		21DE322C2B1E6D5300AA5695 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
@@ -86,7 +89,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21DD02662B236D4F00406621 /* FirebaseAnalytics in Frameworks */,
 				21DD026B2B23724E00406621 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,6 +116,7 @@
 			children = (
 				218588B82AC81A6300730A9D /* Wine.swift */,
 				21598CF02B0D13A200E2A177 /* Helper.swift */,
+				21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 				214066BF2AF2961200E1857F /* Model */,
 				214066B82AF24B6100E1857F /* Components */,
 				21DD02672B2371C900406621 /* Database */,
+				21989AFE2B2B2E7400E5637A /* Files */,
 				214066B92AF24B9D00E1857F /* ActionClosure.swift */,
 				214066B42AF2473000E1857F /* Constants.swift */,
 				218588BA2AC81A6300730A9D /* Assets.xcassets */,
@@ -190,6 +194,14 @@
 				2188F4732B21ED980030B596 /* NeoTabsView.swift */,
 			);
 			path = NeoTabsView;
+			sourceTree = "<group>";
+		};
+		21989AFE2B2B2E7400E5637A /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				21989AFF2B2B2EA700E5637A /* wines.json */,
+			);
+			path = Files;
 			sourceTree = "<group>";
 		};
 		21DD02642B236D4F00406621 /* Frameworks */ = {
@@ -224,7 +236,6 @@
 			);
 			name = CellarStock;
 			packageProductDependencies = (
-				21DD02652B236D4F00406621 /* FirebaseAnalytics */,
 				21DD026A2B23724E00406621 /* FirebaseFirestore */,
 			);
 			productName = CellarStock;
@@ -275,6 +286,7 @@
 				218588BF2AC81A6300730A9D /* Preview Assets.xcassets in Resources */,
 				218588BB2AC81A6300730A9D /* Assets.xcassets in Resources */,
 				21FFE85E2B234A3C007DBD1A /* GoogleService-Info.plist in Resources */,
+				21989B002B2B2EA700E5637A /* wines.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +313,7 @@
 				2188F4782B21ED980030B596 /* NeoTabsItemView.swift in Sources */,
 				21598CF32B0D200500E2A177 /* YearSelectionListView.swift in Sources */,
 				214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */,
+				21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */,
 				2188F4742B21ED980030B596 /* NeoTabsItemModel.swift in Sources */,
 				21C794872AC88CDA00398FE9 /* FormView.swift in Sources */,
 				218588B72AC81A6300730A9D /* ContentView.swift in Sources */,
@@ -443,7 +456,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WK7T3Z2QPN;
@@ -491,7 +504,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WK7T3Z2QPN;
@@ -565,11 +578,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		21DD02652B236D4F00406621 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2195F5122B23609D005B75C8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
 		21DD026A2B23724E00406621 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2195F5122B23609D005B75C8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

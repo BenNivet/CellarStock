@@ -28,6 +28,7 @@ final class Wine {
          name: String = "",
          owner: String = "",
          info: String = "") {
+        self.userId = userId
         self.wineId = wineId
         self.type = type
         self.region = region
@@ -42,8 +43,8 @@ final class Wine {
               let region = Region(rawValue: wineServer.region),
               let appelation = Appelation(rawValue: wineServer.appelation)
         else { return nil }
-        self.userId = wineServer.userId
         self.wineId = documentId
+        self.userId = wineServer.userId
         self.type = type
         self.region = region
         self.appelation = appelation
@@ -76,17 +77,21 @@ final class Wine {
 @Model
 final class Quantity {
     var id: UUID = UUID()
+    var userId: String = ""
     var documentId: String = ""
     var wineId: String = ""
     var year: Int = 0
     var quantity: Int = 0
     var price: Double = 0
     
-    init(documentId: String = "", 
+    init(userId: String = "",
+         documentId: String = "",
          wineId: String = "",
          year: Int = 0,
          quantity: Int = 0,
          price: Double = 0) {
+        self.userId = userId
+        self.documentId = documentId
         self.wineId = wineId
         self.year = year
         self.quantity = quantity
@@ -95,6 +100,7 @@ final class Quantity {
     
     init(quantityServer: QuantityServer, documentId: String) {
         self.documentId = documentId
+        self.userId = quantityServer.userId
         self.wineId = quantityServer.wineId
         self.year = quantityServer.year
         self.quantity = quantityServer.quantity
@@ -102,7 +108,8 @@ final class Quantity {
     }
     
     var quantityServer: QuantityServer {
-        QuantityServer(wineId: wineId,
+        QuantityServer(userId: userId,
+                       wineId: wineId,
                        year: year,
                        quantity: quantity,
                        price: price)
@@ -207,7 +214,7 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
     case medoc
     case hautMedoc
     case listracMedoc
-    case moulis
+    case moulisEnMedoc
     case pessacleognan
     case cotesDeBordeaux
     case cotesDeBourg
@@ -255,8 +262,8 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
             "Haut-Médoc"
         case .listracMedoc:
             "Listrac Médoc"
-        case .moulis:
-            "Moulis"
+        case .moulisEnMedoc:
+            "Moulis-en-Médoc"
         case .pessacleognan:
             "Pessac-Léognan"
         case .cotesDeBordeaux:
@@ -332,6 +339,7 @@ struct WineServer: Codable {
 }
 
 struct QuantityServer: Codable {
+    var userId: String
     var wineId: String
     var year: Int
     var quantity: Int
