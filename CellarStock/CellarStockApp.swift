@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 import FirebaseCore
 
+typealias Wine = WineV2
+typealias Quantity = QuantityV2
+
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {

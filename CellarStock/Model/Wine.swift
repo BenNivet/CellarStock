@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Wine {
+final class WineV2 {
     var id: UUID = UUID()
     var userId: String = ""
     var wineId: String = ""
@@ -75,7 +75,7 @@ final class Wine {
 }
 
 @Model
-final class Quantity {
+final class QuantityV2 {
     var id: UUID = UUID()
     var userId: String = ""
     var documentId: String = ""
