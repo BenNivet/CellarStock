@@ -55,7 +55,7 @@ struct StatsView: View {
                 if let userId = users.first?.documentId {
                     ToolbarItem {
                         ShareLink(item: sharedText(id: userId),
-                                  preview: SharePreview("Partager le code de ma cave"))
+                                  preview: SharePreview("Partager ma cave"))
                     }
                 }
                 ToolbarItem {
@@ -68,9 +68,9 @@ struct StatsView: View {
                         Button("Supprimer les données", role: .destructive) {
                             flush()
                         }
-                        Button("Exporter mes données") {
-                            //
-                        }
+//                        Button("Exporter mes données") {
+//                            //
+//                        }
                     }
                 }
             }
@@ -142,6 +142,7 @@ private extension StatsView {
         Je souhaite partager ma cave avec toi !
         Clic sur le lien ci-dessous pour y acceder :
         vinocave://code/\(id)
+        L'application Vino Cave doit déjà être installé sur le téléphone.
         """
     }
     

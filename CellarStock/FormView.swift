@@ -26,7 +26,8 @@ struct FormView: View {
     @State private var showingCameraSheet = false
     @State private var scannedText = ""
     @State private var showingAmountSheet = false
-    @State private var selectedYearAmount: Int = 0
+    @State private var selectedYearAmount = 0
+    @State private var showingDeleteAlert = false
     @FocusState private var isTextFieldFocus: Bool
     
     var body: some View {
@@ -145,12 +146,20 @@ struct FormView: View {
                 }
             }
             
-            Section("") {
+            Section {
                 Button("Sauvegarder") {
                     save()
                     dismiss()
                 }
                 .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
+            }
+            
+            Section {
+                if !wine.wineId.isEmpty {
+                    Button("Supprimer", role: .destructive) {
+                        showingDeleteAlert = true
+                    }
+                }
             }
         }
         .sheet(isPresented: $showingSheet) {
@@ -164,6 +173,14 @@ struct FormView: View {
         }
         .sheet(isPresented: bindingAmount) {
             AmountView(year: $selectedYearAmount, pricesByYear: $pricesByYear)
+        }
+        .alert("Voulez vous supprimer ce vin ?", isPresented: $showingDeleteAlert) {
+            Button("Oui", role: .destructive) { 
+                quantitiesByYear.removeAll()
+                save()
+                dismiss()
+            }
+            Button("Annuler", role: .cancel) {}
         }
         .autocorrectionDisabled()
     }

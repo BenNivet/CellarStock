@@ -456,7 +456,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WK7T3Z2QPN;
@@ -466,7 +466,7 @@
 				INFOPLIST_FILE = CellarStock/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Vino Cave";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Scannez vos bouteilles au lieu de le saisir.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "L'application a besoin de l'utilisation de l'appareil photo pour scanner vos bouteilles de vin pour déterminer le nom de votre vin.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -504,7 +504,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WK7T3Z2QPN;
@@ -514,7 +514,7 @@
 				INFOPLIST_FILE = CellarStock/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Vino Cave";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Scannez vos bouteilles au lieu de le saisir.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "L'application a besoin de l'utilisation de l'appareil photo pour scanner vos bouteilles de vin pour déterminer le nom de votre vin.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

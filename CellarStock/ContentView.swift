@@ -26,7 +26,6 @@ struct ContentView: View {
     @State private var searchIsActive = false
     @State private var showingCodeAlert = false
     @State private var codeText = ""
-    @State private var showingAlert = false
     
     private var filteredWines: [Wine] {
         guard !searchText.isEmpty else { return wines }
@@ -139,15 +138,19 @@ struct ContentView: View {
         if filteredWines.isEmpty {
             VStack(spacing: CharterConstants.margin) {
                 Spacer()
-                if searchText.isEmpty {
-                    Text("La cave est vide")
-                        .font(.title)
-                    Text("Ajouter un vin en cliquant sur le bouton +")
-                        .font(.title3)
-                } else {
-                    Text("Aucun résultat")
-                        .font(.title)
+                VStack(spacing: CharterConstants.margin) {
+                    if searchText.isEmpty {
+                        Text("La cave est vide")
+                            .font(.title)
+                        Text("Ajouter un vin en cliquant sur le bouton \(Image(systemName: "plus"))")
+                            .font(.title2)
+                            .multilineTextAlignment(.center)
+                    } else {
+                        Text("Aucun résultat")
+                            .font(.title)
+                    }
                 }
+                .padding(.horizontal, CharterConstants.marginLarge)
                 Spacer()
             }
             .frame(maxWidth: .infinity)
@@ -351,52 +354,52 @@ private extension ContentView {
         findCellar(code: url.lastPathComponent)
     }
     
-    func importWines() {
-        let firestoreManager = FirestoreManager.shared
-        do {
-            guard let userId = users.first?.documentId,
-                  let bundlePath = Bundle.main.path(forResource: "wines", ofType: "json"),
-                  let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8)
-            else { return }
-            let winesImport = try JSONDecoder().decode(Import.self, from: jsonData)
-            let winesDataFlat = winesImport.data.compactMap { $0.data(for: userId) }
-            let winesData = Helper.shared.groupImport(data: winesDataFlat)
-            
-            let dispatch = DispatchGroup()
-            winesData.forEach { wine, quantities in
-                dispatch.enter()
-                firestoreManager.insertOrUpdateWine(wine) { wineId in
-                    guard let wineId else { return }
-                    wine.wineId = wineId
-                    modelContext.insert(wine)
-                    let dispatchGroup = DispatchGroup()
-                    for quantity in quantities {
-                        quantity.wineId = wineId
-                        dispatchGroup.enter()
-                        firestoreManager.insertQuantity(quantity) { documentId in
-                            guard let documentId else { return }
-                            quantity.documentId = documentId
-                            modelContext.insert(quantity)
-                            dispatchGroup.leave()
-                        }
-                    }
-                    dispatchGroup.notify(queue: .main) {
-                        try? modelContext.save()
-                        dispatch.leave()
-                    }
-                }
-            }
-            dispatch.notify(queue: .main) {
-                try? modelContext.save()
-            }
-        } catch {
-            print(error)
-        }
-    }
-    
-    func clean() {
-        FirestoreManager.shared.clean()
-    }
+//    func importWines() {
+//        let firestoreManager = FirestoreManager.shared
+//        do {
+//            guard let userId = users.first?.documentId,
+//                  let bundlePath = Bundle.main.path(forResource: "wines", ofType: "json"),
+//                  let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8)
+//            else { return }
+//            let winesImport = try JSONDecoder().decode(Import.self, from: jsonData)
+//            let winesDataFlat = winesImport.data.compactMap { $0.data(for: userId) }
+//            let winesData = Helper.shared.groupImport(data: winesDataFlat)
+//            
+//            let dispatch = DispatchGroup()
+//            winesData.forEach { wine, quantities in
+//                dispatch.enter()
+//                firestoreManager.insertOrUpdateWine(wine) { wineId in
+//                    guard let wineId else { return }
+//                    wine.wineId = wineId
+//                    modelContext.insert(wine)
+//                    let dispatchGroup = DispatchGroup()
+//                    for quantity in quantities {
+//                        quantity.wineId = wineId
+//                        dispatchGroup.enter()
+//                        firestoreManager.insertQuantity(quantity) { documentId in
+//                            guard let documentId else { return }
+//                            quantity.documentId = documentId
+//                            modelContext.insert(quantity)
+//                            dispatchGroup.leave()
+//                        }
+//                    }
+//                    dispatchGroup.notify(queue: .main) {
+//                        try? modelContext.save()
+//                        dispatch.leave()
+//                    }
+//                }
+//            }
+//            dispatch.notify(queue: .main) {
+//                try? modelContext.save()
+//            }
+//        } catch {
+//            print(error)
+//        }
+//    }
+//    
+//    func clean() {
+//        FirestoreManager.shared.clean()
+//    }
 }
 
 extension View {

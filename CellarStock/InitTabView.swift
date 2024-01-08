@@ -41,11 +41,13 @@ struct InitTabView: View {
                         Text("Année")
                         Image("calendar")
                     }
-                RandomView()
-                    .tabItem {
-                        Text("Roulette")
-                        Image("dice")
-                    }
+                if wines.count >= 20 {
+                    RandomView()
+                        .tabItem {
+                            Text("Roulette")
+                            Image("dice")
+                        }
+                }
                 StatsView()
                     .tabItem {
                         Text("Stats")
