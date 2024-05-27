@@ -44,7 +44,7 @@ struct WineImport: Codable {
         self.region = try container.decode(String.self, forKey: .region)
         self.type = try container.decode(String.self, forKey: .type)
         let appelation = try container.decode(String.self, forKey: .appelation)
-        self.appelation = appelation.isEmpty ? Appelation.pauillac.description : appelation
+        self.appelation = appelation.isEmpty ? Appelation.other.description : appelation
         self.name = try container.decode(String.self, forKey: .name)
         self.year = try container.decode(Int.self, forKey: .year)
         self.quantity = try container.decode(Int.self, forKey: .quantity)

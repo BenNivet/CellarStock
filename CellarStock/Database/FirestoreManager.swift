@@ -51,39 +51,39 @@ class FirestoreManager {
             }
     }
     
-    func clean() {
-        db?.collection(Table.wines.rawValue)
-            .getDocuments { [weak self] querySnapshot, err in
-                guard let documents = querySnapshot?.documents
-                else { return }
-                let docs = documents
-                    .filter({ doc in
-                        if let toto = doc.data()["userId"] as? String, !toto.isEmpty { return false }
-                        return true
-                    })
-                for doc in docs {
-                    self?.db?.collection(Table.wines.rawValue)
-                        .document(doc.documentID)
-                        .delete()
-                }
-            }
-        
-        db?.collection(Table.quantities.rawValue)
-            .getDocuments { [weak self] querySnapshot, err in
-                guard let documents = querySnapshot?.documents
-                else { return }
-                let docs = documents
-                    .filter({ doc in
-                        if let toto = doc.data()["userId"] as? String, !toto.isEmpty { return false }
-                        return true
-                    })
-                for doc in docs {
-                    self?.db?.collection(Table.quantities.rawValue)
-                        .document(doc.documentID)
-                        .delete()
-                }
-            }
-    }
+//    func clean() {
+//        db?.collection(Table.wines.rawValue)
+//            .getDocuments { [weak self] querySnapshot, err in
+//                guard let documents = querySnapshot?.documents
+//                else { return }
+//                let docs = documents
+//                    .filter({ doc in
+//                        if let toto = doc.data()["userId"] as? String, !toto.isEmpty { return false }
+//                        return true
+//                    })
+//                for doc in docs {
+//                    self?.db?.collection(Table.wines.rawValue)
+//                        .document(doc.documentID)
+//                        .delete()
+//                }
+//            }
+//        
+//        db?.collection(Table.quantities.rawValue)
+//            .getDocuments { [weak self] querySnapshot, err in
+//                guard let documents = querySnapshot?.documents
+//                else { return }
+//                let docs = documents
+//                    .filter({ doc in
+//                        if let toto = doc.data()["userId"] as? String, !toto.isEmpty { return false }
+//                        return true
+//                    })
+//                for doc in docs {
+//                    self?.db?.collection(Table.quantities.rawValue)
+//                        .document(doc.documentID)
+//                        .delete()
+//                }
+//            }
+//    }
     
     func fetchWines(for userId: String, completion: @escaping ([Wine]) -> Void) {
         db?.collection(Table.wines.rawValue)

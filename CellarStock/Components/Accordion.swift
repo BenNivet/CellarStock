@@ -24,7 +24,7 @@ struct Accordion<Content, RightView>: View where Content: View, RightView: View 
         self.title = title
         self.subtitle = subtitle
         self.image = image
-        _isCollapsed = .init(wrappedValue: isCollapsed)
+        _isCollapsed = State(initialValue: isCollapsed)
         self.content = content
         self.rightView = rightView
     }
@@ -68,13 +68,13 @@ struct Accordion<Content, RightView>: View where Content: View, RightView: View 
     
     private var contentView: some View {
         VStack(spacing: 0) {
-            if !isCollapsed {
+            if !$isCollapsed.wrappedValue {
                 content()
             }
         }
         .padding(.horizontal, CharterConstants.marginXSmall)
         .padding(.vertical, CharterConstants.marginSmall)
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: isCollapsed ? 0 : .none)
+        .frame(maxWidth: .infinity, maxHeight: isCollapsed ? 0 : .none)
         .clipped()
     }
 }

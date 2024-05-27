@@ -71,7 +71,7 @@ struct FormView: View {
                     }
                     if wine.region == .bordeaux {
                         Picker("Appelation", selection: $wine.appelation) {
-                            ForEach(Appelation.allCases) { appelation in
+                            ForEach(Appelation.allCases.sorted { $0.description < $1.description }) { appelation in
                                 Text(String(describing: appelation))
                             }
                         }

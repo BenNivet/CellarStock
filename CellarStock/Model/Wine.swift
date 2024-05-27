@@ -15,7 +15,7 @@ final class WineV2 {
     var wineId: String = ""
     var type: WineType = WineType.rouge
     var region: Region = Region.bourgogne
-    var appelation: Appelation = Appelation.pauillac
+    var appelation: Appelation = Appelation.other
     var name: String = ""
     var owner: String = ""
     var info: String = ""
@@ -24,7 +24,7 @@ final class WineV2 {
          wineId: String = "",
          type: WineType = .rouge,
          region: Region = .bourgogne,
-         appelation: Appelation = .pauillac,
+         appelation: Appelation = .other,
          name: String = "",
          owner: String = "",
          info: String = "") {

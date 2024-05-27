@@ -51,7 +51,7 @@ struct ContentView: View {
     private var appelations: [Appelation] {
         Array(Set(filteredWines.filter { $0.region == .bordeaux }
             .compactMap { $0.appelation }))
-            .sorted { $0.rawValue < $1.rawValue }
+            .sorted { $0.description < $1.description }
     }
     private var types: [WineType] {
         Array(Set(filteredWines.compactMap { $0.type }))
@@ -95,6 +95,7 @@ struct ContentView: View {
                         .alert("Rejoindre une cave", isPresented: $showingCodeAlert) {
                             TextField("Code", text: $codeText)
                                 .autocorrectionDisabled()
+                            Button("Annuler", role: .cancel) {}
                             Button("OK") {
                                 findCellar(code: codeText)
                             }
@@ -294,7 +295,7 @@ private extension ContentView {
     
     func quantity(for region: Region) -> Int {
         var result = 0
-        for wine in wines where wine.region == region {
+        for wine in filteredWines where wine.region == region {
             result += quantity(for: wine)
         }
         return result
@@ -302,7 +303,7 @@ private extension ContentView {
     
     func quantity(for appelation: Appelation) -> Int {
         var result = 0
-        for wine in wines where wine.region == .bordeaux && wine.appelation == appelation {
+        for wine in filteredWines where wine.region == .bordeaux && wine.appelation == appelation {
             result += quantity(for: wine)
         }
         return result
@@ -310,7 +311,7 @@ private extension ContentView {
     
     func quantity(for type: WineType) -> Int {
         var result = 0
-        for wine in wines where wine.type == type {
+        for wine in filteredWines where wine.type == type {
             result += quantity(for: wine)
         }
         return result
