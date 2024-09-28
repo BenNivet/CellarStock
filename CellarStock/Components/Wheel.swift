@@ -21,12 +21,15 @@ struct Wheel: View {
                         Circle()
                             .inset(by: proxy.size.width / 4)
                             .trim(from: CGFloat(index) * segmentSize, to: CGFloat(index + 1) * segmentSize)
-                            .stroke(Color.wineColors[index % Color.wineColors.count], style: StrokeStyle(lineWidth: proxy.size.width / 2))
+                            .stroke(Color.wineColors[index % Color.wineColors.count].gradient,
+                                    style: StrokeStyle(lineWidth: proxy.size.width / 2))
                             .rotationEffect(.radians(.pi * segmentSize))
                         image(name: segments[index], index: CGFloat(index), offset: proxy.size.width / 4)
                     }
                 }
             }
+            .background(Color.black)
+            .clipShape(Circle())
         }
     }
     

@@ -25,12 +25,15 @@ struct ChartsView: View {
                     .cornerRadius(CharterConstants.radiusSmall)
                     .annotation(position: .trailing) {
                         Text("\(count)")
-                            .font(.footnote)
+                            .font(.callout)
+                            .bold()
                             .foregroundColor(.white)
                     }
                 }
-                .foregroundStyle(.blue)
-                .frame(height: CGFloat(data.count * 70))
+                .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.25), .blue.opacity(0.8)],
+                                                startPoint: .leading,
+                                                endPoint: .trailing))
+                .frame(height: CGFloat(data.count * 80))
                 .chartXAxis(.hidden)
                 .chartYAxis {
                     AxisMarks { _ in
@@ -46,7 +49,7 @@ struct ChartsView: View {
     }
 }
 
-struct StepCount: Identifiable {
+struct StepCount: Identifiable, Equatable {
     
     let id = UUID()
     let name: String

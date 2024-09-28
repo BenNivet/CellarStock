@@ -78,7 +78,7 @@ extension String {
 
 extension Double {
     var toRoundedString: String {
-        return if floor(self) == self {
+        if floor(self) == self {
             String(Int(self))
         } else {
             String(format: "%.2f", self)
@@ -88,7 +88,7 @@ extension Double {
 
 extension Int {
     var bottlesString: String {
-        return if self > 1 {
+        if self > 1 {
             "\(self) bouteilles"
         } else {
             "\(self) bouteille"

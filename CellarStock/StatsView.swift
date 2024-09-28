@@ -64,18 +64,22 @@ struct StatsView: View {
                     } label: {
                         Image(systemName: "gearshape")
                     }
-                    .confirmationDialog("Réglages", isPresented: $showingSettings, titleVisibility: .automatic) {
+                    .confirmationDialog("Réglages", 
+                                        isPresented: $showingSettings,
+                                        titleVisibility: .automatic) {
                         Button("Supprimer les données", role: .destructive) {
                             flush()
                         }
-//                        Button("Exporter mes données") {
-//                            //
-//                        }
+                        //                        Button("Exporter mes données") {
+                        //                            //
+                        //                        }
+                        Button("Annuler", role: .cancel) {}
                     }
                 }
             }
             .padding(CharterConstants.margin)
             .navigationTitle("Stats")
+            .addLinearGradientBackground()
         }
     }
     
