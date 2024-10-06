@@ -19,6 +19,7 @@ struct RandomView: View {
     @State private var filterTypes: [Int] = []
     @State private var filterYears: [Int] = []
     @State private var showingAlert = false
+    @State private var sensorFeedback = false
     
     private var animationDuration: TimeInterval = 2
     
@@ -40,6 +41,7 @@ struct RandomView: View {
                             rotation += randomAmount
                             DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
                                 if let (wine, quantity) = randomWine {
+                                    sensorFeedback = true
                                     showingSheet = (true, wine, quantity)
                                 } else {
                                     showingAlert = true
@@ -64,6 +66,7 @@ struct RandomView: View {
                     .ignoresSafeArea()
             }
             .analyticsScreen(name: ScreenName.random, class: ScreenName.random)
+            .sensoryFeedback(.success, trigger: sensorFeedback)
         }
     }
     

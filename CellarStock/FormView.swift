@@ -16,19 +16,24 @@ struct FormView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    
     @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
+    
     @Binding var wine: Wine
     @Binding var quantitiesByYear: [Int: Int]
     @Binding var pricesByYear: [Int: Double]
     @Binding var showQuantitiesOnly: Bool
+    
     @State private var showingSheet = false
     @State private var showingCameraSheet = false
     @State private var scannedText = ""
     @State private var showingAmountSheet = false
     @State private var selectedYearAmount = 0
     @State private var showingDeleteAlert = false
+    @State private var sensorFeedback = false
+    
     @FocusState private var isTextFieldFocus: Bool
     
     private let firestoreManager = FirestoreManager.shared
@@ -153,6 +158,7 @@ struct FormView: View {
                 Button("Sauvegarder") {
                     save()
                     dismiss()
+                    sensorFeedback = true
                     Analytics.logEvent(wine.wineId.isEmpty ? LogEvent.addWine : LogEvent.updateWine, parameters: nil)
                 }
                 .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
@@ -185,11 +191,13 @@ struct FormView: View {
                 quantitiesByYear.removeAll()
                 save()
                 dismiss()
+                sensorFeedback = true
                 Analytics.logEvent(LogEvent.deleteWine, parameters: nil)
             }
             Button("Annuler", role: .cancel) {}
         }
         .autocorrectionDisabled()
+        .sensoryFeedback(.success, trigger: sensorFeedback)
     }
 }
 
