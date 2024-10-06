@@ -49,6 +49,7 @@ struct RandomView: View {
                         .sheet(isPresented: $showingSheet.0) {
                             CongratsView(wine: $showingSheet.1, quantity: $showingSheet.2)
                                 .presentationDetents([.large, .medium])
+                                .analyticsScreen(name: ScreenName.randomResult, class: ScreenName.randomResult)
                         }
                         .alert("Aucun vin ne correspond à vos critères", isPresented: $showingAlert) {
                             Button("OK", role: .cancel) { }
@@ -62,6 +63,7 @@ struct RandomView: View {
                     .aspectRatio(contentMode: .fill)
                     .ignoresSafeArea()
             }
+            .analyticsScreen(name: ScreenName.random, class: ScreenName.random)
         }
     }
     

@@ -5,6 +5,7 @@
 //  Created by CANTE Benjamin on 03/12/2023.
 //
 
+import FirebaseAnalytics
 import SwiftUI
 import SwiftData
 
@@ -56,6 +57,9 @@ struct StatsView: View {
                     ToolbarItem {
                         ShareLink(item: sharedText(id: userId),
                                   preview: SharePreview("Partager ma cave"))
+                        .onAppear {
+                            Analytics.logEvent(LogEvent.shareCellar, parameters: nil)
+                        }
                     }
                 }
                 ToolbarItem {
@@ -69,6 +73,7 @@ struct StatsView: View {
                                         titleVisibility: .automatic) {
                         Button("Supprimer les données", role: .destructive) {
                             flush()
+                            Analytics.logEvent(LogEvent.deleteCellar, parameters: nil)
                         }
                         //                        Button("Exporter mes données") {
                         //                            //
@@ -80,6 +85,7 @@ struct StatsView: View {
             .padding(CharterConstants.margin)
             .navigationTitle("Stats")
             .addLinearGradientBackground()
+            .analyticsScreen(name: ScreenName.stats)
         }
     }
     

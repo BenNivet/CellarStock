@@ -14,14 +14,16 @@ struct InitTabView: View {
     @Query private var users: [User]
     @Query private var wines: [Wine]
     
+    private let firestoreManager = FirestoreManager.shared
+    
     var body: some View {
         if wines.isEmpty {
             if users.isEmpty {
                 ContentView(tabType: .region)
             } else {
                 ContentView(tabType: .region)
-                    .onAppear {
-                        fetchFromServer()
+                    .task {
+                        await fetchFromServer()
                     }
             }
         } else {
@@ -41,7 +43,7 @@ struct InitTabView: View {
                         Text("Année")
                         Image("calendar")
                     }
-                if wines.count >= 20 {
+                if wines.count >= 8 {
                     RandomView()
                         .tabItem {
                             Text("Roulette")
@@ -57,32 +59,31 @@ struct InitTabView: View {
             .accentColor(.white)
             .onAppear {
                 UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
-                fetchFromServer()
+            }
+            .task {
+                await fetchFromServer()
             }
         }
     }
     
-    func fetchFromServer() {
-        let firestoreManager = FirestoreManager.shared
+    func fetchFromServer() async {
         if let userId = users.first?.documentId {
-            DispatchQueue.global(qos: .background).async {
-                firestoreManager.fetchWines(for: userId) { resultsWines in
-                    firestoreManager.fetchQuantities(for: userId) { resultsQuantities in
-                        DispatchQueue.main.async {
-                            try? modelContext.delete(model: Quantity.self)
-                            try? modelContext.delete(model: Wine.self)
-                            try? modelContext.save()
-                            for wine in resultsWines {
-                                modelContext.insert(wine)
-                            }
-                            for quantity in resultsQuantities {
-                                modelContext.insert(quantity)
-                            }
-                            try? modelContext.save()
-                        }
-                    }
-                }
-            }
+            let wines = await firestoreManager.fetchWines(for: userId)
+            let quantities = await firestoreManager.fetchQuantities(for: userId)
+            updateModel(wines: wines, quantities: quantities)
         }
+    }
+    
+    func updateModel(wines: [Wine], quantities: [Quantity]) {
+        try? modelContext.delete(model: Quantity.self)
+        try? modelContext.delete(model: Wine.self)
+        try? modelContext.save()
+        for wine in wines {
+            modelContext.insert(wine)
+        }
+        for quantity in quantities {
+            modelContext.insert(quantity)
+        }
+        try? modelContext.save()
     }
 }

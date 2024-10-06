@@ -5,6 +5,7 @@
 //  Created by CANTE Benjamin on 30/09/2023.
 //
 
+import FirebaseAnalytics
 import SwiftUI
 import SwiftData
 
@@ -18,6 +19,8 @@ struct ContentView: View {
     let tabType: TabType
     
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var entitlementManager: EntitlementManager
+    
     @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
@@ -26,6 +29,7 @@ struct ContentView: View {
     @State private var searchIsActive = false
     @State private var showingCodeAlert = false
     @State private var codeText = ""
+    @State private var showingSubscription = false
     
     private var filteredWines: [Wine] {
         guard !searchText.isEmpty else { return wines }
@@ -43,7 +47,7 @@ struct ContentView: View {
         }
     }
     
-    private var title: String { "Vino Cave" }
+    private var title = "Vino Cave"
     private var regions: [Region] {
         Array(Set(filteredWines.compactMap { $0.region }))
             .sorted { $0.rawValue < $1.rawValue }
@@ -59,6 +63,10 @@ struct ContentView: View {
     }
     private var years: [Int] {
         Array(Set(quantities.compactMap { $0.year })).sorted(by: >)
+    }
+    
+    init(tabType: TabType) {
+        self.tabType = tabType
     }
     
     var body: some View {
@@ -105,7 +113,12 @@ struct ContentView: View {
                     }
                     ToolbarItem {
                         Button {
-                            showingSheet = (true, Wine(), [:], [:], false)
+                            if wines.count >= 5,
+                               !entitlementManager.isPremium {
+                                showingSubscription = true
+                            } else {
+                                showingSheet = (true, Wine(), [:], [:], false)
+                            }
                         } label: {
                             Image(systemName: "plus")
                                 .font(.title2)
@@ -116,8 +129,12 @@ struct ContentView: View {
                                      quantitiesByYear: $showingSheet.2,
                                      pricesByYear: $showingSheet.3,
                                      showQuantitiesOnly: $showingSheet.4)
+                            .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
                         }
                     }
+                }
+                .fullScreenCover(isPresented: $showingSubscription) {
+                    SubscriptionView()
                 }
                 .toolbarBackground(searchIsActive ? .visible : .automatic, for: .navigationBar)
                 .background {
@@ -143,6 +160,7 @@ struct ContentView: View {
                     if searchText.isEmpty {
                         Text("La cave est vide")
                             .font(.title)
+                            .analyticsScreen(name: ScreenName.emptyWineList, class: ScreenName.emptyWineList)
                         Text("Ajouter un vin en cliquant sur le bouton \(Image(systemName: "plus"))")
                             .font(.title2)
                             .multilineTextAlignment(.center)
@@ -189,6 +207,7 @@ struct ContentView: View {
                 }
                 .padding(CharterConstants.margin)
             }
+            .analyticsScreen(name: ScreenName.wineList, class: ScreenName.wineList)
         }
     }
     
@@ -342,11 +361,13 @@ private extension ContentView {
     }
     
     func findCellar(code: String) {
-        FirestoreManager.shared.findUser(id: code) { userId in
+        Task {
+            let userId = await FirestoreManager.shared.findUser(id: code)
             guard let userId else { return }
             flush()
             modelContext.insert(User(documentId: userId))
             try? modelContext.save()
+            Analytics.logEvent(LogEvent.joinCellar, parameters: nil)
         }
     }
     

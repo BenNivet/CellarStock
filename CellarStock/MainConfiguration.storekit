@@ -1,0 +1,154 @@
+{
+  "identifier" : "169CCCD2",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6473699835",
+    "_developerTeamID" : "WK7T3Z2QPN",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 749909275.06105196,
+    "_locale" : "fr",
+    "_storefront" : "FRA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21554027",
+      "localizations" : [
+
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6736587260",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Accès premium pour 6 mois",
+              "displayName" : "6 Mois",
+              "locale" : "fr"
+            }
+          ],
+          "productID" : "HalfYearly",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "HalfYearly",
+          "subscriptionGroupID" : "21554027",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6736586856",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Accès premium pour 1 mois",
+              "displayName" : "1 Mois",
+              "locale" : "fr"
+            }
+          ],
+          "productID" : "Monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21554027",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6736587200",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Accès premium pour 12 mois",
+              "displayName" : "12 Mois",
+              "locale" : "fr"
+            }
+          ],
+          "productID" : "Yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly",
+          "subscriptionGroupID" : "21554027",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

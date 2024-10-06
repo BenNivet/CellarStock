@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-class FirestoreManager {
+actor FirestoreManager {
     enum Table: String {
         case users = "Users"
         case wines = "Wines"
@@ -26,29 +26,37 @@ class FirestoreManager {
         db = Firestore.firestore()
     }
     
-    func findUser(id: String, completion: @escaping (String?) -> Void) {
-        guard !id.isEmpty
-        else {
-            completion(nil)
-            return
-        }
-        db?.collection(Table.users.rawValue).document(id)
-            .getDocument { documentSnapshot, error in
-                if let documentSnapshot,
-                   documentSnapshot.exists {
-                    completion(documentSnapshot.documentID)
-                } else {
-                    completion(nil)
-                }
+    func findUser(id: String) async -> String? {
+        guard !id.isEmpty else { return nil }
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                db?.collection(Table.users.rawValue).document(id)
+                    .getDocument { documentSnapshot, error in
+                        if let documentSnapshot,
+                           documentSnapshot.exists {
+                            continuation.resume(returning: documentSnapshot.documentID)
+                        } else {
+                            continuation.resume(returning: nil)
+                        }
+                    }
             }
+        } catch {
+            return nil
+        }
     }
     
-    func createUser(name: String = "", completion: @escaping (String?) -> Void) {
-        var ref: DocumentReference? = nil
-        ref = try? db?.collection(Table.users.rawValue)
-            .addDocument(from: UserServer(name: name)) { _ in
-                completion(ref?.documentID)
+    func createUser(name: String = "") async -> String? {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                var ref: DocumentReference? = nil
+                ref = try? db?.collection(Table.users.rawValue)
+                    .addDocument(from: UserServer(name: name)) { _ in
+                        continuation.resume(returning: ref?.documentID)
+                    }
             }
+        } catch {
+            return nil
+        }
     }
     
 //    func clean() {
@@ -85,62 +93,86 @@ class FirestoreManager {
 //            }
 //    }
     
-    func fetchWines(for userId: String, completion: @escaping ([Wine]) -> Void) {
-        db?.collection(Table.wines.rawValue)
-            .whereField(Column.userId.rawValue, isEqualTo: userId)
-            .getDocuments { querySnapshot, err in
-                guard let documents = querySnapshot?.documents
-                else {
-                    completion([])
-                    return
-                }
-                completion(documents
-                    .compactMap { wineData -> Wine? in
-                        guard let wineServer = try? wineData.data(as: WineServer.self)
-                        else { return nil }
-                        return Wine(wineServer: wineServer,
-                                    documentId: wineData.documentID)})
+    func fetchWines(for userId: String) async -> [Wine] {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                db?.collection(Table.wines.rawValue)
+                    .whereField(Column.userId.rawValue, isEqualTo: userId)
+                    .getDocuments { querySnapshot, err in
+                        guard let documents = querySnapshot?.documents
+                        else {
+                            continuation.resume(returning: [])
+                            return
+                        }
+                        continuation.resume(returning: documents
+                            .compactMap { wineData -> Wine? in
+                                guard let wineServer = try? wineData.data(as: WineServer.self)
+                                else { return nil }
+                                return Wine(wineServer: wineServer,
+                                            documentId: wineData.documentID)})
+                    }
             }
+        } catch {
+            return []
+        }
     }
     
-    func fetchQuantities(for userId: String, completion: @escaping ([Quantity]) -> Void) {
-        db?.collection(Table.quantities.rawValue)
-            .whereField(Column.userId.rawValue, isEqualTo: userId)
-            .getDocuments { querySnapshot, err in
-                guard let documents = querySnapshot?.documents
-                else {
-                    completion([])
-                    return
-                }
-                completion(documents
-                    .compactMap { quantityData -> Quantity? in
-                        guard let quantityServer = try? quantityData.data(as: QuantityServer.self)
-                        else { return nil }
-                        return Quantity(quantityServer: quantityServer,
-                                        documentId: quantityData.documentID)})
+    func fetchQuantities(for userId: String) async -> [Quantity] {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                db?.collection(Table.quantities.rawValue)
+                    .whereField(Column.userId.rawValue, isEqualTo: userId)
+                    .getDocuments { querySnapshot, err in
+                        guard let documents = querySnapshot?.documents
+                        else {
+                            continuation.resume(returning: [])
+                            return
+                        }
+                        continuation.resume(returning: documents
+                            .compactMap { quantityData -> Quantity? in
+                                guard let quantityServer = try? quantityData.data(as: QuantityServer.self)
+                                else { return nil }
+                                return Quantity(quantityServer: quantityServer,
+                                                documentId: quantityData.documentID)})
+                    }
             }
+        } catch {
+            return []
+        }
     }
     
-    func insertQuantity(_ quantity: Quantity, completion: @escaping (String?) -> Void) {
-        var ref: DocumentReference? = nil
-        ref = try? db?.collection(Table.quantities.rawValue)
-            .addDocument(from: quantity.quantityServer) { _ in
-                completion(ref?.documentID)
+    func insertQuantity(_ quantity: Quantity) async -> String? {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                var ref: DocumentReference? = nil
+                ref = try? db?.collection(Table.quantities.rawValue)
+                    .addDocument(from: quantity.quantityServer) { _ in
+                        continuation.resume(returning: ref?.documentID)
+                    }
             }
+        } catch {
+            return nil
+        }
     }
     
-    func insertOrUpdateWine(_ wine: Wine, completion: @escaping (String?) -> Void) {
-        if wine.wineId.isEmpty {
-            var ref: DocumentReference? = nil
-            ref = try? db?.collection(Table.wines.rawValue)
-                .addDocument(from: wine.wineServer) { _ in
-                    completion(ref?.documentID)
+    func insertOrUpdateWine(_ wine: Wine) async -> String? {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                if wine.wineId.isEmpty {
+                    var ref: DocumentReference? = nil
+                    ref = try? db?.collection(Table.wines.rawValue)
+                        .addDocument(from: wine.wineServer) { _ in
+                            continuation.resume(returning: ref?.documentID)
+                        }
+                } else {
+                    try? db?.collection(Table.wines.rawValue)
+                        .document(wine.wineId)
+                        .setData(from: wine.wineServer)
+                    continuation.resume(returning: wine.wineId)
                 }
-        } else {
-            try? db?.collection(Table.wines.rawValue)
-                .document(wine.wineId)
-                .setData(from: wine.wineServer)
-            completion(wine.wineId)
+            }
+        } catch {
+            return nil
         }
     }
     

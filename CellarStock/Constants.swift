@@ -42,6 +42,35 @@ struct CharterConstants {
     static let disabledOpacity: CGFloat = 0.6
 }
 
+struct ScreenName {
+    static let wineList = "Wine_list"
+    static let emptyWineList = "Wine_list_empty"
+    static let addWine = "Add_wine"
+    static let addWinePrice = "Add_wine_price"
+    static let subscription = "Subscription"
+    static let subscriptionSuccess = "Subscription_success"
+    static let random = "Random"
+    static let randomResult = "Random_result"
+    static let stats = "Stats"
+    static let scanWine = "Scan_wine"
+}
+
+struct LogEvent {
+    static let addWine = "Add_wine"
+    static let updateWine = "Update_wine"
+    static let deleteWine = "Delete_wine"
+    static let joinCellar = "Join_cellar"
+    static let shareCellar = "Share_cellar"
+    static let deleteCellar = "Delete_cellar"
+    static let closeSubscription = "Close_subscription"
+    static let validateSubscription = "Validate_subscription"
+    static let redeemSubscription = "Reedem_subscription"
+}
+
+struct Subscription {
+    static let popularId = "Yearly"
+}
+
 extension UIColor {
     convenience init(hexString: String) {
         let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -93,5 +122,11 @@ extension Int {
         } else {
             "\(self) bouteille"
         }
+    }
+}
+
+extension String {
+    var isInt: Bool {
+        Int(self) != nil
     }
 }

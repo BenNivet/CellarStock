@@ -16,13 +16,16 @@ struct CongratsView: View {
     @Binding var wine: Wine
     @Binding var quantity: Quantity
     
+    private let firestoreManager = FirestoreManager.shared
+    
     var body: some View {
         VStack(spacing: CharterConstants.margin) {
             Text("Félicitations")
                 .font(.title)
+                .padding(.top, CharterConstants.margin)
             Text("Acceptez vous cette proposition ?")
                 .font(.title3)
-            Spacer()
+                .padding(.bottom, CharterConstants.margin)
             TileView {
                 HStack {
                     VStack(alignment: .leading) {
@@ -49,37 +52,45 @@ struct CongratsView: View {
                 }
             }
             Spacer()
-            VStack(spacing: CharterConstants.marginSmall) {
+            VStack(spacing: CharterConstants.margin) {
                 Button {
-                    let firestoreManager = FirestoreManager.shared
                     quantity.quantity -= 1
-                    if quantity.quantity == 0 {
-                        modelContext.delete(quantity)
-                        firestoreManager.deleteQuantity(quantity)
-                    } else {
-                        firestoreManager.updateQuantity(quantity)
+                    Task {
+                        if quantity.quantity == 0 {
+                            modelContext.delete(quantity)
+                            await firestoreManager.deleteQuantity(quantity)
+                        } else {
+                            await firestoreManager.updateQuantity(quantity)
+                        }
+                        
+                        if quantity(for: wine) == 0 {
+                            modelContext.delete(wine)
+                            await firestoreManager.deleteWine(wine)
+                        }
+                        try? modelContext.save()
                     }
-                    
-                    if quantity(for: wine) == 0 {
-                        modelContext.delete(wine)
-                        firestoreManager.deleteWine(wine)
-                    }
-                    try? modelContext.save()
                     dismiss()
                 } label: {
-                    Text("Oui")
-                        .frame(maxWidth: .infinity)
+                    RoundedRectangle(cornerRadius: CharterConstants.radiusSmall)
+                        .overlay {
+                            Text("Oui")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 16.5, weight: .semibold, design: .rounded))
+                        }
                 }
-                .frame(height: 40)
-                .buttonStyle(.borderedProminent)
+                .frame(height: 50)
+                
                 Button {
                     dismiss()
                 } label: {
-                    Text("Non, rejouer")
-                        .frame(maxWidth: .infinity)
+                    RoundedRectangle(cornerRadius: CharterConstants.radiusSmall)
+                        .fill(.gray.opacity(CharterConstants.alphaFifteen))
+                        .overlay {
+                            Text("Non, rejouer")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        }
                 }
-                .frame(height: 40)
-                .buttonStyle(.bordered)
+                .frame(height: 50)
                 
             }
         }

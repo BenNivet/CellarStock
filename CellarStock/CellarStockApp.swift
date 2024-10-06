@@ -12,18 +12,14 @@ import FirebaseCore
 typealias Wine = WineV2
 typealias Quantity = QuantityV2
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FirebaseApp.configure()
-        FirestoreManager.shared.initDb()
-        return true
-    }
-}
-
 @main
 struct CellarStockApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    @StateObject
+    private var entitlementManager: EntitlementManager
+    
+    @StateObject
+    private var subscriptionsManager: SubscriptionsManager
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -40,9 +36,25 @@ struct CellarStockApp: App {
         }
     }()
     
+    init() {
+        FirebaseApp.configure()
+        let entitlementManager = EntitlementManager()
+        let subscriptionsManager = SubscriptionsManager(entitlementManager: entitlementManager)
+        
+        _entitlementManager = StateObject(wrappedValue: entitlementManager)
+        _subscriptionsManager = StateObject(wrappedValue: subscriptionsManager)
+    }
+    
     var body: some Scene {
         WindowGroup {
             InitTabView()
+                .environmentObject(entitlementManager)
+                .environmentObject(subscriptionsManager)
+                .fontDesign(.rounded)
+                .task {
+                    await FirestoreManager.shared.initDb()
+                    await subscriptionsManager.updatePurchasedProducts()
+                }
         }
         .modelContainer(sharedModelContainer)
     }
