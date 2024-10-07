@@ -43,7 +43,7 @@ struct InitTabView: View {
                         Text("Année")
                         Image("calendar")
                     }
-                if wines.count >= 8 {
+                if wines.count > 5 {
                     RandomView()
                         .tabItem {
                             Text("Roulette")

@@ -115,7 +115,9 @@ struct ContentView: View {
                         Button {
                             if wines.count >= 5,
                                !entitlementManager.isPremium {
-                                showingSubscription = true
+//                                showingSubscription = true
+                                showingSheet = (true, Wine(), [:], [:], false)
+                                Analytics.logEvent(LogEvent.needSubscription, parameters: ["wines": wines.count])
                             } else {
                                 showingSheet = (true, Wine(), [:], [:], false)
                             }

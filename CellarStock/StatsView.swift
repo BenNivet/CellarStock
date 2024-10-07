@@ -12,10 +12,13 @@ import SwiftData
 struct StatsView: View {
     
     @Environment(\.modelContext) private var modelContext
+    
     @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
+    
     @State private var showingSettings = false
+    @State private var showingSubscription = false
     
     private var regions: [Region] {
         Array(Set(wines.compactMap { $0.region }))
@@ -81,8 +84,18 @@ struct StatsView: View {
                         Button("Annuler", role: .cancel) {}
                     }
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingSubscription = true
+                    } label: {
+                        Image(systemName: "crown.fill")
+                    }
+                }
             }
             .padding(CharterConstants.margin)
+            .fullScreenCover(isPresented: $showingSubscription) {
+                SubscriptionView()
+            }
             .navigationTitle("Stats")
             .addLinearGradientBackground()
             .analyticsScreen(name: ScreenName.stats)

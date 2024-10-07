@@ -65,6 +65,7 @@ struct LogEvent {
     static let closeSubscription = "Close_subscription"
     static let validateSubscription = "Validate_subscription"
     static let redeemSubscription = "Reedem_subscription"
+    static let needSubscription = "Need_subscription"
 }
 
 struct Subscription {
