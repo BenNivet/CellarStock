@@ -10,7 +10,7 @@
     "_applicationInternalID" : "6473699835",
     "_developerTeamID" : "WK7T3Z2QPN",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 749909275.06105196,
+    "_lastSynchronizedDate" : 749995013.46917295,
     "_locale" : "fr",
     "_storefront" : "FRA",
     "_storeKitErrors" : [
@@ -76,7 +76,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "19.99",
+          "displayPrice" : "9.99",
           "familyShareable" : false,
           "groupNumber" : 3,
           "internalID" : "6736587260",
@@ -101,7 +101,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "3.99",
+          "displayPrice" : "1.99",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6736586856",
@@ -124,9 +124,21 @@
 
           ],
           "codeOffers" : [
-
+            {
+              "eligibility" : [
+                "new",
+                "expired",
+                "existing"
+              ],
+              "internalID" : "EF34A05F",
+              "isStackable" : false,
+              "numberOfPeriods" : 1,
+              "paymentMode" : "free",
+              "referenceName" : "OneYearFree",
+              "subscriptionPeriod" : "P1Y"
+            }
           ],
-          "displayPrice" : "29.99",
+          "displayPrice" : "17.99",
           "familyShareable" : false,
           "groupNumber" : 2,
           "internalID" : "6736587200",
