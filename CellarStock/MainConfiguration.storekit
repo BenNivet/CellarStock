@@ -126,9 +126,9 @@
           "codeOffers" : [
             {
               "eligibility" : [
-                "new",
                 "expired",
-                "existing"
+                "existing",
+                "new"
               ],
               "internalID" : "EF34A05F",
               "isStackable" : false,

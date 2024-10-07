@@ -189,7 +189,18 @@ struct SubscriptionView: View {
                         .multilineTextAlignment(.center)
                 }
             }
-            redeemButtonView
+            HStack(spacing: 0) {
+                Link("Conditions",
+                     destination: URL(string: "http://www.apple.com/legal/itunes/appstore/dev/stdeula")!)
+                Spacer()
+                redeemButtonView
+                Spacer()
+                Link("Confidentialité",
+                     destination: URL(string: "https://www.facebook.com/people/Vino-Cave/61554797827994/")!)
+            }
+            .font(.system(size: 14, weight: .regular))
+            .frame(height: 15, alignment: .center)
+            .foregroundStyle(.white.opacity(0.5))
         }
     }
     
