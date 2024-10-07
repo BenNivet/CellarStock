@@ -12,18 +12,28 @@ import SwiftData
 struct ChartsView: View {
     
     let data: [StepCount]
+    @State private var displayData: [StepCount] = []
+    
+    init(data: [StepCount]) {
+        self.data = data
+        _displayData = State(initialValue: data.map { step in
+            var newStep = step
+            newStep.count = 0
+            return newStep
+        })
+    }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             ScrollView {
-                Chart(data) {
+                Chart(displayData) {
                     let count = $0.count
                     BarMark(
                         x: .value("Bottles", $0.count),
                         y: .value("Name", $0.name)
                     )
                     .cornerRadius(CharterConstants.radiusSmall)
-                    .annotation(position: .trailing) {
+                    .annotation(position: .overlay, alignment: .trailing) {
                         Text("\(count)")
                             .font(.callout)
                             .bold()
@@ -33,7 +43,7 @@ struct ChartsView: View {
                 .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.25), .blue.opacity(0.8)],
                                                 startPoint: .leading,
                                                 endPoint: .trailing))
-                .frame(height: CGFloat(data.count * 80))
+                .frame(height: CGFloat(displayData.count * 80))
                 .chartXAxis(.hidden)
                 .chartYAxis {
                     AxisMarks { _ in
@@ -44,7 +54,11 @@ struct ChartsView: View {
                 }
                 .padding(CharterConstants.margin)
             }
-            Spacer()
+        }
+        .task {
+            withAnimation {
+                displayData = data
+            }
         }
     }
 }
@@ -53,7 +67,7 @@ struct StepCount: Identifiable, Equatable {
     
     let id = UUID()
     let name: String
-    let count: Int
+    var count: Int
     
     init(name: String, count: Int) {
         self.name = name
