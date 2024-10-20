@@ -22,6 +22,8 @@
 		215745972B1D176C0021745D /* RoundedRectLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745962B1D176C0021745D /* RoundedRectLabel.swift */; };
 		21598CF12B0D13A200E2A177 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21598CF02B0D13A200E2A177 /* Helper.swift */; };
 		21598CF32B0D200500E2A177 /* YearSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21598CF22B0D200500E2A177 /* YearSelectionListView.swift */; };
+		2162B4172CC50CF90043A0C0 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 2162B4162CC50CF90043A0C0 /* GoogleMobileAds */; };
+		2162B4822CC512970043A0C0 /* InterstitialAdsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2162B4812CC512970043A0C0 /* InterstitialAdsManager.swift */; };
 		2182E61C2CA8350B0022D98A /* View+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182E61B2CA8350B0022D98A /* View+extensions.swift */; };
 		218588B52AC81A6300730A9D /* CellarStockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218588B42AC81A6300730A9D /* CellarStockApp.swift */; };
 		218588B72AC81A6300730A9D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218588B62AC81A6300730A9D /* ContentView.swift */; };
@@ -36,6 +38,9 @@
 		2188F4782B21ED980030B596 /* NeoTabsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4712B21ED980030B596 /* NeoTabsItemView.swift */; };
 		2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4722B21ED980030B596 /* NeoTabsContentView.swift */; };
 		2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4732B21ED980030B596 /* NeoTabsView.swift */; };
+		219573AE2CBAB76E00BCD488 /* AddTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219573AD2CBAB76E00BCD488 /* AddTip.swift */; };
+		219573B32CBCF7C100BCD488 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219573B22CBCF7C100BCD488 /* LoaderView.swift */; };
+		2195741D2CBCFB6B00BCD488 /* LoaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2195741C2CBCFB6B00BCD488 /* LoaderViewModifier.swift */; };
 		21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */; };
 		21989B002B2B2EA700E5637A /* wines.json in Resources */ = {isa = PBXBuildFile; fileRef = 21989AFF2B2B2EA700E5637A /* wines.json */; };
 		21AA0A492CB07938005F2434 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA0A482CB07938005F2434 /* SubscriptionView.swift */; };
@@ -71,6 +76,7 @@
 		215745962B1D176C0021745D /* RoundedRectLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectLabel.swift; sourceTree = "<group>"; };
 		21598CF02B0D13A200E2A177 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		21598CF22B0D200500E2A177 /* YearSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearSelectionListView.swift; sourceTree = "<group>"; };
+		2162B4812CC512970043A0C0 /* InterstitialAdsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterstitialAdsManager.swift; sourceTree = "<group>"; };
 		2182E61B2CA8350B0022D98A /* View+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+extensions.swift"; sourceTree = "<group>"; };
 		218588B12AC81A6300730A9D /* CellarStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CellarStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		218588B42AC81A6300730A9D /* CellarStockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellarStockApp.swift; sourceTree = "<group>"; };
@@ -87,6 +93,9 @@
 		2188F4712B21ED980030B596 /* NeoTabsItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsItemView.swift; sourceTree = "<group>"; };
 		2188F4722B21ED980030B596 /* NeoTabsContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsContentView.swift; sourceTree = "<group>"; };
 		2188F4732B21ED980030B596 /* NeoTabsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsView.swift; sourceTree = "<group>"; };
+		219573AD2CBAB76E00BCD488 /* AddTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTip.swift; sourceTree = "<group>"; };
+		219573B22CBCF7C100BCD488 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
+		2195741C2CBCFB6B00BCD488 /* LoaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderViewModifier.swift; sourceTree = "<group>"; };
 		21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportHelper.swift; sourceTree = "<group>"; };
 		21989AFF2B2B2EA700E5637A /* wines.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wines.json; sourceTree = "<group>"; };
 		21AA0A482CB07938005F2434 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
@@ -110,6 +119,7 @@
 				21AA0A4F2CB18B7B005F2434 /* FirebaseAnalytics in Frameworks */,
 				21AA0A552CB18B7B005F2434 /* FirebaseCrashlytics in Frameworks */,
 				21AA0A532CB18B7B005F2434 /* FirebaseCore in Frameworks */,
+				2162B4172CC50CF90043A0C0 /* GoogleMobileAds in Frameworks */,
 				21AA0A5B2CB18B7B005F2434 /* FirebaseStorage in Frameworks */,
 				21AA0A512CB18B7B005F2434 /* FirebaseAuth in Frameworks */,
 				21AA0A592CB18B7B005F2434 /* FirebaseFirestore in Frameworks */,
@@ -154,6 +164,24 @@
 			path = Scanner;
 			sourceTree = "<group>";
 		};
+		2162B4802CC512890043A0C0 /* Ads */ = {
+			isa = PBXGroup;
+			children = (
+				2162B4812CC512970043A0C0 /* InterstitialAdsManager.swift */,
+			);
+			path = Ads;
+			sourceTree = "<group>";
+		};
+		2162B4832CC513DC0043A0C0 /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				21AA0A482CB07938005F2434 /* SubscriptionView.swift */,
+				21CD6F512CB2B0FE008A6893 /* SubscriptionManager.swift */,
+				21CD6F532CB2B142008A6893 /* EntitlementManager.swift */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
 		218588A82AC81A6300730A9D = {
 			isa = PBXGroup;
 			children = (
@@ -183,9 +211,10 @@
 				214066C02AF29EEC00E1857F /* CongratsView.swift */,
 				215745912B1CE49A0021745D /* StatsView.swift */,
 				2188F4682B21D36C0030B596 /* ChartsView.swift */,
-				21AA0A482CB07938005F2434 /* SubscriptionView.swift */,
-				21CD6F512CB2B0FE008A6893 /* SubscriptionManager.swift */,
-				21CD6F532CB2B142008A6893 /* EntitlementManager.swift */,
+				2162B4802CC512890043A0C0 /* Ads */,
+				2162B4832CC513DC0043A0C0 /* Subscription */,
+				219573B12CBCF7A900BCD488 /* Loader */,
+				219573AC2CBAB74F00BCD488 /* Tips */,
 				215745932B1D171F0021745D /* Scanner */,
 				214066BF2AF2961200E1857F /* Model */,
 				214066B82AF24B6100E1857F /* Components */,
@@ -223,6 +252,23 @@
 				2188F4732B21ED980030B596 /* NeoTabsView.swift */,
 			);
 			path = NeoTabsView;
+			sourceTree = "<group>";
+		};
+		219573AC2CBAB74F00BCD488 /* Tips */ = {
+			isa = PBXGroup;
+			children = (
+				219573AD2CBAB76E00BCD488 /* AddTip.swift */,
+			);
+			path = Tips;
+			sourceTree = "<group>";
+		};
+		219573B12CBCF7A900BCD488 /* Loader */ = {
+			isa = PBXGroup;
+			children = (
+				219573B22CBCF7C100BCD488 /* LoaderView.swift */,
+				2195741C2CBCFB6B00BCD488 /* LoaderViewModifier.swift */,
+			);
+			path = Loader;
 			sourceTree = "<group>";
 		};
 		21989AFE2B2B2E7400E5637A /* Files */ = {
@@ -272,6 +318,7 @@
 				21AA0A562CB18B7B005F2434 /* FirebaseDatabase */,
 				21AA0A582CB18B7B005F2434 /* FirebaseFirestore */,
 				21AA0A5A2CB18B7B005F2434 /* FirebaseStorage */,
+				2162B4162CC50CF90043A0C0 /* GoogleMobileAds */,
 			);
 			productName = CellarStock;
 			productReference = 218588B12AC81A6300730A9D /* CellarStock.app */;
@@ -303,6 +350,7 @@
 			mainGroup = 218588A82AC81A6300730A9D;
 			packageReferences = (
 				21AA0A4D2CB18B7B005F2434 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2162B4152CC50CF90043A0C0 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 218588B22AC81A6300730A9D /* Products */;
 			projectDirPath = "";
@@ -340,6 +388,8 @@
 				21DD02692B2371E200406621 /* FirestoreManager.swift in Sources */,
 				215745952B1D17330021745D /* DocumentScannerView.swift in Sources */,
 				21598CF12B0D13A200E2A177 /* Helper.swift in Sources */,
+				2162B4822CC512970043A0C0 /* InterstitialAdsManager.swift in Sources */,
+				219573B32CBCF7C100BCD488 /* LoaderView.swift in Sources */,
 				214066BE2AF2793000E1857F /* RandomView.swift in Sources */,
 				2188F4772B21ED980030B596 /* NeoTabsDynamicItemsView.swift in Sources */,
 				2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */,
@@ -353,6 +403,7 @@
 				214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */,
 				21AA0A492CB07938005F2434 /* SubscriptionView.swift in Sources */,
 				21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */,
+				219573AE2CBAB76E00BCD488 /* AddTip.swift in Sources */,
 				2188F4742B21ED980030B596 /* NeoTabsItemModel.swift in Sources */,
 				21C794872AC88CDA00398FE9 /* FormView.swift in Sources */,
 				218588B72AC81A6300730A9D /* ContentView.swift in Sources */,
@@ -362,6 +413,7 @@
 				2188F4692B21D36C0030B596 /* ChartsView.swift in Sources */,
 				21CD6F542CB2B142008A6893 /* EntitlementManager.swift in Sources */,
 				218588B92AC81A6300730A9D /* Wine.swift in Sources */,
+				2195741D2CBCFB6B00BCD488 /* LoaderViewModifier.swift in Sources */,
 				215745922B1CE49B0021745D /* StatsView.swift in Sources */,
 				214066B52AF2473000E1857F /* Constants.swift in Sources */,
 				214066BA2AF24B9D00E1857F /* ActionClosure.swift in Sources */,
@@ -525,7 +577,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -575,7 +627,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -613,6 +665,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2162B4152CC50CF90043A0C0 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.10.0;
+			};
+		};
 		21AA0A4D2CB18B7B005F2434 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -624,6 +684,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2162B4162CC50CF90043A0C0 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2162B4152CC50CF90043A0C0 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
 		21AA0A4E2CB18B7B005F2434 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 21AA0A4D2CB18B7B005F2434 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

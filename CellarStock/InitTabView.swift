@@ -11,8 +11,11 @@ import SwiftData
 struct InitTabView: View {
     
     @Environment(\.modelContext) private var modelContext
+    
     @Query private var users: [User]
     @Query private var wines: [Wine]
+    
+    @State private var isLoaderPresented = false
     
     private let firestoreManager = FirestoreManager.shared
     
@@ -23,7 +26,7 @@ struct InitTabView: View {
             } else {
                 ContentView(tabType: .region)
                     .task {
-                        await fetchFromServer()
+                        fetchFromServer()
                     }
             }
         } else {
@@ -61,29 +64,47 @@ struct InitTabView: View {
                 UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
             }
             .task {
-                await fetchFromServer()
+                fetchFromServer()
+            }
+            .loader(isPresented: $isLoaderPresented)
+        }
+    }
+    
+    func fetchFromServer() {
+        if let userId = users.first?.documentId {
+            isLoaderPresented = true
+            Task.detached(priority: .background) {
+                let wines = await firestoreManager.fetchWines(for: userId)
+                let quantities = await firestoreManager.fetchQuantities(for: userId)
+                await MainActor.run {
+                    updateModel(wines: wines, quantities: quantities)
+                }
             }
         }
     }
     
-    func fetchFromServer() async {
-        if let userId = users.first?.documentId {
-            let wines = await firestoreManager.fetchWines(for: userId)
-            let quantities = await firestoreManager.fetchQuantities(for: userId)
-            updateModel(wines: wines, quantities: quantities)
-        }
-    }
-    
     func updateModel(wines: [Wine], quantities: [Quantity]) {
-        try? modelContext.delete(model: Quantity.self)
-        try? modelContext.delete(model: Wine.self)
-        try? modelContext.save()
-        for wine in wines {
-            modelContext.insert(wine)
+        modelContext.autosaveEnabled = false
+        do {
+            try modelContext.transaction {
+                try modelContext.delete(model: Quantity.self)
+                try modelContext.delete(model: Wine.self)
+                for wine in wines {
+                    modelContext.insert(wine)
+                }
+                
+                for quantity in quantities {
+                    modelContext.insert(quantity)
+                }
+                if modelContext.hasChanges {
+                    try modelContext.save()
+                }
+                isLoaderPresented = false
+                modelContext.autosaveEnabled = true
+            }
+        } catch {
+            isLoaderPresented = false
+            modelContext.autosaveEnabled = true
         }
-        for quantity in quantities {
-            modelContext.insert(quantity)
-        }
-        try? modelContext.save()
     }
 }

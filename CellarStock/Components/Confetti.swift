@@ -83,12 +83,10 @@ struct DisplayConfettiModifier: ViewModifier {
     }
     
     private func handleAnimationSequence() async {
-        do {
-            try await Task.sleep(for: .seconds(animationTime))
-            withAnimation(.easeOut(duration: fadeTime)) {
-                opacity = 0
-            }
-        } catch {}
+        try? await Task.sleep(for: .seconds(animationTime))
+        withAnimation(.easeOut(duration: fadeTime)) {
+            opacity = 0
+        }
     }
 }
 

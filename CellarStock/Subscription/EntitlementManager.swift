@@ -11,5 +11,5 @@ class EntitlementManager: ObservableObject {
     static let userDefaults = UserDefaults.standard
     
     @AppStorage("isPremium", store: userDefaults)
-    var isPremium: Bool = false
+    var isPremium = false
 }

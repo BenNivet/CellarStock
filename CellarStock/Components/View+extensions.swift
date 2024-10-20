@@ -20,4 +20,8 @@ extension View {
             }
         )
     }
+    
+    func loader(isPresented: Binding<Bool>) -> some View {
+        ModifiedContent(content: self, modifier: LoaderViewModifier(isPresented: isPresented))
+    }
 }

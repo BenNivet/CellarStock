@@ -5,9 +5,12 @@
 //  Created by CANTE Benjamin on 30/09/2023.
 //
 
+import AppTrackingTransparency
+import Combine
 import FirebaseAnalytics
 import SwiftUI
 import SwiftData
+import TipKit
 
 enum TabType {
     case region
@@ -20,6 +23,7 @@ struct ContentView: View {
     
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
+    @EnvironmentObject private var interstitialAdsManager: InterstitialAdsManager
     
     @Query private var users: [User]
     @Query private var wines: [Wine]
@@ -64,6 +68,8 @@ struct ContentView: View {
     private var years: [Int] {
         Array(Set(quantities.compactMap { $0.year })).sorted(by: >)
     }
+    
+    private var addTip = AddTip()
     
     init(tabType: TabType) {
         self.tabType = tabType
@@ -133,6 +139,14 @@ struct ContentView: View {
                                      showQuantitiesOnly: $showingSheet.4)
                             .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
                         }
+                        .if(wines.count == 0) {
+                            $0.popoverTip(addTip) { _ in
+                                showingSheet = (true, Wine(), [:], [:], false)
+                                addTip.invalidate(reason: .actionPerformed)
+                            }
+                            .tipCornerRadius(CharterConstants.radiusSmall)
+                        }
+                        
                     }
                 }
                 .fullScreenCover(isPresented: $showingSubscription) {
@@ -210,6 +224,15 @@ struct ContentView: View {
                 .padding(CharterConstants.margin)
             }
             .analyticsScreen(name: ScreenName.wineList, class: ScreenName.wineList)
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in })
+            }
+            .onReceive(interstitialAdsManager.$interstitialAdLoaded) { isInterstitialAdLoaded in
+                if !entitlementManager.isPremium ,
+                   isInterstitialAdLoaded {
+                    interstitialAdsManager.displayInterstitialAd()
+                }
+            }
         }
     }
     

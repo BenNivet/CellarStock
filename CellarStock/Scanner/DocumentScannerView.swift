@@ -47,6 +47,9 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         var parent: DocumentScannerView
         var roundBoxMappings: [UUID: UIView] = [:]
         
+        private let wineKeywords = ["CHATEAU", "DOMAINE"]
+        private let escapeKeywords = ["DU", "DE", "DES", "LE", "LA", "LES"]
+        
         init(_ parent: DocumentScannerView) {
             self.parent = parent
         }
@@ -67,7 +70,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
             processItem(item: item)
             if case .text(let text) = item {
                 stopScanning()
-                parent.selectedText = text.transcript.capitalized
+                parent.selectedText = buildScannedText(text.transcript.capitalized)
                 parent.dismiss()
             }
         }
@@ -145,6 +148,44 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         
         func stopScanning() {
             parent.scannerViewController.stopScanning()
+        }
+        
+        func buildScannedText(_ selectedText: String) -> String {
+            var elements: [String] = []
+            let lines = selectedText.components(separatedBy: "\n")
+            var isEscaped = false
+            
+            for line in lines {
+                guard var lastElement = elements.last
+                else {
+                    elements.append(line)
+                    continue
+                }
+                if isMatched(line, array: escapeKeywords) {
+                    lastElement.append(" " + line)
+                    elements = elements.dropLast()
+                    elements.append(lastElement)
+                    isEscaped = true
+                } else if isMatched(lastElement, array: wineKeywords) {
+                    elements = elements.dropLast()
+                    elements.append(lastElement + " " + line)
+                    isEscaped = false
+                } else {
+                    if isEscaped {
+                        elements = elements.dropLast()
+                        elements.append(lastElement + " " + line)
+                        isEscaped = false
+                    } else {
+                        elements.append(line)
+                        isEscaped = false
+                    }
+                }
+            }
+            return elements.joined(separator: "\n")
+        }
+        
+        private func isMatched(_ word: String, array: [String]) -> Bool {
+            array.contains { word.compare($0, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }
         }
     }
 }

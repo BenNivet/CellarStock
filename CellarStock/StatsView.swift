@@ -8,6 +8,7 @@
 import FirebaseAnalytics
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct StatsView: View {
     
@@ -60,9 +61,6 @@ struct StatsView: View {
                     ToolbarItem {
                         ShareLink(item: sharedText(id: userId),
                                   preview: SharePreview("Partager ma cave"))
-                        .onAppear {
-                            Analytics.logEvent(LogEvent.shareCellar, parameters: nil)
-                        }
                     }
                 }
                 ToolbarItem {

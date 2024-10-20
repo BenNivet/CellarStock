@@ -37,10 +37,8 @@ struct SubscriptionView: View {
                     showConfetti = true
                 }
                 .task {
-                    do {
-                        try await Task.sleep(for: .seconds(7))
-                        dismiss()
-                    } catch {}
+                    try? await Task.sleep(for: .seconds(7))
+                    dismiss()
                 }
         } else {
             subscriptionOptionsView

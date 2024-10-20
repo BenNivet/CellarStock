@@ -5,9 +5,11 @@
 //  Created by CANTE Benjamin on 30/09/2023.
 //
 
+import FirebaseCore
+import GoogleMobileAds
 import SwiftUI
 import SwiftData
-import FirebaseCore
+import TipKit
 
 typealias Wine = WineV2
 typealias Quantity = QuantityV2
@@ -15,13 +17,11 @@ typealias Quantity = QuantityV2
 @main
 struct CellarStockApp: App {
     
-    @StateObject
-    private var entitlementManager: EntitlementManager
+    @StateObject private var entitlementManager: EntitlementManager
+    @StateObject private var subscriptionsManager: SubscriptionsManager
+    @StateObject private var interstitialAdsManager = InterstitialAdsManager()
     
-    @StateObject
-    private var subscriptionsManager: SubscriptionsManager
-    
-    var sharedModelContainer: ModelContainer = {
+    @State private var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Wine.self,
             Quantity.self,
@@ -43,6 +43,16 @@ struct CellarStockApp: App {
         
         _entitlementManager = StateObject(wrappedValue: entitlementManager)
         _subscriptionsManager = StateObject(wrappedValue: subscriptionsManager)
+        
+        try? Tips.configure([
+            .displayFrequency(.daily)
+        ])
+        
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        
+        Task {
+            await subscriptionsManager.updatePurchasedProducts()
+        }
     }
     
     var body: some Scene {
@@ -50,11 +60,8 @@ struct CellarStockApp: App {
             InitTabView()
                 .environmentObject(entitlementManager)
                 .environmentObject(subscriptionsManager)
+                .environmentObject(interstitialAdsManager)
                 .fontDesign(.rounded)
-                .task {
-                    await FirestoreManager.shared.initDb()
-                    await subscriptionsManager.updatePurchasedProducts()
-                }
         }
         .modelContainer(sharedModelContainer)
     }

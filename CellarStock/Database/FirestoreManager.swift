@@ -22,7 +22,7 @@ actor FirestoreManager {
     static let shared = FirestoreManager()
     var db: Firestore?
     
-    func initDb() {
+    init() {
         db = Firestore.firestore()
     }
     
