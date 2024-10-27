@@ -25,7 +25,7 @@ struct TileView<Content: View>: View {
                 .padding(CharterConstants.margin)
         }
         .background(backgroundColor(isPressed: isPressed))
-        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
+        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius))
         .onTapGesture {
             action?.handler()
         }

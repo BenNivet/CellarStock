@@ -20,6 +20,7 @@ enum TabType {
 
 struct ContentView: View {
     let tabType: TabType
+    @Binding var reload: Bool
     
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
@@ -34,6 +35,7 @@ struct ContentView: View {
     @State private var showingCodeAlert = false
     @State private var codeText = ""
     @State private var showingSubscription = false
+    @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
     
     private var filteredWines: [Wine] {
         guard !searchText.isEmpty else { return wines }
@@ -71,8 +73,9 @@ struct ContentView: View {
     
     private var addTip = AddTip()
     
-    init(tabType: TabType) {
+    init(tabType: TabType, reload: Binding<Bool>) {
         self.tabType = tabType
+        _reload = reload
     }
     
     var body: some View {
@@ -102,7 +105,7 @@ struct ContentView: View {
                         Button {
                             showingCodeAlert = true
                         } label: {
-                            Image(systemName: "magnifyingglass")
+                            Image(systemName: "person.2")
                                 .font(.title2)
                         }
                         .foregroundStyle(.white)
@@ -121,8 +124,11 @@ struct ContentView: View {
                         Button {
                             if wines.count >= 5,
                                !entitlementManager.isPremium {
-//                                showingSubscription = true
-                                showingSheet = (true, Wine(), [:], [:], false)
+                                if Int.random(in: 1...100) >= 100 - CharterConstants.randomPercentage {
+                                    showingSubscription = true
+                                } else {
+                                    showingSheet = (true, Wine(), [:], [:], false)
+                                }
                                 Analytics.logEvent(LogEvent.needSubscription, parameters: ["wines": wines.count])
                             } else {
                                 showingSheet = (true, Wine(), [:], [:], false)
@@ -132,19 +138,19 @@ struct ContentView: View {
                                 .font(.title2)
                         }
                         .foregroundStyle(.white)
-                        .sheet(isPresented: $showingSheet.0) {
+                        .fullScreenCover(isPresented: $showingSheet.0) {
                             FormView(wine: $showingSheet.1,
                                      quantitiesByYear: $showingSheet.2,
                                      pricesByYear: $showingSheet.3,
                                      showQuantitiesOnly: $showingSheet.4)
                             .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
                         }
-                        .if(wines.count == 0) {
+                        .if(wines.isEmpty) {
                             $0.popoverTip(addTip) { _ in
                                 showingSheet = (true, Wine(), [:], [:], false)
                                 addTip.invalidate(reason: .actionPerformed)
                             }
-                            .tipCornerRadius(CharterConstants.radiusSmall)
+                            .tipCornerRadius(CharterConstants.radius)
                         }
                         
                     }
@@ -191,19 +197,21 @@ struct ContentView: View {
             .frame(maxWidth: .infinity)
         } else {
             ScrollView {
-                VStack(spacing: CharterConstants.margin) {
+                LazyVStack(spacing: CharterConstants.margin) {
                     switch tabType {
                     case .region:
                         ForEach(regions) { region in
                             Accordion(title: region.description,
-                                      subtitle: quantity(for: region).bottlesString) {
+                                      subtitle: quantity(for: region).bottlesString,
+                                      isCollapsed: isCollapsed(item: region, array: regions)) {
                                 regionView(region: region)
                             }
                         }
                     case .type:
                         ForEach(types) { type in
                             Accordion(title: type.description,
-                                      subtitle: quantity(for: type).bottlesString) {
+                                      subtitle: quantity(for: type).bottlesString,
+                                      isCollapsed: isCollapsed(item: type, array: types)) {
                                 VStack(spacing: CharterConstants.marginSmall) {
                                     ForEach(filteredWines.filter { $0.type == type }) { wine in
                                         cellView(wine: wine)
@@ -214,7 +222,8 @@ struct ContentView: View {
                     case .year:
                         ForEach(years, id: \.self) { year in
                             Accordion(title: String(year),
-                                      subtitle: quantity(for: year).bottlesString) {
+                                      subtitle: quantity(for: year).bottlesString,
+                                      isCollapsed: isCollapsed(item: year, array: years)) {
                                 yearView(year: year)
                             }
                         }
@@ -223,15 +232,22 @@ struct ContentView: View {
                 }
                 .padding(CharterConstants.margin)
             }
+            .scrollIndicators(.hidden)
+            .refreshable {
+                reload = true
+            }
             .analyticsScreen(name: ScreenName.wineList, class: ScreenName.wineList)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in })
             }
             .onReceive(interstitialAdsManager.$interstitialAdLoaded) { isInterstitialAdLoaded in
-                if !entitlementManager.isPremium ,
+                if !entitlementManager.isPremium,
                    isInterstitialAdLoaded {
                     interstitialAdsManager.displayInterstitialAd()
                 }
+            }
+            .onChange(of: searchText) {
+                accordionCollapsedStates.removeAll()
             }
         }
     }
@@ -242,7 +258,8 @@ struct ContentView: View {
             VStack(spacing: CharterConstants.margin) {
                 ForEach(appelations) { appelation in
                     Accordion(title: appelation.description,
-                              subtitle: quantity(for: appelation).bottlesString) {
+                              subtitle: quantity(for: appelation).bottlesString,
+                              isCollapsed: isCollapsed(item: appelation, array: appelations)) {
                         VStack(spacing: CharterConstants.marginSmall) {
                             ForEach(filteredWines.filter { $0.region == region && $0.appelation == appelation }) { wine in
                                 cellView(wine: wine)
@@ -399,6 +416,14 @@ private extension ContentView {
     func handleURL(url: URL) {
         guard let codeKey = url.host(), codeKey == "code" else { return }
         findCellar(code: url.lastPathComponent)
+    }
+    
+    func isCollapsed(item: AnyHashable, array: [any Hashable]) -> Binding<Bool> {
+        Binding<Bool> {
+            accordionCollapsedStates[item] ?? (array.count > 1 ? true : false)
+        } set: { newValue in
+            accordionCollapsedStates[item] = newValue
+        }
     }
     
 //    func importWines() {

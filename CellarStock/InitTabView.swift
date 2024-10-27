@@ -16,32 +16,32 @@ struct InitTabView: View {
     @Query private var wines: [Wine]
     
     @State private var isLoaderPresented = false
+    @State private var reload = false
+    @State private var alreadyFetched = false
     
     private let firestoreManager = FirestoreManager.shared
     
     var body: some View {
         if wines.isEmpty {
-            if users.isEmpty {
-                ContentView(tabType: .region)
-            } else {
-                ContentView(tabType: .region)
-                    .task {
+            ContentView(tabType: .region, reload: $reload)
+                .task {
+                    if !alreadyFetched {
                         fetchFromServer()
                     }
-            }
+                }
         } else {
             TabView {
-                ContentView(tabType: .region)
+                ContentView(tabType: .region, reload: $reload)
                     .tabItem {
                         Text("Région")
                         Image("map")
                     }
-                ContentView(tabType: .type)
+                ContentView(tabType: .type, reload: $reload)
                     .tabItem {
                         Text("Type")
                         Image("grape")
                     }
-                ContentView(tabType: .year)
+                ContentView(tabType: .year, reload: $reload)
                     .tabItem {
                         Text("Année")
                         Image("calendar")
@@ -64,13 +64,21 @@ struct InitTabView: View {
                 UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
             }
             .task {
-                fetchFromServer()
+                if !alreadyFetched {
+                    fetchFromServer()
+                }
+            }
+            .onChange(of: reload) { _ , newValue in
+                if newValue {
+                    fetchFromServer()
+                }
             }
             .loader(isPresented: $isLoaderPresented)
         }
     }
     
-    func fetchFromServer() {
+    private func fetchFromServer() {
+        print("fetchFromServer")
         if let userId = users.first?.documentId {
             isLoaderPresented = true
             Task.detached(priority: .background) {
@@ -83,7 +91,7 @@ struct InitTabView: View {
         }
     }
     
-    func updateModel(wines: [Wine], quantities: [Quantity]) {
+    private func updateModel(wines: [Wine], quantities: [Quantity]) {
         modelContext.autosaveEnabled = false
         do {
             try modelContext.transaction {
@@ -99,12 +107,19 @@ struct InitTabView: View {
                 if modelContext.hasChanges {
                     try modelContext.save()
                 }
-                isLoaderPresented = false
-                modelContext.autosaveEnabled = true
+                endFetch()
             }
         } catch {
-            isLoaderPresented = false
-            modelContext.autosaveEnabled = true
+            endFetch()
         }
+    }
+    
+    private func endFetch() {
+        isLoaderPresented = false
+        modelContext.autosaveEnabled = true
+        if reload {
+            reload = false
+        }
+        alreadyFetched = true
     }
 }

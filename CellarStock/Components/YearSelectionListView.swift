@@ -13,24 +13,44 @@ struct YearSelectionListView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    
     @Binding var quantities: [Int: Int]
     @Binding var prices: [Int: Double]
     
+    @State private var searchText = ""
+    
     var body: some View {
-        ScrollView {
-            VStack(spacing: CharterConstants.marginSmall) {
-                ForEach(availableYears, id: \.self) { year in
-                    TileView {
-                        Text(String(year))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    } action: {
-                        quantities[year] = 1
-                        prices[year] = 0
+        NavigationView {
+            List {
+                listRows
+            }
+            .listStyle(.plain)
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Rechercher")
+            .keyboardType(.numberPad)
+            .navigationTitle("Année")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         dismiss()
+                    } label: {
+                        closeButtonView
                     }
                 }
             }
-            .padding(CharterConstants.margin)
+        }
+    }
+    
+    @ViewBuilder
+    var listRows: some View {
+        let filteredItems = searchText.isEmpty ? availableYears : availableYears.filter { String($0).localizedCaseInsensitiveContains(searchText) }
+        ForEach(filteredItems, id: \.self) { year in
+            Button {
+                quantities[year] = 1
+                prices[year] = 0
+                dismiss()
+            } label: {
+                Text(String(year))
+            }
         }
     }
 }

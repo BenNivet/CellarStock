@@ -53,7 +53,7 @@ struct CongratsView: View {
             }
             Spacer()
             VStack(spacing: CharterConstants.margin) {
-                Button {
+                Button("Oui") {
                     quantity.quantity -= 1
                     Task {
                         if quantity.quantity == 0 {
@@ -70,27 +70,13 @@ struct CongratsView: View {
                         try? modelContext.save()
                     }
                     dismiss()
-                } label: {
-                    RoundedRectangle(cornerRadius: CharterConstants.radiusSmall)
-                        .overlay {
-                            Text("Oui")
-                                .foregroundStyle(.white)
-                                .font(.system(size: 16.5, weight: .semibold, design: .rounded))
-                        }
                 }
-                .frame(height: 50)
+                .buttonStyle(PrimaryButtonStyle())
                 
-                Button {
+                Button("Non, rejouer") {
                     dismiss()
-                } label: {
-                    RoundedRectangle(cornerRadius: CharterConstants.radiusSmall)
-                        .fill(.gray.opacity(CharterConstants.alphaFifteen))
-                        .overlay {
-                            Text("Non, rejouer")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        }
                 }
-                .frame(height: 50)
+                .buttonStyle(SecondaryButtonStyle())
                 
             }
         }

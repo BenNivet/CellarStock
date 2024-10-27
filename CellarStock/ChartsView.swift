@@ -32,7 +32,7 @@ struct ChartsView: View {
                         x: .value("Bottles", $0.count),
                         y: .value("Name", $0.name)
                     )
-                    .cornerRadius(CharterConstants.radiusSmall)
+                    .cornerRadius(CharterConstants.radius)
                     .annotation(position: .overlay, alignment: .trailing) {
                         Text("\(count)")
                             .font(.callout)
@@ -40,7 +40,8 @@ struct ChartsView: View {
                             .foregroundColor(.white)
                     }
                 }
-                .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.25), .blue.opacity(0.8)],
+                .foregroundStyle(LinearGradient(colors: [CharterConstants.mainBlue.opacity(0.25),
+                                                         CharterConstants.mainBlue.opacity(0.8)],
                                                 startPoint: .leading,
                                                 endPoint: .trailing))
                 .frame(height: CGFloat(displayData.count * 80))

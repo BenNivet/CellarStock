@@ -5,6 +5,7 @@
 //  Created by CANTE Benjamin on 03/12/2023.
 //
 
+import Combine
 import SwiftUI
 import VisionKit
 
@@ -13,6 +14,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
     
     @Environment(\.dismiss) var dismiss
     @Binding var selectedText: String
+    var listener: PassthroughSubject<Bool,Never>
     
     static let textDataType: DataScannerViewController.RecognizedDataType = .text(
         languages: [
@@ -22,7 +24,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
     )
     
     var scannerViewController: DataScannerViewController = DataScannerViewController(
-        recognizedDataTypes: [DocumentScannerView.textDataType, .barcode()],
+        recognizedDataTypes: [DocumentScannerView.textDataType],
         qualityLevel: .accurate,
         recognizesMultipleItems: false,
         isHighFrameRateTrackingEnabled: false,
@@ -40,18 +42,33 @@ struct DocumentScannerView: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, listener: listener)
     }
     
     class Coordinator: NSObject, DataScannerViewControllerDelegate {
         var parent: DocumentScannerView
-        var roundBoxMappings: [UUID: UIView] = [:]
+        var cancellables: Set<AnyCancellable> = []
         
+        private var listener: PassthroughSubject<Bool,Never>
+        private var roundBoxMappings: [UUID: UIView] = [:]
+        private var transcript: String?
         private let wineKeywords = ["CHATEAU", "DOMAINE"]
         private let escapeKeywords = ["DU", "DE", "DES", "LE", "LA", "LES"]
         
-        init(_ parent: DocumentScannerView) {
+        init(_ parent: DocumentScannerView, listener: PassthroughSubject<Bool,Never>) {
             self.parent = parent
+            self.listener = listener
+            super.init()
+            subscribe()
+        }
+        
+        func subscribe() {
+            listener.sink { [weak self] res in
+                guard let self else { return }
+                stopScanning()
+                parent.selectedText = buildScannedText(transcript?.capitalized ?? "")
+                parent.dismiss()
+            }.store(in: &cancellables)
         }
         
         func dataScanner(_ dataScanner: DataScannerViewController, didAdd addedItems: [RecognizedItem], allItems: [RecognizedItem]) {
@@ -133,6 +150,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
             case .text(let text):
                 print("Text Observation - \(text.observation)")
                 print("Text transcript - \(text.transcript)")
+                transcript = text.transcript
                 let frame = getRoundBoxFrame(item: item)
                 addRoundBoxToItem(frame: frame, text: text.transcript, item: item)
             case .barcode:

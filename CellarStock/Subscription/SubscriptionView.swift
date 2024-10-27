@@ -100,15 +100,6 @@ struct SubscriptionView: View {
     
     private var navView: some View {
         HStack {
-            Button {
-                dismiss()
-                Analytics.logEvent(LogEvent.closeSubscription, parameters: nil)
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.5))
-            }
-            Spacer()
             if !entitlementManager.isPremium {
                 Button("Restaurer") {
                     Task {
@@ -116,9 +107,16 @@ struct SubscriptionView: View {
                         await subscriptionsManager.restorePurchases()
                     }
                 }
-                .font(.system(size: 14, weight: .regular))
-                .frame(height: 15, alignment: .center)
-                .foregroundStyle(.white.opacity(0.5))
+                .font(.system(size: 15, weight: .regular))
+                .frame(height: 24, alignment: .center)
+                .foregroundStyle(.white)
+            }
+            Spacer()
+            Button {
+                dismiss()
+                Analytics.logEvent(LogEvent.closeSubscription, parameters: nil)
+            } label: {
+                closeButtonView
             }
         }
     }
@@ -198,7 +196,7 @@ struct SubscriptionView: View {
             }
             .font(.system(size: 14, weight: .regular))
             .frame(height: 15, alignment: .center)
-            .foregroundStyle(.white.opacity(0.5))
+            .foregroundStyle(CharterConstants.halfWhite)
         }
     }
     
@@ -211,11 +209,12 @@ struct SubscriptionView: View {
                 Analytics.logEvent(LogEvent.validateSubscription, parameters: nil)
             }
         } label: {
-            RoundedRectangle(cornerRadius: CharterConstants.radiusSmall)
+            RoundedRectangle(cornerRadius: CharterConstants.radius)
+                .fill(CharterConstants.mainBlue)
                 .overlay {
-                    Text("Essayer gratuitement")
+                    Text("Commencer")
                         .foregroundStyle(.white)
-                        .font(.system(size: 16.5, weight: .semibold))
+                        .font(.system(size: 20, weight: .semibold))
                 }
         }
         .frame(height: 50)
@@ -229,7 +228,7 @@ struct SubscriptionView: View {
         }
         .font(.system(size: 14, weight: .regular))
         .frame(height: 15, alignment: .center)
-        .foregroundStyle(.white.opacity(0.5))
+        .foregroundStyle(CharterConstants.halfWhite)
     }
 }
 
@@ -260,11 +259,11 @@ struct SubscriptionItemView: View {
             popularView
         }
         .background(
-            LinearGradient(colors: [.blue, .black],
+            LinearGradient(colors: [CharterConstants.mainBlue, .black],
                            startPoint: .top,
                            endPoint: .bottom)
             .opacity(selectedProduct == product ? 1: 0.5))
-        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall)
+        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius)
         )
         .opacity(selectedProduct == product ? 1: 0.7)
         .onTapGesture {
@@ -286,7 +285,7 @@ struct SubscriptionItemView: View {
             }
             .padding(.vertical, CharterConstants.marginXSmall)
             .background(Color.yellow.gradient)
-            .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
+            .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius))
         }
     }
 }

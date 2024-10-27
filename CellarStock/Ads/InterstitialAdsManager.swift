@@ -24,7 +24,7 @@ class InterstitialAdsManager: NSObject, ObservableObject {
         loadInterstitialAd()
     }
     
-    func loadInterstitialAd(){
+    func loadInterstitialAd() {
         GADInterstitialAd.load(withAdUnitID: interstitialId, request: GADRequest()) { [weak self] ad, error in
             guard let self else { return }
             if let error {
@@ -39,7 +39,7 @@ class InterstitialAdsManager: NSObject, ObservableObject {
         }
     }
     
-    func displayInterstitialAd(){
+    func displayInterstitialAd() {
         guard let root = UIApplication.shared.windows.first?.rootViewController
         else { return }
         

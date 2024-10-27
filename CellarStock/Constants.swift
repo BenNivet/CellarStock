@@ -18,28 +18,30 @@ struct CharterConstants {
     static let marginLarge: CGFloat = 32
     static let marginBig: CGFloat = 40
     
+    static let buttonSize: CGFloat = 45
+    
     // Radius
-    static let radiusXSmall: CGFloat = 4
-    static let radiusSmall: CGFloat = 8
-    static let radius: CGFloat = 16
+    static let radius: CGFloat = 12
     
     // Color
+    static let mainBlue: Color = Color(UIColor(hexString: "#024CAA"))
+    static let mainRed: Color = Color(UIColor(hexString: "#D13E46"))
     static let redWine: Color = Color(UIColor(hexString: "#800020"))
     static let whiteWine: Color = Color(UIColor(hexString: "#FDE992"))
     static let roseWine: Color = Color(UIColor(hexString: "#EE7272"))
     static let sparklingWine: Color = Color(UIColor(hexString: "#FDEFB2"))
+    static let halfWhite: Color = .white.opacity(0.6)
+    static let halfGray: Color = .gray.opacity(0.6)
     
     // Alpha Transparency
-    static let alphaFullyTransparent: CGFloat = 0
-    static let alphaFive: CGFloat = 0.05
-    static let alphaTen: CGFloat = 0.1
     static let alphaFifteen: CGFloat = 0.15
-    static let alphaSixteen: CGFloat = 0.16
     static let alphaThirty: CGFloat = 0.3
-    static let alphaFullyOpaque: CGFloat = 1
     
     // Opacity
-    static let disabledOpacity: CGFloat = 0.6
+    static let disabledOpacity: CGFloat = 0.4
+    
+    // Random
+    static let randomPercentage = 10
 }
 
 struct ScreenName {

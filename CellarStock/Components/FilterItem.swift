@@ -60,7 +60,7 @@ struct FilterItem: View {
         }
         .padding()
         .background(backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
+        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius))
         .sheet(isPresented: $showingSheet) {
             SelectionListView(type: type, filteringElements: $filteringElements)
         }

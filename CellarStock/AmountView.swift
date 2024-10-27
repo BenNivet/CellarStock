@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct AmountView: View {
-    @Environment(\.dismiss) var dismiss
+    
     @Binding var year: Int
     @Binding var pricesByYear: [Int: Double]
+    
     @State private var isPressed = false
     @State private var amount: String
+    
     @FocusState private var isAmountFocus: Bool
     
     init(year: Binding<Int>, pricesByYear: Binding<[Int: Double]>) {
@@ -27,58 +29,35 @@ struct AmountView: View {
     }
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Prix")
-                Spacer()
-                TextField("Prix", text: $amount)
+        NavigationView {
+            VStack {
+                FloatingTextField(placeHolder: "Prix", text: $amount, rightIcon: "eurosign")
                     .keyboardType(.numberPad)
-                    .multilineTextAlignment(.trailing)
                     .focused($isAmountFocus)
-                Text("€")
-            }
-            .padding(CharterConstants.margin)
-            .background(.gray.opacity(CharterConstants.alphaFifteen))
-            .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
-            Spacer()
-            HStack {
+                
                 Spacer()
-                Text("Valider")
-                    .font(.body.bold())
-                    .foregroundStyle(.black)
-                Spacer()
-            }
-            .frame(height: 40)
-            .contentShape(Rectangle())
-            .onTapGesture {
-                if let amountDouble = Double(amount) {
-                    pricesByYear[year] = amountDouble
+                
+                Button("Valider") {
+                    if let amountDouble = Double(amount) {
+                        pricesByYear[year] = amountDouble
+                    }
+                    year = 0
                 }
-                year = 0
-                dismiss()
+                .buttonStyle(PrimaryButtonStyle())
             }
-            .onLongPressGesture(minimumDuration: .infinity,
-                                maximumDistance: .infinity) {
-                isPressed = true
-            } onPressingChanged: { state in
-                isPressed = state
+            .onAppear {
+                isAmountFocus = true
             }
             .padding(CharterConstants.margin)
-            .background(backgroundColor)
-            .frame(height: 40)
-            .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
-        }
-        .onAppear {
-            isAmountFocus = true
-        }
-        .padding(CharterConstants.margin)
-    }
-    
-    private var backgroundColor: Color {
-        if isPressed {
-            .white.opacity(0.8)
-        } else {
-            .white
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        year = 0
+                    } label: {
+                        closeButtonView
+                    }
+                }
+            }
         }
     }
 }

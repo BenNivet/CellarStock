@@ -9,8 +9,7 @@ import UIKit
 
 class RoundedRectLabel: UIView {
     let label = UILabel()
-    let cornerRadius: CGFloat = 5.0
-    let padding: CGFloat = 5
+    let padding = CharterConstants.marginSmall
     var text = ""
     
     override init(frame: CGRect) {
@@ -36,7 +35,7 @@ class RoundedRectLabel: UIView {
         
         // Configure the background
         backgroundColor = .gray
-        layer.cornerRadius = cornerRadius
+        layer.cornerRadius = CharterConstants.radius
         layer.opacity = 0.75
     }
     

@@ -40,6 +40,7 @@ struct StatsView: View {
                     tile(left: "Total", right: generalInfos.count.bottlesString)
                     tile(left: "Montant total", right: "\(generalInfos.price.toRoundedString) €")
                 }
+                .padding(.horizontal, CharterConstants.margin)
                 
                 NeoTabsView(items: [
                     NeoTabsItemModel(title: "Régions",
@@ -90,7 +91,7 @@ struct StatsView: View {
                     }
                 }
             }
-            .padding(CharterConstants.margin)
+            .padding(.vertical, CharterConstants.margin)
             .fullScreenCover(isPresented: $showingSubscription) {
                 SubscriptionView()
             }

@@ -57,7 +57,7 @@ struct SelectionListView: View {
                     .lineLimit(1)
                     .padding(CharterConstants.marginSmall)
                     .background(.gray.opacity(CharterConstants.alphaThirty))
-                    .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
+                    .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius))
                     .onTapGesture {
                         initialFilteringElements = []
                     }
@@ -72,8 +72,8 @@ struct SelectionListView: View {
                     .foregroundStyle(.black)
             }
             .padding(CharterConstants.marginSmall)
-            .background(isApplyEnabled ? .white : .gray.opacity(CharterConstants.disabledOpacity))
-            .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radiusSmall))
+            .background(isApplyEnabled ? .white : CharterConstants.halfGray)
+            .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius))
             .onTapGesture {
                 filteringElements = initialFilteringElements
                 dismiss()

@@ -5,11 +5,18 @@
 //  Created by CANTE Benjamin on 30/09/2023.
 //
 
+import Combine
 import FirebaseAnalytics
 import Foundation
 import SwiftUI
 import SwiftData
 import VisionKit
+
+enum WinePicker {
+    case region
+    case appelation
+    case type
+}
 
 @MainActor
 struct FormView: View {
@@ -34,160 +41,207 @@ struct FormView: View {
     @State private var showingDeleteAlert = false
     @State private var sensorFeedback = false
     
-    @FocusState private var isTextFieldFocus: Bool
-    
+    private let listener = PassthroughSubject<Bool,Never>()
     private let firestoreManager = FirestoreManager.shared
     
     var body: some View {
-        if !scannedText.isEmpty {
-            let linesText = scannedText.components(separatedBy: "\n")
-            VStack(spacing: CharterConstants.margin) {
-                HStack(spacing: CharterConstants.marginSmall) {
-                    Text("Choisissez le nom du vin")
-                        .font(.title2.bold())
-                    Spacer()
-                }
+        NavigationView {
+            VStack(spacing: 0) {
                 ScrollView {
-                    VStack(spacing: CharterConstants.marginSmall) {
-                        ForEach(linesText, id: \.self) { lineText in
-                            TileView {
-                                Text(lineText)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            } action: {
-                                wine.name = lineText
-                                scannedText = ""
+                    formView
+                    Spacer()
+                    VStack(spacing: CharterConstants.margin) {
+                        Button("Sauvegarder") {
+                            save()
+                            dismiss()
+                            sensorFeedback = true
+                            Analytics.logEvent(wine.wineId.isEmpty ? LogEvent.addWine : LogEvent.updateWine, parameters: nil)
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
+                        
+                        if !wine.wineId.isEmpty {
+                            Button("Supprimer") {
+                                showingDeleteAlert = true
                             }
+                            .buttonStyle(DestructiveButtonStyle())
                         }
                     }
-                    .padding(.bottom, CharterConstants.marginSmall)
+                    .padding(CharterConstants.margin)
+                    .background(.gray.opacity(CharterConstants.alphaFifteen))
+                }
+                .keyboardAvoiding()
+                .scrollIndicators(.hidden)
+            }
+            .onTapGesture {
+                hideKeyboard()
+            }
+            .navigationTitle("Ajouter un vin")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        closeButtonView
+                    }
                 }
             }
-            .padding(CharterConstants.margin)
-        } else {
-            formView
         }
     }
     
+    @ViewBuilder
     private var formView: some View {
-        Form {
+        VStack(spacing: CharterConstants.margin) {
             if !showQuantitiesOnly {
-                Section("Vin") {
-                    Picker("Region", selection: $wine.region) {
-                        ForEach(Region.allCases) { region in
-                            Text(String(describing: region))
-                        }
-                    }
-                    if wine.region == .bordeaux {
-                        Picker("Appelation", selection: $wine.appelation) {
-                            ForEach(Appelation.allCases.sorted { $0.description < $1.description }) { appelation in
-                                Text(String(describing: appelation))
-                            }
-                        }
-                    }
-                    Picker("Type", selection: $wine.type) {
-                        ForEach(WineType.allCases) { type in
-                            Text(String(describing: type))
-                        }
-                    }
-                    HStack {
-                        TextField("Nom", text: $wine.name)
-                            .focused($isTextFieldFocus)
-                        if scannerAvailable {
-                            Button {
-                                isTextFieldFocus = false
-                                showingCameraSheet = true
-                            } label: {
-                                Image(systemName: "camera")
-                            }
-                            .buttonStyle(BorderlessButtonStyle())
-                            .foregroundStyle(.white)
-                        }
-                    }
+                section("Caractéristiques")
+                
+                FloatingTextField(type: .picker(rows: Region.allCases.map { $0.description }),
+                                  placeHolder: "Région",
+                                  text: pickerValueBinding(wine.region, type: .region),
+                                  rightIcon: "chevron.right")
+                if wine.region == .bordeaux {
+                    FloatingTextField(type: .picker(rows: Appelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
+                                      placeHolder: "Appelation",
+                                      text: pickerValueBinding(wine.appelation, type: .appelation),
+                                      rightIcon: "chevron.right")
+                }
+                FloatingTextField(type: .picker(rows: WineType.allCases.map { $0.description }),
+                                  placeHolder: "Type",
+                                  text: pickerValueBinding(wine.type, type: .type),
+                                  rightIcon: "chevron.right")
+                FloatingTextField(placeHolder: "Nom",
+                                  text: $wine.name,
+                                  isRequired: true,
+                                  rightIcon: scannerAvailable ? "camera" : nil) {
+                    hideKeyboard()
+                    showingCameraSheet = true
                 }
             }
             
-            Section("Quantité") {
-                ForEach(quantitiesByYear.keys.sorted(by: >), id: \.self) { year in
-                    VStack(alignment: .leading, spacing: CharterConstants.marginSmall) {
+            section("Années", isRequired: wine.wineId.isEmpty && quantitiesByYear.isEmpty)
+            
+            ForEach(quantitiesByYear.keys.sorted(by: >), id: \.self) { year in
+                HStack(spacing: CharterConstants.margin) {
+                    ZStack {
+                        Text(String(year))
+                        Text("XXXX")
+                            .layoutPriority(1)
+                            .opacity(0)
+                    }
+                    .font(.system(size: 18))
+                    
+                    Divider()
+                        .frame(width: 0.5)
+                        .background(CharterConstants.halfWhite)
+                    
+                    VStack(spacing: CharterConstants.margin) {
                         HStack {
-                            Text(String(year))
+                            Text("Quantités")
                             Spacer()
-                            VStack(alignment: .trailing) {
-                                Stepper {
-                                    
-                                } onIncrement: {
-                                    quantitiesByYear[year] = (quantitiesByYear[year] ?? 0) + 1
-                                } onDecrement: {
-                                    guard let quantity = quantitiesByYear[year] else { return }
-                                    if quantity > 1 {
-                                        quantitiesByYear[year] = (quantity - 1)
-                                    } else {
+                            AnimatedStepper(currentNumber: quantitiesByYear[year] ?? 0) {
+                                quantitiesByYear[year] = (quantitiesByYear[year] ?? 0) + 1
+                            } onDecrement: {
+                                guard let quantity = quantitiesByYear[year] else { return }
+                                if quantity > 1 {
+                                    quantitiesByYear[year] = (quantity - 1)
+                                } else {
+                                    withAnimation {
                                         quantitiesByYear[year] = nil
                                     }
                                 }
-                                Text((quantitiesByYear[year] ?? 0).bottlesString)
-                                    .font(.caption)
                             }
                         }
                         HStack {
+                            Text("Prix")
                             Spacer()
                             Text("\(String(Int(pricesByYear[year] ?? 0))) €")
                         }
                         .onTapGesture {
-                            isTextFieldFocus = false
+                            hideKeyboard()
                             selectedYearAmount = year
                         }
                     }
                 }
-                Button("Ajouter une année") {
-                    isTextFieldFocus = false
-                    showingSheet = true
+                .padding(.bottom, CharterConstants.marginSmall)
+                .overlay(alignment: .bottom) {
+                    Divider()
+                        .frame(height: 0.5)
+                        .background(CharterConstants.halfWhite)
                 }
             }
+            
+            Button {
+                hideKeyboard()
+                showingSheet = true
+            } label: {
+                HStack(spacing: CharterConstants.marginSmall) {
+                    Image(systemName: "plus.circle")
+                    Text("Ajouter une année")
+                }
+            }
+            .buttonStyle(SecondaryButtonStyle())
             
             if !showQuantitiesOnly {
-                Section("Infos") {
-                    TextField("Vigneron / Domaine", text: $wine.owner)
-                        .focused($isTextFieldFocus)
-                    TextField("Infos", text: $wine.info)
-                        .focused($isTextFieldFocus)
-                }
+                section("Autres informations")
+                
+                FloatingTextField(placeHolder: "Vigneron / Domaine", text: $wine.owner)
+                FloatingTextField(placeHolder: "Infos", text: $wine.info)
             }
-            
-            Section {
-                Button("Sauvegarder") {
-                    save()
-                    dismiss()
-                    sensorFeedback = true
-                    Analytics.logEvent(wine.wineId.isEmpty ? LogEvent.addWine : LogEvent.updateWine, parameters: nil)
+        }
+        .padding(CharterConstants.margin)
+        .sheet(isPresented: bindingScannedText) {
+            NavigationView {
+                let linesText = scannedText.components(separatedBy: "\n")
+                List {
+                    ForEach(linesText, id: \.self) { lineText in
+                        Button {
+                            wine.name = lineText
+                            scannedText = ""
+                        } label: {
+                            Text(lineText)
+                        }
+                    }
                 }
-                .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
-            }
-            
-            Section {
-                if !wine.wineId.isEmpty {
-                    Button("Supprimer", role: .destructive) {
-                        showingDeleteAlert = true
+                .listStyle(.plain)
+                .navigationTitle("Nom du vin")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            scannedText.removeAll()
+                        } label: {
+                            closeButtonView
+                        }
                     }
                 }
             }
         }
         .sheet(isPresented: $showingSheet) {
-            YearSelectionListView(availableYears: Helper.shared.availableYears(for: wine,
-                                                                               selectedYears: Array(quantitiesByYear.keys)),
-                                  quantities: $quantitiesByYear,
-                                  prices: $pricesByYear)
+            YearSelectionListView(
+                availableYears: Helper.shared.availableYears(for: wine,
+                                                             selectedYears: Array(quantitiesByYear.keys)),
+                quantities: $quantitiesByYear,
+                prices: $pricesByYear
+            )
         }
         .sheet(isPresented: $showingCameraSheet) {
-            DocumentScannerView(selectedText: $scannedText)
-                .analyticsScreen(name: ScreenName.scanWine, class: ScreenName.scanWine)
+            ZStack(alignment: .bottom) {
+                DocumentScannerView(selectedText: $scannedText, listener: listener)
+                    .ignoresSafeArea()
+                    .analyticsScreen(name: ScreenName.scanWine, class: ScreenName.scanWine)
+                Button("") {
+                    listener.send(true)
+                }
+                .buttonStyle(CameraButtonStyle())
+                .padding(.horizontal, CharterConstants.margin)
+                .padding(.bottom, CharterConstants.margin)
+            }
         }
-        .sheet(isPresented: bindingAmount) {
+        .fullScreenCover(isPresented: bindingAmount) {
             AmountView(year: $selectedYearAmount, pricesByYear: $pricesByYear)
                 .analyticsScreen(name: ScreenName.addWinePrice, class: ScreenName.addWinePrice)
         }
         .alert("Voulez vous supprimer ce vin ?", isPresented: $showingDeleteAlert) {
-            Button("Oui", role: .destructive) { 
+            Button("Oui", role: .destructive) {
                 quantitiesByYear.removeAll()
                 save()
                 dismiss()
@@ -196,8 +250,18 @@ struct FormView: View {
             }
             Button("Annuler", role: .cancel) {}
         }
-        .autocorrectionDisabled()
         .sensoryFeedback(.success, trigger: sensorFeedback)
+    }
+    
+    func section(_ title: String, isRequired: Bool = false) -> some View {
+        var text = AttributedString(title)
+        text.foregroundColor = .white
+        
+        return Text(isRequired ? text + " " + requiredAttributedText(opacity: 0.8) : text)
+            .font(.system(size: 23, weight: .bold))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .multilineTextAlignment(.leading)
+            .padding(.top, CharterConstants.margin)
     }
 }
 
@@ -208,10 +272,33 @@ private extension FormView {
         DataScannerViewController.isAvailable
     }
     
+    var bindingScannedText: Binding<Bool> {
+        Binding { !scannedText.isEmpty } set: { _ in }
+    }
+    
     var bindingAmount: Binding<Bool> {
+        Binding { selectedYearAmount != 0 } set: { _ in }
+    }
+    
+    func pickerValueBinding(_ value: CustomStringConvertible, type: WinePicker) -> Binding<String> {
         Binding {
-            selectedYearAmount != 0
-        } set: { _ in }
+            String(describing: value)
+        } set: { newValue in
+            switch type {
+            case .region:
+                guard let region = Region.allCases.first(where: { $0.description == newValue })
+                else { return }
+                wine.region = region
+            case .appelation:
+                guard let appelation = Appelation.allCases.first(where: { $0.description == newValue })
+                else { return }
+                wine.appelation = appelation
+            case .type:
+                guard let type = WineType.allCases.first(where: { $0.description == newValue })
+                else { return }
+                wine.type = type
+            }
+        }
     }
     
     func save() {
