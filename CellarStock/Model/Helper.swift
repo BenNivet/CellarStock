@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class Helper {
+final class Helper {
     private let currentYear = Calendar.current.component(.year, from: Date())
     
     static let shared = Helper()

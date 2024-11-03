@@ -21,8 +21,12 @@ struct StatsView: View {
     @State private var showingSettings = false
     @State private var showingSubscription = false
     
+    private var countries: [Country] {
+        Array(Set(wines.compactMap { $0.country }.filter { $0 != .france }))
+            .sorted { $0.rawValue < $1.rawValue }
+    }
     private var regions: [Region] {
-        Array(Set(wines.compactMap { $0.region }))
+        Array(Set(wines.filter { $0.country == .france }.compactMap { $0.region }))
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var types: [WineType] {
@@ -45,7 +49,7 @@ struct StatsView: View {
                 NeoTabsView(items: [
                     NeoTabsItemModel(title: "Régions",
                                      index: 0) {
-                                         AnyView(ChartsView(data: regions.map { StepCount(name: $0.description, count: quantity(for: $0)) }))
+                                         AnyView(ChartsView(data: regions.map { StepCount(name: $0.description, count: quantity(for: $0)) } + countries.map { StepCount(name: $0.description, count: quantity(for: $0)) }))
                                      },
                     NeoTabsItemModel(title: "Types",
                                      index: 1) {
@@ -136,9 +140,17 @@ private extension StatsView {
         return result
     }
     
+    func quantity(for country: Country) -> Int {
+        var result = 0
+        for wine in wines where wine.country == country {
+            result += quantity(for: wine)
+        }
+        return result
+    }
+    
     func quantity(for region: Region) -> Int {
         var result = 0
-        for wine in wines where wine.region == region {
+        for wine in wines where wine.country == .france && wine.region == region {
             result += quantity(for: wine)
         }
         return result

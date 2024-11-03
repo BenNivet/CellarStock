@@ -7,11 +7,14 @@
 
 import SwiftUI
 
-class EntitlementManager: ObservableObject {
+final class EntitlementManager: ObservableObject {
     static let userDefaults = UserDefaults.standard
     
     @AppStorage("isPremium", store: userDefaults)
     var isPremium = false
+    
+    @AppStorage("winesPlus", store: userDefaults)
+    var winesPlus = 0
     
     @AppStorage("winesSubmitted", store: userDefaults)
     var winesSubmitted = 0

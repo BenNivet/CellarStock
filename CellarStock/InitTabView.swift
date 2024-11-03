@@ -78,7 +78,6 @@ struct InitTabView: View {
     }
     
     private func fetchFromServer() {
-        print("fetchFromServer")
         if let userId = users.first?.documentId {
             isLoaderPresented = true
             Task.detached(priority: .background) {

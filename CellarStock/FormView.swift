@@ -14,9 +14,11 @@ import SwiftData
 import VisionKit
 
 enum WinePicker {
+    case country
     case region
     case appelation
     case type
+    case size
 }
 
 @MainActor
@@ -101,19 +103,30 @@ struct FormView: View {
             if !showQuantitiesOnly {
                 section("Caractéristiques")
                 
-                FloatingTextField(type: .picker(rows: Region.allCases.map { $0.description }),
-                                  placeHolder: "Région",
-                                  text: pickerValueBinding(wine.region, type: .region),
+                FloatingTextField(type: .picker(rows: Country.allCases.map { $0.description }),
+                                  placeHolder: "Pays",
+                                  text: pickerValueBinding(wine.country ?? .france, type: .country),
                                   rightIcon: "chevron.right")
-                if wine.region == .bordeaux {
-                    FloatingTextField(type: .picker(rows: Appelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
-                                      placeHolder: "Appelation",
-                                      text: pickerValueBinding(wine.appelation, type: .appelation),
+                
+                if wine.country ?? .france == .france {
+                    FloatingTextField(type: .picker(rows: Region.allCases.map { $0.description }),
+                                      placeHolder: "Région",
+                                      text: pickerValueBinding(wine.region, type: .region),
                                       rightIcon: "chevron.right")
+                    if wine.region == .bordeaux {
+                        FloatingTextField(type: .picker(rows: Appelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
+                                          placeHolder: "Appelation",
+                                          text: pickerValueBinding(wine.appelation, type: .appelation),
+                                          rightIcon: "chevron.right")
+                    }
                 }
                 FloatingTextField(type: .picker(rows: WineType.allCases.map { $0.description }),
                                   placeHolder: "Type",
                                   text: pickerValueBinding(wine.type, type: .type),
+                                  rightIcon: "chevron.right")
+                FloatingTextField(type: .picker(rows: Size.allCases.map { $0.description }),
+                                  placeHolder: "Taille",
+                                  text: pickerValueBinding(wine.size ?? .bouteille, type: .size),
                                   rightIcon: "chevron.right")
                 FloatingTextField(placeHolder: "Nom",
                                   text: $wine.name,
@@ -291,6 +304,10 @@ private extension FormView {
             String(describing: value)
         } set: { newValue in
             switch type {
+            case .country:
+                guard let country = Country.allCases.first(where: { $0.description == newValue })
+                else { return }
+                wine.country = country
             case .region:
                 guard let region = Region.allCases.first(where: { $0.description == newValue })
                 else { return }
@@ -303,6 +320,10 @@ private extension FormView {
                 guard let type = WineType.allCases.first(where: { $0.description == newValue })
                 else { return }
                 wine.type = type
+            case .size:
+                guard let size = Size.allCases.first(where: { $0.description == newValue })
+                else { return }
+                wine.size = size
             }
         }
     }

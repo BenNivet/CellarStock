@@ -31,10 +31,15 @@ struct CongratsView: View {
                     VStack(alignment: .leading) {
                         Text(wine.name)
                             .font(.body)
-                        Text(wine.region.description)
-                            .font(.caption)
-                        if wine.region == .bordeaux {
-                            Text(wine.appelation.description)
+                        if wine.country == .france {
+                            Text(wine.region.description)
+                                .font(.caption)
+                            if wine.region == .bordeaux {
+                                Text(wine.appelation.description)
+                                    .font(.caption)
+                            }
+                        } else if let country = wine.country {
+                            Text(country.description)
                                 .font(.caption)
                         }
                         Text(wine.type.description)

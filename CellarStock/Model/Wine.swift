@@ -19,6 +19,8 @@ final class WineV2 {
     var name: String = ""
     var owner: String = ""
     var info: String = ""
+    var country: Country? = Country.france
+    var size: Size? = Size.bouteille
     
     init(userId: String = "",
          wineId: String = "",
@@ -27,7 +29,9 @@ final class WineV2 {
          appelation: Appelation = .other,
          name: String = "",
          owner: String = "",
-         info: String = "") {
+         info: String = "",
+         country: Country? = .france,
+         size: Size? = .bouteille) {
         self.userId = userId
         self.wineId = wineId
         self.type = type
@@ -36,12 +40,16 @@ final class WineV2 {
         self.name = name
         self.owner = owner
         self.info = info
+        self.country = country
+        self.size = size
     }
     
     init?(wineServer: WineServer, documentId: String) {
         guard let type = WineType(rawValue: wineServer.type),
               let region = Region(rawValue: wineServer.region),
-              let appelation = Appelation(rawValue: wineServer.appelation)
+              let appelation = Appelation(rawValue: wineServer.appelation),
+              let country = Country(rawValue: wineServer.country ?? Country.france.rawValue),
+              let size = Size(rawValue: wineServer.size ?? Size.bouteille.rawValue)
         else { return nil }
         self.wineId = documentId
         self.userId = wineServer.userId
@@ -51,6 +59,8 @@ final class WineV2 {
         self.name = wineServer.name
         self.owner = wineServer.owner
         self.info = wineServer.info
+        self.country = country
+        self.size = size
     }
     
     var wineServer: WineServer {
@@ -60,7 +70,9 @@ final class WineV2 {
                    appelation: appelation.rawValue,
                    name: name,
                    owner: owner,
-                   info: info)
+                   info: info,
+                   country: (country ?? .france).rawValue,
+                   size: (size ?? .bouteille).rawValue)
     }
     
     func isMatch(for query: String) -> Bool {
@@ -328,6 +340,104 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
     }
 }
 
+enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
+    var id: Self { self }
+    
+    case france = 0
+    case italie
+    case espagne
+    case usa
+    case argentine
+    case australie
+    case chili
+    case afriqueDuSud
+    case chine
+    case allemagne
+    case portugal
+    case russie
+    case roumanie
+    case hongrie
+    case autriche
+    case grece
+    case suisse
+    case other
+    
+    var description: String {
+        switch self {
+        case .france:
+            "France"
+        case .italie:
+            "Italie"
+        case .espagne:
+            "Espagne"
+        case .usa:
+            "États-Unis"
+        case .argentine:
+            "Argentine"
+        case .australie:
+            "Australie"
+        case .chili:
+            "Chili"
+        case .afriqueDuSud:
+            "Afrique du Sud"
+        case .chine:
+            "Chine"
+        case .allemagne:
+            "Allemagne"
+        case .portugal:
+            "Portugal"
+        case .russie:
+            "Russie"
+        case .roumanie:
+            "Roumanie"
+        case .hongrie:
+            "Hongrie"
+        case .autriche:
+            "Autriche"
+        case .grece:
+            "Grèce"
+        case .suisse:
+            "Suisse"
+        case .other:
+            "Autre"
+        }
+    }
+}
+
+enum Size: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
+    var id: Self { self }
+    
+    case bouteille = 1
+    case magnum = 2
+    case jeroboam = 4
+    case mathusalem = 8
+    case salmanazar = 12
+    case balthazar = 16
+    case nabuchodonosor = 20
+    case salomon = 24
+    
+    var description: String {
+        switch self {
+        case .bouteille:
+            "75 cl"
+        case .magnum:
+            "Magnum (1,5L)"
+        case .jeroboam:
+            "Jéroboam (3L)"
+        case .mathusalem:
+            "Mathusalem (6L)"
+        case .salmanazar:
+            "Salmanazar (9L)"
+        case .balthazar:
+            "Balthazar (12L)"
+        case .nabuchodonosor:
+            "Nabuchodonosor (15L)"
+        case .salomon:
+            "Salomon (18L)"
+        }
+    }
+}
+
 struct WineServer: Codable {
     var userId: String
     var type: Int
@@ -336,6 +446,8 @@ struct WineServer: Codable {
     var name: String
     var owner: String
     var info: String
+    var country: Int?
+    var size: Int?
 }
 
 struct QuantityServer: Codable {

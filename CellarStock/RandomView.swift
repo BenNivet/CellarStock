@@ -84,7 +84,7 @@ struct RandomView: View {
     private var randomWine: (Wine, Quantity)? {
         var selectableWines = wines
         if !filterRegions.isEmpty {
-            selectableWines = selectableWines.filter { filterRegions.contains($0.region.rawValue) }
+            selectableWines = selectableWines.filter { $0.country == .france && filterRegions.contains($0.region.rawValue) }
         }
         if !filterTypes.isEmpty {
             selectableWines = selectableWines.filter { filterTypes.contains($0.type.rawValue) }

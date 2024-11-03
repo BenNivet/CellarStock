@@ -40,11 +40,11 @@ class SubscriptionsManager: NSObject, ObservableObject {
 // MARK: - NeedSubscription
 extension SubscriptionsManager {
     var needSubscription: Bool {
-        if let winesSubmitted = entitlementManager?.winesSubmitted,
-           winesSubmitted != 0,
-           winesSubmitted % CharterConstants.winesCountSubscription == 0,
+        if let winesPlus = entitlementManager?.winesPlus,
+           winesPlus != 0,
+           winesPlus % CharterConstants.winesCountSubscription == 0,
            !(entitlementManager?.isPremium ?? false) {
-            entitlementManager?.winesSubmitted += 1
+            entitlementManager?.winesPlus += 1
             return true
         } else {
             return false
@@ -140,7 +140,7 @@ extension SubscriptionsManager {
     }
 }
 
-extension SubscriptionsManager: SKPaymentTransactionObserver {
+extension SubscriptionsManager: @preconcurrency SKPaymentTransactionObserver {
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {}
     
     func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool { true }
