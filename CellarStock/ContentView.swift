@@ -64,7 +64,7 @@ struct ContentView: View {
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var appelations: [Appelation] {
-        Array(Set(filteredWines.filter { $0.region == .bordeaux }
+        Array(Set(filteredWines.filter { $0.country == .france && $0.region == .bordeaux }
             .compactMap { $0.appelation }))
             .sorted { $0.description < $1.description }
     }
@@ -272,7 +272,7 @@ struct ContentView: View {
                               subtitle: quantity(for: appelation).bottlesString,
                               isCollapsed: isCollapsed(item: appelation, array: appelations)) {
                         VStack(spacing: CharterConstants.marginSmall) {
-                            ForEach(filteredWines.filter { $0.region == region && $0.appelation == appelation }) { wine in
+                            ForEach(filteredWines.filter { $0.country == .france && $0.region == region && $0.appelation == appelation }) { wine in
                                 cellView(wine: wine)
                             }
                         }
@@ -281,7 +281,7 @@ struct ContentView: View {
             }
         } else {
             VStack(spacing: CharterConstants.marginSmall) {
-                ForEach(filteredWines.filter { $0.region == region }) { wine in
+                ForEach(filteredWines.filter { $0.country == .france && $0.region == region }) { wine in
                     cellView(wine: wine)
                 }
             }
@@ -301,8 +301,14 @@ struct ContentView: View {
             TileView {
                 HStack(spacing: 0) {
                     VStack(alignment: .leading) {
-                        Text(wine.name)
-                            .font(.body)
+                        if let size = wine.size,
+                           size != .bouteille {
+                            Text(wine.name + " (\(size.description.components(separatedBy: " ").first ?? ""))")
+                                .font(.body)
+                        } else {
+                            Text(wine.name)
+                                .font(.body)
+                        }
                         if wine.country == .france {
                             Text(wine.region.description)
                                 .font(.caption)
@@ -316,6 +322,11 @@ struct ContentView: View {
                         }
                         Text(wine.type.description)
                             .font(.caption)
+                        if let size = wine.size,
+                           size != .bouteille {
+                            Text(size.description.components(separatedBy: " ").first ?? "")
+                                .font(.caption)
+                        }
                         if !wine.owner.isEmpty {
                             Text(wine.owner)
                                 .font(.caption)
@@ -387,7 +398,7 @@ private extension ContentView {
     
     func quantity(for appelation: Appelation) -> Int {
         var result = 0
-        for wine in filteredWines where wine.region == .bordeaux && wine.appelation == appelation {
+        for wine in filteredWines where wine.country == .france && wine.region == .bordeaux && wine.appelation == appelation {
             result += quantity(for: wine)
         }
         return result

@@ -83,6 +83,7 @@ final class WineV2 {
         || name.queryFormatted.contains(queryFormatted)
         || owner.queryFormatted.contains(queryFormatted)
         || info.queryFormatted.contains(queryFormatted)
+        || (size != .bouteille && (size?.description ?? "").queryFormatted.contains(queryFormatted))
     }
 }
 
