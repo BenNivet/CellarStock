@@ -53,7 +53,9 @@ struct StatsView: View {
                                      },
                     NeoTabsItemModel(title: "Années",
                                      index: 2) {
-                                         AnyView(ChartsView(data: years.map { StepCount(name: String($0), count: quantity(for: $0)) }))
+                                         AnyView(ChartsView(data: years.map {
+                                             StepCount(name: $0 == CharterConstants.withoutYear ? "Sans millésime": String($0),
+                                                       count: quantity(for: $0)) }))
                                      }
                 ])
             }
@@ -97,7 +99,7 @@ struct StatsView: View {
             }
             .navigationTitle("Stats")
             .addLinearGradientBackground()
-            .analyticsScreen(name: ScreenName.stats)
+            .analyticsScreen(name: ScreenName.stats, class: ScreenName.stats)
         }
     }
     

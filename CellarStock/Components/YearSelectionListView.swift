@@ -49,7 +49,11 @@ struct YearSelectionListView: View {
                 prices[year] = 0
                 dismiss()
             } label: {
-                Text(String(year))
+                if year == CharterConstants.withoutYear {
+                    Text("Sans millésime")
+                } else {
+                    Text(String(year))
+                }
             }
         }
     }

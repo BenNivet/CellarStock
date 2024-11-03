@@ -12,4 +12,7 @@ class EntitlementManager: ObservableObject {
     
     @AppStorage("isPremium", store: userDefaults)
     var isPremium = false
+    
+    @AppStorage("winesSubmitted", store: userDefaults)
+    var winesSubmitted = 0
 }

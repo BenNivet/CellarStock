@@ -24,6 +24,7 @@ struct ContentView: View {
     
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
+    @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     @EnvironmentObject private var interstitialAdsManager: InterstitialAdsManager
     
     @Query private var users: [User]
@@ -105,8 +106,7 @@ struct ContentView: View {
                         Button {
                             showingCodeAlert = true
                         } label: {
-                            Image(systemName: "person.2")
-                                .font(.title2)
+                            Image(systemName: "person.2.fill")
                         }
                         .foregroundStyle(.white)
                         .alert("Rejoindre une cave", isPresented: $showingCodeAlert) {
@@ -122,16 +122,13 @@ struct ContentView: View {
                     }
                     ToolbarItem {
                         Button {
-                            if wines.count >= 5,
-                               !entitlementManager.isPremium {
-                                if Int.random(in: 1...100) >= 100 - CharterConstants.randomPercentage {
-                                    showingSubscription = true
-                                } else {
-                                    showingSheet = (true, Wine(), [:], [:], false)
-                                }
-                                Analytics.logEvent(LogEvent.needSubscription, parameters: ["wines": wines.count])
+                            if subscriptionsManager.needSubscription {
+                                showingSubscription = true
                             } else {
                                 showingSheet = (true, Wine(), [:], [:], false)
+                            }
+                            if wines.count >= CharterConstants.winesCountSubscription {
+                                Analytics.logEvent(LogEvent.needSubscription, parameters: ["wines": wines.count])
                             }
                         } label: {
                             Image(systemName: "plus")
@@ -152,7 +149,6 @@ struct ContentView: View {
                             }
                             .tipCornerRadius(CharterConstants.radius)
                         }
-                        
                     }
                 }
                 .fullScreenCover(isPresented: $showingSubscription) {
@@ -221,7 +217,7 @@ struct ContentView: View {
                         }
                     case .year:
                         ForEach(years, id: \.self) { year in
-                            Accordion(title: String(year),
+                            Accordion(title: year == CharterConstants.withoutYear ? "Sans millésime": String(year),
                                       subtitle: quantity(for: year).bottlesString,
                                       isCollapsed: isCollapsed(item: year, array: years)) {
                                 yearView(year: year)

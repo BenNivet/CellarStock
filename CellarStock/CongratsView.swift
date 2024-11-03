@@ -43,7 +43,7 @@ struct CongratsView: View {
                             Text(wine.owner)
                                 .font(.caption)
                         }
-                        Text(String(quantity.year))
+                        Text(quantity.year == CharterConstants.withoutYear ? "Sans millésime": String(quantity.year))
                             .font(.caption)
                         Text(quantity.quantity.bottlesString)
                             .font(.caption)

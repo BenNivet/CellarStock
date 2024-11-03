@@ -26,6 +26,9 @@ class Helper {
         var result: [Int] = []
         var loopYear = currentYear
         let limitYear = currentYear - 80
+        if !selectedYears.contains(CharterConstants.withoutYear) {
+            result.append(CharterConstants.withoutYear)
+        }
         while loopYear >= limitYear {
             if !selectedYears.contains(loopYear) {
                 result.append(loopYear)

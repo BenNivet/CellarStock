@@ -14,10 +14,13 @@ class InterstitialAdsManager: NSObject, ObservableObject {
     @Published var interstitialAdLoaded = false
     var interstitialAd: GADInterstitialAd?
     
+#if DEBUG
     // TEST Id
-//    private let interstitialId = "ca-app-pub-3940256099942544/4411468910"
+    private let interstitialId = "ca-app-pub-3940256099942544/4411468910"
+#else
     // PROD Id
-    private let interstitialId = "ca-app-pub-1362150666996278/5211257865"
+    private let interstitialId = "ca-app-pub-1362150666996278/3489136171"
+#endif
     
     override init() {
         super.init()
@@ -50,7 +53,7 @@ class InterstitialAdsManager: NSObject, ObservableObject {
     }
 }
 
-extension InterstitialAdsManager: GADFullScreenContentDelegate {
+extension InterstitialAdsManager: @preconcurrency GADFullScreenContentDelegate {
     
     func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         print("🟡: Failed to display interstitial ad")

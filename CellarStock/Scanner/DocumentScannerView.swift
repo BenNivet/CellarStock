@@ -52,8 +52,8 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         private var listener: PassthroughSubject<Bool,Never>
         private var roundBoxMappings: [UUID: UIView] = [:]
         private var transcript: String?
-        private let wineKeywords = ["CHATEAU", "DOMAINE"]
-        private let escapeKeywords = ["DU", "DE", "DES", "LE", "LA", "LES"]
+        private let wineKeywords = ["CHATEAU", "DOMAINE", "CLOS"]
+        private let escapeKeywords = ["DU", "DE", "DES", "LE", "LA", "LES", "UN", "UNE", "ET", "&"]
         
         init(_ parent: DocumentScannerView, listener: PassthroughSubject<Bool,Never>) {
             self.parent = parent

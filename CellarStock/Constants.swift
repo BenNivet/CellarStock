@@ -41,7 +41,10 @@ struct CharterConstants {
     static let disabledOpacity: CGFloat = 0.4
     
     // Random
-    static let randomPercentage = 10
+    static let winesCountSubscription = 11
+    static let winesCountRatings = 17
+    
+    static let withoutYear = 9999
 }
 
 struct ScreenName {

@@ -31,7 +31,7 @@ struct SubscriptionView: View {
             hasSubscriptionView
                 .padding(.horizontal, CharterConstants.margin)
                 .addLinearGradientBackground()
-                .analyticsScreen(name: ScreenName.subscriptionSuccess)
+                .analyticsScreen(name: ScreenName.subscriptionSuccess, class: ScreenName.subscriptionSuccess)
                 .displayConfetti(isActive: $showConfetti)
                 .onAppear {
                     showConfetti = true
@@ -51,7 +51,7 @@ struct SubscriptionView: View {
                 }
                 .offerCodeRedemption(isPresented: $showRedeemCode)
                 .addLinearGradientBackground()
-                .analyticsScreen(name: ScreenName.subscription)
+                .analyticsScreen(name: ScreenName.subscription, class: ScreenName.subscription)
                 .overlay {
                     if subscriptionsManager.products.isEmpty {
                         ProgressView()
@@ -232,7 +232,7 @@ struct SubscriptionView: View {
     }
 }
 
-// MARK: Subscription Item
+// MARK: - Subscription Item
 struct SubscriptionItemView: View {
     var product: Product
     @Binding var selectedProduct: Product?

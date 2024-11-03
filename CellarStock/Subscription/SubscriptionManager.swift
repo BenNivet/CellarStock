@@ -14,8 +14,8 @@ class SubscriptionsManager: NSObject, ObservableObject {
     
     @Published var products: [Product] = []
     
-    private var entitlementManager: EntitlementManager? = nil
-    private var updates: Task<Void, Never>? = nil
+    private var entitlementManager: EntitlementManager?
+    private var updates: Task<Void, Never>?
     
     init(entitlementManager: EntitlementManager) {
         self.entitlementManager = entitlementManager
@@ -37,7 +37,35 @@ class SubscriptionsManager: NSObject, ObservableObject {
     }
 }
 
-// MARK: StoreKit2 API
+// MARK: - NeedSubscription
+extension SubscriptionsManager {
+    var needSubscription: Bool {
+        if let winesSubmitted = entitlementManager?.winesSubmitted,
+           winesSubmitted != 0,
+           winesSubmitted % CharterConstants.winesCountSubscription == 0,
+           !(entitlementManager?.isPremium ?? false) {
+            entitlementManager?.winesSubmitted += 1
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+extension SubscriptionsManager {
+    var needRating: Bool {
+        if let winesSubmitted = entitlementManager?.winesSubmitted,
+           winesSubmitted != 0,
+           winesSubmitted % CharterConstants.winesCountRatings == 0 {
+            entitlementManager?.winesSubmitted += 1
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+// MARK: - StoreKit2 API
 extension SubscriptionsManager {
     func loadProducts() async {
         do {
@@ -115,7 +143,5 @@ extension SubscriptionsManager {
 extension SubscriptionsManager: SKPaymentTransactionObserver {
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {}
     
-    func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool {
-        true
-    }
+    func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool { true }
 }

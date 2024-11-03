@@ -95,7 +95,7 @@ struct SelectionListView: View {
             }
         case .year:
             ForEach(years, id: \.self) { year in
-                elementView(label: String(year), index: year)
+                elementView(label: year == CharterConstants.withoutYear ? "Sans millésime": String(year), index: year)
             }
         }
     }

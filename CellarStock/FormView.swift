@@ -8,6 +8,7 @@
 import Combine
 import FirebaseAnalytics
 import Foundation
+import StoreKit
 import SwiftUI
 import SwiftData
 import VisionKit
@@ -23,6 +24,9 @@ struct FormView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    @Environment(\.requestReview) var requestReview
+    @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
+    @EnvironmentObject private var entitlementManager: EntitlementManager
     
     @Query private var users: [User]
     @Query private var wines: [Wine]
@@ -46,33 +50,35 @@ struct FormView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                ScrollView {
-                    formView
-                    Spacer()
-                    VStack(spacing: CharterConstants.margin) {
-                        Button("Sauvegarder") {
-                            save()
-                            dismiss()
-                            sensorFeedback = true
-                            Analytics.logEvent(wine.wineId.isEmpty ? LogEvent.addWine : LogEvent.updateWine, parameters: nil)
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
-                        
-                        if !wine.wineId.isEmpty {
-                            Button("Supprimer") {
-                                showingDeleteAlert = true
-                            }
-                            .buttonStyle(DestructiveButtonStyle())
+            ScrollView {
+                formView
+                Spacer()
+                VStack(spacing: CharterConstants.margin) {
+                    Button("Sauvegarder") {
+                        save()
+                        dismiss()
+                        sensorFeedback = true
+                        Analytics.logEvent(wine.wineId.isEmpty ? LogEvent.addWine : LogEvent.updateWine, parameters: nil)
+                        entitlementManager.winesSubmitted += 1
+                        if subscriptionsManager.needRating {
+                            requestReview()
                         }
                     }
-                    .padding(CharterConstants.margin)
-                    .background(.gray.opacity(CharterConstants.alphaFifteen))
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
+                    
+                    if !wine.wineId.isEmpty {
+                        Button("Supprimer") {
+                            showingDeleteAlert = true
+                        }
+                        .buttonStyle(DestructiveButtonStyle())
+                    }
                 }
-                .keyboardAvoiding()
-                .scrollIndicators(.hidden)
+                .padding(CharterConstants.margin)
             }
+            .addLinearGradientBackground()
+            .keyboardAvoiding()
+            .scrollIndicators(.hidden)
             .onTapGesture {
                 hideKeyboard()
             }
@@ -123,7 +129,7 @@ struct FormView: View {
             ForEach(quantitiesByYear.keys.sorted(by: >), id: \.self) { year in
                 HStack(spacing: CharterConstants.margin) {
                     ZStack {
-                        Text(String(year))
+                        Text(year == CharterConstants.withoutYear ? "Ø" : String(year))
                         Text("XXXX")
                             .layoutPriority(1)
                             .opacity(0)
@@ -185,7 +191,7 @@ struct FormView: View {
                 section("Autres informations")
                 
                 FloatingTextField(placeHolder: "Vigneron / Domaine", text: $wine.owner)
-                FloatingTextField(placeHolder: "Infos", text: $wine.info)
+                FloatingTextField(placeHolder: "Infos / Étage clayette", text: $wine.info)
             }
         }
         .padding(CharterConstants.margin)

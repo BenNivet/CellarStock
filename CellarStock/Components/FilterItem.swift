@@ -77,7 +77,7 @@ struct FilterItem: View {
             case .type:
                 WineType(rawValue: index)?.description ?? type.label
             case .year:
-                String(index)
+                String(index) == String(CharterConstants.withoutYear) ? "Sans millésime": String(index)
             }
         } else {
             "\(type.label) . \(filteringElements.count)"
