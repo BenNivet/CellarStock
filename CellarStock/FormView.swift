@@ -105,10 +105,10 @@ struct FormView: View {
                 
                 FloatingTextField(type: .picker(rows: Country.allCases.map { $0.description }),
                                   placeHolder: "Pays",
-                                  text: pickerValueBinding(wine.country ?? .france, type: .country),
+                                  text: pickerValueBinding(wine.country, type: .country),
                                   rightIcon: "chevron.right")
                 
-                if wine.country ?? .france == .france {
+                if wine.country == .france {
                     FloatingTextField(type: .picker(rows: Region.allCases.map { $0.description }),
                                       placeHolder: "Région",
                                       text: pickerValueBinding(wine.region, type: .region),
@@ -126,7 +126,7 @@ struct FormView: View {
                                   rightIcon: "chevron.right")
                 FloatingTextField(type: .picker(rows: Size.allCases.map { $0.description }),
                                   placeHolder: "Taille",
-                                  text: pickerValueBinding(wine.size ?? .bouteille, type: .size),
+                                  text: pickerValueBinding(wine.size, type: .size),
                                   rightIcon: "chevron.right")
                 FloatingTextField(placeHolder: "Nom",
                                   text: $wine.name,

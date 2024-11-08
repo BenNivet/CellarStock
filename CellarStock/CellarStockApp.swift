@@ -11,8 +11,9 @@ import SwiftUI
 import SwiftData
 import TipKit
 
-typealias Wine = WineV2
-typealias Quantity = QuantityV2
+typealias Wine = SchemaV2.WineV2
+typealias Quantity = SchemaV2.QuantityV2
+typealias User = SchemaV2.User
 
 @main
 struct CellarStockApp: App {
@@ -22,19 +23,32 @@ struct CellarStockApp: App {
     @StateObject private var interstitialAdsManager = InterstitialAdsManager()
     
     @State private var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Wine.self,
-            Quantity.self,
-            User.self
-        ])
+        let schema = Schema(versionedSchema: SchemaV2.self)
         let modelConfiguration = ModelConfiguration(schema: schema)
         
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema,
+                                      migrationPlan: MigrationPlan.self,
+                                      configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    enum MigrationPlan: SchemaMigrationPlan {
+        static var schemas: [any VersionedSchema.Type] {
+            [SchemaV1.self,
+             SchemaV2.self]
+        }
+        static var stages: [MigrationStage] {
+            [migrateV1toV2]
+        }
+        
+        static let migrateV1toV2 = MigrationStage.lightweight(
+            fromVersion: SchemaV1.self,
+            toVersion: SchemaV2.self
+        )
+    }
     
     init() {
         FirebaseApp.configure()
@@ -48,9 +62,8 @@ struct CellarStockApp: App {
             .displayFrequency(.daily)
         ])
         
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
-        
         Task {
+            await GADMobileAds.sharedInstance().start()
             await subscriptionsManager.updatePurchasedProducts()
         }
     }

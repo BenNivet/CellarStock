@@ -26,7 +26,7 @@ struct InitTabView: View {
             ContentView(tabType: .region, reload: $reload)
                 .task {
                     if !alreadyFetched {
-                        fetchFromServer()
+                        await fetchFromServer()
                     }
                 }
         } else {
@@ -65,28 +65,28 @@ struct InitTabView: View {
             }
             .task {
                 if !alreadyFetched {
-                    fetchFromServer()
+                    await fetchFromServer()
                 }
             }
             .onChange(of: reload) { _ , newValue in
                 if newValue {
-                    fetchFromServer()
+                    Task {
+                        await fetchFromServer()
+                    }
                 }
             }
             .loader(isPresented: $isLoaderPresented)
         }
     }
     
-    private func fetchFromServer() {
+    private func fetchFromServer() async {
         if let userId = users.first?.documentId {
             isLoaderPresented = true
-            Task.detached(priority: .background) {
+//            Task.detached(priority: .background) {
                 let wines = await firestoreManager.fetchWines(for: userId)
                 let quantities = await firestoreManager.fetchQuantities(for: userId)
-                await MainActor.run {
-                    updateModel(wines: wines, quantities: quantities)
-                }
-            }
+                updateModel(wines: wines, quantities: quantities)
+//            }
         }
     }
     

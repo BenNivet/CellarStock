@@ -29,9 +29,8 @@ struct CongratsView: View {
             TileView {
                 HStack {
                     VStack(alignment: .leading) {
-                        if let size = wine.size,
-                           size != .bouteille {
-                            Text(wine.name + " (\(size.description.components(separatedBy: " ").first ?? ""))")
+                        if wine.size != .bouteille {
+                            Text(wine.name + " (\(wine.size.description.components(separatedBy: " ").first ?? ""))")
                                 .font(.body)
                         } else {
                             Text(wine.name)
@@ -44,8 +43,8 @@ struct CongratsView: View {
                                 Text(wine.appelation.description)
                                     .font(.caption)
                             }
-                        } else if let country = wine.country {
-                            Text(country.description)
+                        } else {
+                            Text(wine.country.description)
                                 .font(.caption)
                         }
                         Text(wine.type.description)

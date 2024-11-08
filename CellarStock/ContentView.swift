@@ -301,9 +301,8 @@ struct ContentView: View {
             TileView {
                 HStack(spacing: 0) {
                     VStack(alignment: .leading) {
-                        if let size = wine.size,
-                           size != .bouteille {
-                            Text(wine.name + " (\(size.description.components(separatedBy: " ").first ?? ""))")
+                        if wine.size != .bouteille {
+                            Text(wine.name + " (\(wine.size.description.components(separatedBy: " ").first ?? ""))")
                                 .font(.body)
                         } else {
                             Text(wine.name)
@@ -316,15 +315,14 @@ struct ContentView: View {
                                 Text(wine.appelation.description)
                                     .font(.caption)
                             }
-                        } else if let country = wine.country {
-                            Text(country.description)
+                        } else {
+                            Text(wine.country.description)
                                 .font(.caption)
                         }
                         Text(wine.type.description)
                             .font(.caption)
-                        if let size = wine.size,
-                           size != .bouteille {
-                            Text(size.description.components(separatedBy: " ").first ?? "")
+                        if wine.size != .bouteille {
+                            Text(wine.size.description.components(separatedBy: " ").first ?? "")
                                 .font(.caption)
                         }
                         if !wine.owner.isEmpty {
