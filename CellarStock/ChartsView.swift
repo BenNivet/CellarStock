@@ -46,6 +46,7 @@ struct ChartsView: View {
                                                 endPoint: .trailing))
                 .frame(height: CGFloat(displayData.count * 80))
                 .chartXAxis(.hidden)
+                .chartXScale(type: .symmetricLog)
                 .chartYAxis {
                     AxisMarks { _ in
                         AxisValueLabel()

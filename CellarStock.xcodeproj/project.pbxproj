@@ -17,6 +17,8 @@
 		214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066BB2AF25D8500E1857F /* InitTabView.swift */; };
 		214066BE2AF2793000E1857F /* RandomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066BD2AF2793000E1857F /* RandomView.swift */; };
 		214066C12AF29EEC00E1857F /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066C02AF29EEC00E1857F /* CongratsView.swift */; };
+		214517682CDCED0300752320 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 214517672CDCED0300752320 /* InfoPlist.xcstrings */; };
+		2145176C2CDCEF7D00752320 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 2145176B2CDCEF7D00752320 /* Localizable.xcstrings */; };
 		215745922B1CE49B0021745D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745912B1CE49A0021745D /* StatsView.swift */; };
 		215745952B1D17330021745D /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745942B1D17330021745D /* DocumentScannerView.swift */; };
 		215745972B1D176C0021745D /* RoundedRectLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745962B1D176C0021745D /* RoundedRectLabel.swift */; };
@@ -77,6 +79,8 @@
 		214066BB2AF25D8500E1857F /* InitTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitTabView.swift; sourceTree = "<group>"; };
 		214066BD2AF2793000E1857F /* RandomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomView.swift; sourceTree = "<group>"; };
 		214066C02AF29EEC00E1857F /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
+		214517672CDCED0300752320 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		2145176B2CDCEF7D00752320 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		215745912B1CE49A0021745D /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		215745942B1D17330021745D /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
 		215745962B1D176C0021745D /* RoundedRectLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectLabel.swift; sourceTree = "<group>"; };
@@ -172,6 +176,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		214517662CDCECBB00752320 /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				214517672CDCED0300752320 /* InfoPlist.xcstrings */,
+				2145176B2CDCEF7D00752320 /* Localizable.xcstrings */,
+			);
+			path = Strings;
+			sourceTree = "<group>";
+		};
 		215745932B1D171F0021745D /* Scanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,6 +250,7 @@
 				214066B82AF24B6100E1857F /* Components */,
 				21DD02672B2371C900406621 /* Database */,
 				21989AFE2B2B2E7400E5637A /* Files */,
+				214517662CDCECBB00752320 /* Strings */,
 				214066B92AF24B9D00E1857F /* ActionClosure.swift */,
 				214066B42AF2473000E1857F /* Constants.swift */,
 				218588BA2AC81A6300730A9D /* Assets.xcassets */,
@@ -358,7 +372,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					218588B02AC81A6300730A9D = {
 						CreatedOnToolsVersion = 15.0;
@@ -371,6 +385,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				fr,
 				Base,
 			);
 			mainGroup = 218588A82AC81A6300730A9D;
@@ -393,6 +408,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				218588BF2AC81A6300730A9D /* Preview Assets.xcassets in Resources */,
+				214517682CDCED0300752320 /* InfoPlist.xcstrings in Resources */,
+				2145176C2CDCEF7D00752320 /* Localizable.xcstrings in Resources */,
 				218588BB2AC81A6300730A9D /* Assets.xcassets in Resources */,
 				21FFE85E2B234A3C007DBD1A /* GoogleService-Info.plist in Resources */,
 				21989B002B2B2EA700E5637A /* wines.json in Resources */,
@@ -462,6 +479,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -515,6 +533,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -524,6 +543,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -570,6 +590,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -582,7 +603,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -594,6 +615,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Vino Cave";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_NSCameraUsageDescription = "L'application a besoin de l'utilisation de l'appareil photo pour scanner vos bouteilles de vin pour déterminer le nom de votre vin.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Vos données seront utilisées pour vous présenter des publicités personalisées.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -609,7 +631,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -632,7 +654,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -644,6 +666,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Vino Cave";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_NSCameraUsageDescription = "L'application a besoin de l'utilisation de l'appareil photo pour scanner vos bouteilles de vin pour déterminer le nom de votre vin.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Vos données seront utilisées pour vous présenter des publicités personalisées.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -659,7 +682,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";

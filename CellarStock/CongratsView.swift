@@ -53,7 +53,7 @@ struct CongratsView: View {
                             Text(wine.owner)
                                 .font(.caption)
                         }
-                        Text(quantity.year == CharterConstants.withoutYear ? "Sans millésime": String(quantity.year))
+                        Text(quantity.year == CharterConstants.withoutYear ? String(localized: "Sans millésime") : String(quantity.year))
                             .font(.caption)
                         Text(quantity.quantity.bottlesString)
                             .font(.caption)
@@ -68,16 +68,15 @@ struct CongratsView: View {
                     Task {
                         if quantity.quantity == 0 {
                             modelContext.delete(quantity)
-                            await firestoreManager.deleteQuantity(quantity)
+                            firestoreManager.deleteQuantity(quantity)
                         } else {
-                            await firestoreManager.updateQuantity(quantity)
+                            firestoreManager.updateQuantity(quantity)
                         }
                         
                         if quantity(for: wine) == 0 {
                             modelContext.delete(wine)
-                            await firestoreManager.deleteWine(wine)
+                            firestoreManager.deleteWine(wine)
                         }
-                        try? modelContext.save()
                     }
                     dismiss()
                 }

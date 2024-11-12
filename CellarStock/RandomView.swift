@@ -50,7 +50,7 @@ struct RandomView: View {
                         }
                         .sheet(isPresented: $showingSheet.0) {
                             CongratsView(wine: $showingSheet.1, quantity: $showingSheet.2)
-                                .presentationDetents([.large, .medium])
+                                .presentationDetents([.large, .fraction(0.6)])
                                 .analyticsScreen(name: ScreenName.randomResult, class: ScreenName.randomResult)
                         }
                         .alert("Aucun vin ne correspond à vos critères", isPresented: $showingAlert) {

@@ -18,7 +18,7 @@ extension View {
     }
     
     func requiredAttributedText(opacity: Double = 1) ->AttributedString {
-        var requiredText = AttributedString("(requis)")
+        var requiredText = AttributedString("(\(String(localized: "requis")))")
         requiredText.foregroundColor = CharterConstants.mainRed.opacity(opacity)
         return requiredText
     }

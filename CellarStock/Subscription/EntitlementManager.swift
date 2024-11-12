@@ -18,4 +18,7 @@ final class EntitlementManager: ObservableObject {
     
     @AppStorage("winesSubmitted", store: userDefaults)
     var winesSubmitted = 0
+    
+    @AppStorage("clearNeeded", store: userDefaults)
+    var clearNeeded = true
 }

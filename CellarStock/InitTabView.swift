@@ -11,114 +11,133 @@ import SwiftData
 struct InitTabView: View {
     
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var entitlementManager: EntitlementManager
     
     @Query private var users: [User]
     @Query private var wines: [Wine]
+    @Query private var quantities: [Quantity]
     
-    @State private var isLoaderPresented = false
+    @State private var isLoaderPresented = true
     @State private var reload = false
     @State private var alreadyFetched = false
     
     private let firestoreManager = FirestoreManager.shared
     
     var body: some View {
-        if wines.isEmpty {
-            ContentView(tabType: .region, reload: $reload)
-                .task {
-                    if !alreadyFetched {
-                        await fetchFromServer()
-                    }
-                }
-        } else {
-            TabView {
+        Group {
+            if wines.isEmpty {
                 ContentView(tabType: .region, reload: $reload)
-                    .tabItem {
-                        Text("Région")
-                        Image("map")
+                    .task {
+                        await fetchIfNeeded()
                     }
-                ContentView(tabType: .type, reload: $reload)
-                    .tabItem {
-                        Text("Type")
-                        Image("grape")
-                    }
-                ContentView(tabType: .year, reload: $reload)
-                    .tabItem {
-                        Text("Année")
-                        Image("calendar")
-                    }
-                if wines.count > 5 {
-                    RandomView()
+                //        } else if !alreadyFetched {
+                //            Image("wallpaper1")
+                //                .resizable()
+                //                .ignoresSafeArea()
+                //                .loader(isPresented: $isLoaderPresented)
+                //                .task {
+                //                    await fetchIfNeeded()
+                //                }
+            } else {
+                TabView {
+                    ContentView(tabType: .region, reload: $reload)
                         .tabItem {
-                            Text("Roulette")
-                            Image("dice")
+                            Text("Région")
+                            Image("map")
+                        }
+                    ContentView(tabType: .type, reload: $reload)
+                        .tabItem {
+                            Text("Type")
+                            Image("grape")
+                        }
+                    ContentView(tabType: .year, reload: $reload)
+                        .tabItem {
+                            Text("Année")
+                            Image("calendar")
+                        }
+                    if wines.count > 5 {
+                        RandomView()
+                            .tabItem {
+                                Text("Roulette")
+                                Image("dice")
+                            }
+                    }
+                    StatsView()
+                        .tabItem {
+                            Text("Stats")
+                            Image("stats")
                         }
                 }
-                StatsView()
-                    .tabItem {
-                        Text("Stats")
-                        Image("stats")
-                    }
-            }
-            .accentColor(.white)
-            .onAppear {
-                UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
-            }
-            .task {
-                if !alreadyFetched {
-                    await fetchFromServer()
+                .accentColor(.white)
+                .onAppear {
+                    UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
                 }
-            }
-            .onChange(of: reload) { _ , newValue in
-                if newValue {
-                    Task {
-                        await fetchFromServer()
+                .task {
+                    await fetchIfNeeded()
+                }
+                .onChange(of: reload) { _ , newValue in
+                    if newValue {
+                        Task {
+                            await fetchFromServer()
+                        }
                     }
                 }
             }
-            .loader(isPresented: $isLoaderPresented)
+        }
+        .loader(isPresented: $isLoaderPresented)
+    }
+    
+    private func fetchIfNeeded() async {
+        if !alreadyFetched {
+            await fetchFromServer()
         }
     }
     
     private func fetchFromServer() async {
-        if let userId = users.first?.documentId {
-            isLoaderPresented = true
-//            Task.detached(priority: .background) {
-                let wines = await firestoreManager.fetchWines(for: userId)
-                let quantities = await firestoreManager.fetchQuantities(for: userId)
-                updateModel(wines: wines, quantities: quantities)
-//            }
+        if entitlementManager.clearNeeded {
+            entitlementManager.clearNeeded = false
+            try? modelContext.delete(model: Wine.self)
+            try? modelContext.delete(model: Quantity.self)
+        } else if let userId = users.first?.documentId {
+            async let wines = await firestoreManager.fetchWines(for: userId)
+            async let quantities = await firestoreManager.fetchQuantities(for: userId)
+            updateModel(wines: await wines, quantities: await quantities)
         }
     }
     
     private func updateModel(wines: [Wine], quantities: [Quantity]) {
-        modelContext.autosaveEnabled = false
         do {
-            try modelContext.transaction {
-                try modelContext.delete(model: Quantity.self)
-                try modelContext.delete(model: Wine.self)
-                for wine in wines {
-                    modelContext.insert(wine)
+            if self.wines.count != wines.count,
+               self.wines.first(where: { wines.contains($0) }) == nil {
+                try modelContext.transaction {
+                    try modelContext.delete(model: Wine.self)
+                    for wine in wines {
+                        modelContext.insert(wine)
+                    }
                 }
-                
-                for quantity in quantities {
-                    modelContext.insert(quantity)
-                }
-                if modelContext.hasChanges {
-                    try modelContext.save()
-                }
-                endFetch()
             }
+            
+            if self.quantities.count != quantities.count,
+               self.quantities.first(where: { quantities.contains($0) }) == nil {
+                try modelContext.transaction {
+                    try modelContext.delete(model: Quantity.self)
+                    for quantity in quantities {
+                        modelContext.insert(quantity)
+                    }
+                }
+            }
+            
+            endFetch()
         } catch {
             endFetch()
         }
     }
     
     private func endFetch() {
-        isLoaderPresented = false
-        modelContext.autosaveEnabled = true
         if reload {
             reload = false
         }
         alreadyFetched = true
+        isLoaderPresented = false
     }
 }

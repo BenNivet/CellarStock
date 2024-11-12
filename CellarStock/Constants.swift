@@ -71,6 +71,13 @@ struct LogEvent {
     static let validateSubscription = "Validate_subscription"
     static let redeemSubscription = "Reedem_subscription"
     static let needSubscription = "Need_subscription"
+    
+    // Ads
+    static let adSuccess = "Load_ad_success"
+    static let adNil = "Load_ad_nil"
+    static let adError = "Load_ad_error"
+    static let displayAdSuccess = "Display_ad_success"
+    static let displayAdError = "Display_ad_error"
 }
 
 struct Subscription {
@@ -124,9 +131,9 @@ extension Double {
 extension Int {
     var bottlesString: String {
         if self > 1 {
-            "\(self) bouteilles"
+            "\(self) \(String(localized: "bouteilles"))"
         } else {
-            "\(self) bouteille"
+            "\(self) \(String(localized: "bouteille"))"
         }
     }
 }

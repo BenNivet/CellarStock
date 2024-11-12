@@ -30,6 +30,7 @@ struct ContentView: View {
     @Query private var users: [User]
     @Query private var wines: [Wine]
     @Query private var quantities: [Quantity]
+    
     @State private var showingSheet: (Bool, Wine, [Int: Int], [Int: Double], Bool) = (false, Wine(), [:], [:], false)
     @State private var searchText = ""
     @State private var searchIsActive = false
@@ -54,7 +55,7 @@ struct ContentView: View {
         }
     }
     
-    private var title = "Vino Cave"
+    private var title = String(localized: "Vino Cave")
     private var countries: [Country] {
         Array(Set(filteredWines.compactMap { $0.country }.filter { $0 != .france }))
             .sorted { $0.rawValue < $1.rawValue }
@@ -212,7 +213,7 @@ struct ContentView: View {
                             Accordion(title: country.description,
                                       subtitle: quantity(for: country).bottlesString,
                                       isCollapsed: isCollapsed(item: country, array: regions + countries)) {
-                                VStack(spacing: CharterConstants.marginSmall) {
+                                LazyVStack(spacing: CharterConstants.marginSmall) {
                                     ForEach(filteredWines.filter { $0.country == country }) { wine in
                                         cellView(wine: wine)
                                     }
@@ -224,7 +225,7 @@ struct ContentView: View {
                             Accordion(title: type.description,
                                       subtitle: quantity(for: type).bottlesString,
                                       isCollapsed: isCollapsed(item: type, array: types)) {
-                                VStack(spacing: CharterConstants.marginSmall) {
+                                LazyVStack(spacing: CharterConstants.marginSmall) {
                                     ForEach(filteredWines.filter { $0.type == type }) { wine in
                                         cellView(wine: wine)
                                     }
@@ -233,7 +234,7 @@ struct ContentView: View {
                         }
                     case .year:
                         ForEach(years, id: \.self) { year in
-                            Accordion(title: year == CharterConstants.withoutYear ? "Sans millésime": String(year),
+                            Accordion(title: year == CharterConstants.withoutYear ? String(localized: "Sans millésime") : String(year),
                                       subtitle: quantity(for: year).bottlesString,
                                       isCollapsed: isCollapsed(item: year, array: years)) {
                                 yearView(year: year)
@@ -266,12 +267,12 @@ struct ContentView: View {
     @ViewBuilder
     private func regionView(region: Region) -> some View {
         if region == .bordeaux {
-            VStack(spacing: CharterConstants.margin) {
+            LazyVStack(spacing: CharterConstants.margin) {
                 ForEach(appelations) { appelation in
                     Accordion(title: appelation.description,
                               subtitle: quantity(for: appelation).bottlesString,
                               isCollapsed: isCollapsed(item: appelation, array: appelations)) {
-                        VStack(spacing: CharterConstants.marginSmall) {
+                        LazyVStack(spacing: CharterConstants.marginSmall) {
                             ForEach(filteredWines.filter { $0.country == .france && $0.region == region && $0.appelation == appelation }) { wine in
                                 cellView(wine: wine)
                             }
@@ -280,7 +281,7 @@ struct ContentView: View {
                 }
             }
         } else {
-            VStack(spacing: CharterConstants.marginSmall) {
+            LazyVStack(spacing: CharterConstants.marginSmall) {
                 ForEach(filteredWines.filter { $0.country == .france && $0.region == region }) { wine in
                     cellView(wine: wine)
                 }
@@ -289,7 +290,7 @@ struct ContentView: View {
     }
     
     private func yearView(year: Int) -> some View {
-        VStack(spacing: CharterConstants.marginSmall) {
+        LazyVStack(spacing: CharterConstants.marginSmall) {
             ForEach(wines(for: year), id: \.0) { wine, quantity in
                 cellView(wine: wine, yearQuantity: quantity)
             }
@@ -301,13 +302,8 @@ struct ContentView: View {
             TileView {
                 HStack(spacing: 0) {
                     VStack(alignment: .leading) {
-                        if wine.size != .bouteille {
-                            Text(wine.name + " (\(wine.size.description.components(separatedBy: " ").first ?? ""))")
-                                .font(.body)
-                        } else {
-                            Text(wine.name)
-                                .font(.body)
-                        }
+                        Text(wine.name)
+                            .font(.body)
                         if wine.country == .france {
                             Text(wine.region.description)
                                 .font(.caption)
@@ -372,7 +368,8 @@ private extension ContentView {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities where quantity.wineId == wine.wineId {
+        let quantitiesFetched = (try? modelContext.fetch(FetchDescriptor<Quantity>())) ?? []
+        for quantity in quantitiesFetched where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result
@@ -412,7 +409,8 @@ private extension ContentView {
     
     func quantity(for year: Int) -> Int {
         var result = 0
-        for quantity in quantities where quantity.year == year {
+        let quantitiesFetched = (try? modelContext.fetch(FetchDescriptor<Quantity>())) ?? []
+        for quantity in quantitiesFetched where quantity.year == year {
             result += quantity.quantity
         }
         return result
@@ -420,7 +418,8 @@ private extension ContentView {
     
     func wines(for year: Int) -> [(Wine, Int)] {
         var result: [(Wine, Int)] = []
-        for quantity in quantities where quantity.year == year {
+        let quantitiesFetched = (try? modelContext.fetch(FetchDescriptor<Quantity>())) ?? []
+        for quantity in quantitiesFetched where quantity.year == year {
             guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
             result.append((wine, quantity.quantity))
         }
@@ -431,7 +430,6 @@ private extension ContentView {
         try? modelContext.delete(model: User.self)
         try? modelContext.delete(model: Quantity.self)
         try? modelContext.delete(model: Wine.self)
-        try? modelContext.save()
     }
     
     func findCellar(code: String) {
@@ -440,7 +438,6 @@ private extension ContentView {
             guard let userId else { return }
             flush()
             modelContext.insert(User(documentId: userId))
-            try? modelContext.save()
             Analytics.logEvent(LogEvent.joinCellar, parameters: nil)
         }
     }
@@ -522,7 +519,7 @@ extension View {
         switch tabType {
         case .region, .type:
             self
-                .searchable(text: searchText, isPresented: searchIsActive, prompt: "Recherche")
+                .searchable(text: searchText, isPresented: searchIsActive, prompt: "Rechercher")
                 .autocorrectionDisabled()
         case .year:
             self

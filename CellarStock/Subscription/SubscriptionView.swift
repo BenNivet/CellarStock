@@ -18,10 +18,10 @@ struct SubscriptionView: View {
     @State private var selectedProduct: Product? = nil
     @State private var showRedeemCode: Bool = false
     
-    private let features: [String] = ["Ajouter des vins en illimité",
-                                      "Partager ma cave",
-                                      "Suggestions de vins",
-                                      "Aucune publicité"]
+    private let features: [String] = [String(localized: "Ajouter des vins en illimité"),
+                                      String(localized: "Partager ma cave"),
+                                      String(localized: "Suggestions de vins"),
+                                      String(localized: "Aucune publicité")]
     
     @State private var showConfetti = false
     

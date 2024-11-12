@@ -140,7 +140,7 @@ extension SubscriptionsManager {
     }
 }
 
-extension SubscriptionsManager: @preconcurrency SKPaymentTransactionObserver {
+extension SubscriptionsManager: SKPaymentTransactionObserver {
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {}
     
     func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool { true }

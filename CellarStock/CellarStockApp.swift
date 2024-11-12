@@ -63,7 +63,9 @@ struct CellarStockApp: App {
         ])
         
         Task {
-            await GADMobileAds.sharedInstance().start()
+            if !entitlementManager.isPremium {
+                await GADMobileAds.sharedInstance().start()
+            }
             await subscriptionsManager.updatePurchasedProducts()
         }
     }
@@ -71,11 +73,11 @@ struct CellarStockApp: App {
     var body: some Scene {
         WindowGroup {
             InitTabView()
+                .modelContainer(sharedModelContainer)
                 .environmentObject(entitlementManager)
                 .environmentObject(subscriptionsManager)
                 .environmentObject(interstitialAdsManager)
                 .fontDesign(.rounded)
         }
-        .modelContainer(sharedModelContainer)
     }
 }

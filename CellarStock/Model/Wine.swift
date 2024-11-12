@@ -311,15 +311,15 @@ enum WineType: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable
     var description: String {
         switch self {
         case .rouge:
-            "Rouge"
+            String(localized: "Rouge")
         case .blanc:
-            "Blanc"
+            String(localized: "Blanc")
         case .rose:
-            "Rosé"
+            String(localized: "Rosé")
         case .petillant:
-            "Pétillant"
+            String(localized: "Pétillant")
         case .other:
-            "Autre"
+            String(localized: "Autre")
         }
     }
 }
@@ -520,43 +520,44 @@ enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable 
     var description: String {
         switch self {
         case .france:
-            "France"
+            String(localized: "France")
         case .italie:
-            "Italie"
+            String(localized: "Italie")
         case .espagne:
-            "Espagne"
+            String(localized: "Espagne")
         case .usa:
-            "États-Unis"
+            String(localized: "États-Unis")
         case .argentine:
-            "Argentine"
+            String(localized: "Argentine")
         case .australie:
-            "Australie"
+            String(localized: "Australie")
         case .chili:
-            "Chili"
+            String(localized: "Chili")
         case .afriqueDuSud:
-            "Afrique du Sud"
+            String(localized: "Afrique du Sud")
         case .chine:
-            "Chine"
+            String(localized: "Chine")
         case .allemagne:
-            "Allemagne"
+            String(localized: "Allemagne")
         case .portugal:
-            "Portugal"
+            String(localized: "Portugal")
         case .russie:
-            "Russie"
+            String(localized: "Russie")
         case .roumanie:
-            "Roumanie"
+            String(localized: "Roumanie")
         case .hongrie:
-            "Hongrie"
+            String(localized: "Hongrie")
         case .autriche:
-            "Autriche"
+            String(localized: "Autriche")
         case .grece:
-            "Grèce"
+            String(localized: "Grèce")
         case .suisse:
-            "Suisse"
+            String(localized: "Suisse")
         case .other:
-            "Autre"
+            String(localized: "Autre")
         }
     }
+
 }
 
 enum Size: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {

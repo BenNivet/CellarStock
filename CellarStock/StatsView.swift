@@ -41,24 +41,24 @@ struct StatsView: View {
         NavigationStack {
             VStack(spacing: CharterConstants.margin) {
                 VStack(spacing: CharterConstants.marginSmall) {
-                    tile(left: "Total", right: generalInfos.count.bottlesString)
-                    tile(left: "Montant total", right: "\(generalInfos.price.toRoundedString) €")
+                    tile(left: String(localized: "Total"), right: generalInfos.count.bottlesString)
+                    tile(left: String(localized: "Montant total"), right: "\(generalInfos.price.toRoundedString) \(String(describing: Locale.current.currencySymbol ?? "€"))")
                 }
                 .padding(.horizontal, CharterConstants.margin)
                 
                 NeoTabsView(items: [
-                    NeoTabsItemModel(title: "Régions",
+                    NeoTabsItemModel(title: String(localized: "Régions"),
                                      index: 0) {
                                          AnyView(ChartsView(data: regions.map { StepCount(name: $0.description, count: quantity(for: $0)) } + countries.map { StepCount(name: $0.description, count: quantity(for: $0)) }))
                                      },
-                    NeoTabsItemModel(title: "Types",
+                    NeoTabsItemModel(title: String(localized: "Types"),
                                      index: 1) {
                                          AnyView(ChartsView(data: types.map { StepCount(name: $0.description, count: quantity(for: $0)) }))
                                      },
-                    NeoTabsItemModel(title: "Années",
+                    NeoTabsItemModel(title: String(localized: "Années"),
                                      index: 2) {
                                          AnyView(ChartsView(data: years.map {
-                                             StepCount(name: $0 == CharterConstants.withoutYear ? "Sans millésime": String($0),
+                                             StepCount(name: $0 == CharterConstants.withoutYear ? String(localized: "Sans millésime"): String($0),
                                                        count: quantity(for: $0)) }))
                                      }
                 ])
@@ -173,6 +173,7 @@ private extension StatsView {
     }
     
     func sharedText(id: String) -> String {
+        String(localized:
         """
         Vino Cave
         Je souhaite partager ma cave avec toi !
@@ -180,13 +181,13 @@ private extension StatsView {
         vinocave://code/\(id)
         L'application Vino Cave doit déjà être installé sur le téléphone.
         """
+        )
     }
     
     func flush() {
         try? modelContext.delete(model: User.self)
         try? modelContext.delete(model: Quantity.self)
         try? modelContext.delete(model: Wine.self)
-        try? modelContext.save()
     }
 }
 

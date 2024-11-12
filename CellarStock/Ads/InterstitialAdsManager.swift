@@ -5,6 +5,7 @@
 //  Created by CANTE Benjamin  on 20/10/2024.
 //
 
+import FirebaseAnalytics
 import Foundation
 import GoogleMobileAds
 
@@ -33,12 +34,18 @@ class InterstitialAdsManager: NSObject, ObservableObject {
             if let error {
                 print("🔴: \(error.localizedDescription)")
                 interstitialAdLoaded = false
+                Analytics.logEvent(LogEvent.adError, parameters: nil)
                 return
             }
             print("🟢: Loading succeeded")
             interstitialAd = ad
             interstitialAd?.fullScreenContentDelegate = self
             interstitialAdLoaded = true
+            if ad != nil {
+                Analytics.logEvent(LogEvent.adSuccess, parameters: nil)
+            } else {
+                Analytics.logEvent(LogEvent.adNil, parameters: nil)
+            }
         }
     }
     
@@ -53,15 +60,18 @@ class InterstitialAdsManager: NSObject, ObservableObject {
     }
 }
 
-extension InterstitialAdsManager: @preconcurrency GADFullScreenContentDelegate {
+extension InterstitialAdsManager: GADFullScreenContentDelegate {
     
     func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         print("🟡: Failed to display interstitial ad")
+        Analytics.logEvent(LogEvent.displayAdError, parameters: nil)
         loadInterstitialAd()
     }
     
     func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         print("🤩: Displayed an interstitial ad")
+        Analytics.logEvent(LogEvent.displayAdSuccess, parameters: nil)
+        self.interstitialAd = nil
     }
     
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {

@@ -15,11 +15,11 @@ enum FilterType {
     var label: String {
         switch self {
         case .region:
-            "Régions"
+            String(localized: "Régions")
         case .type:
-            "Types"
+            String(localized: "Types")
         case .year:
-            "Années"
+            String(localized: "Années")
         }
     }
 }
@@ -77,7 +77,7 @@ struct FilterItem: View {
             case .type:
                 WineType(rawValue: index)?.description ?? type.label
             case .year:
-                String(index) == String(CharterConstants.withoutYear) ? "Sans millésime": String(index)
+                String(index) == String(CharterConstants.withoutYear) ? String(localized: "Sans millésime"): String(index)
             }
         } else {
             "\(type.label) . \(filteringElements.count)"

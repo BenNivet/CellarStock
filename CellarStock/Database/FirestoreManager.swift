@@ -8,7 +8,8 @@
 import Foundation
 import FirebaseFirestore
 
-actor FirestoreManager {
+@MainActor
+class FirestoreManager {
     enum Table: String {
         case users = "Users"
         case wines = "Wines"

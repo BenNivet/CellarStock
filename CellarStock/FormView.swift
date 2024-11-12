@@ -101,34 +101,34 @@ struct FormView: View {
     private var formView: some View {
         VStack(spacing: CharterConstants.margin) {
             if !showQuantitiesOnly {
-                section("Caractéristiques")
+                section(String(localized: "Caractéristiques"))
                 
                 FloatingTextField(type: .picker(rows: Country.allCases.map { $0.description }),
-                                  placeHolder: "Pays",
+                                  placeHolder: String(localized: "Pays"),
                                   text: pickerValueBinding(wine.country, type: .country),
                                   rightIcon: "chevron.right")
                 
                 if wine.country == .france {
                     FloatingTextField(type: .picker(rows: Region.allCases.map { $0.description }),
-                                      placeHolder: "Région",
+                                      placeHolder: String(localized: "Région"),
                                       text: pickerValueBinding(wine.region, type: .region),
                                       rightIcon: "chevron.right")
                     if wine.region == .bordeaux {
                         FloatingTextField(type: .picker(rows: Appelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
-                                          placeHolder: "Appelation",
+                                          placeHolder: String(localized: "Appelation"),
                                           text: pickerValueBinding(wine.appelation, type: .appelation),
                                           rightIcon: "chevron.right")
                     }
                 }
                 FloatingTextField(type: .picker(rows: WineType.allCases.map { $0.description }),
-                                  placeHolder: "Type",
+                                  placeHolder: String(localized: "Type"),
                                   text: pickerValueBinding(wine.type, type: .type),
                                   rightIcon: "chevron.right")
                 FloatingTextField(type: .picker(rows: Size.allCases.map { $0.description }),
-                                  placeHolder: "Taille",
+                                  placeHolder: String(localized: "Taille"),
                                   text: pickerValueBinding(wine.size, type: .size),
                                   rightIcon: "chevron.right")
-                FloatingTextField(placeHolder: "Nom",
+                FloatingTextField(placeHolder: String(localized: "Nom"),
                                   text: $wine.name,
                                   isRequired: true,
                                   rightIcon: scannerAvailable ? "camera" : nil) {
@@ -137,7 +137,7 @@ struct FormView: View {
                 }
             }
             
-            section("Années", isRequired: wine.wineId.isEmpty && quantitiesByYear.isEmpty)
+            section(String(localized: "Années"), isRequired: wine.wineId.isEmpty && quantitiesByYear.isEmpty)
             
             ForEach(quantitiesByYear.keys.sorted(by: >), id: \.self) { year in
                 HStack(spacing: CharterConstants.margin) {
@@ -173,7 +173,7 @@ struct FormView: View {
                         HStack {
                             Text("Prix")
                             Spacer()
-                            Text("\(String(Int(pricesByYear[year] ?? 0))) €")
+                            Text("\(String(Int(pricesByYear[year] ?? 0))) \(String(describing: Locale.current.currencySymbol ?? "€"))")
                         }
                         .onTapGesture {
                             hideKeyboard()
@@ -201,10 +201,10 @@ struct FormView: View {
             .buttonStyle(SecondaryButtonStyle())
             
             if !showQuantitiesOnly {
-                section("Autres informations")
+                section(String(localized: "Autres informations"))
                 
-                FloatingTextField(placeHolder: "Vigneron / Domaine", text: $wine.owner)
-                FloatingTextField(placeHolder: "Infos / Étage clayette", text: $wine.info)
+                FloatingTextField(placeHolder: String(localized: "Vigneron / Domaine"), text: $wine.owner)
+                FloatingTextField(placeHolder: String(localized: "Infos / Étage clayette"), text: $wine.info)
             }
         }
         .padding(CharterConstants.margin)
@@ -333,14 +333,12 @@ private extension FormView {
             guard !quantitiesByYear.isEmpty else {
                 for quantity in quantities where quantity.wineId == wine.wineId {
                     modelContext.delete(quantity)
-                    await firestoreManager.deleteQuantity(quantity)
+                    firestoreManager.deleteQuantity(quantity)
                 }
-                try? modelContext.save()
                 if wines.contains(wine) {
                     modelContext.delete(wine)
-                    await firestoreManager.deleteWine(wine)
+                    firestoreManager.deleteWine(wine)
                 }
-                try? modelContext.save()
                 return
             }
             
@@ -350,7 +348,6 @@ private extension FormView {
                 let resultId = await firestoreManager.createUser()
                 if let resultId {
                     modelContext.insert(User(documentId: resultId))
-                    try? modelContext.save()
                     wine.userId = resultId
                 }
             }
@@ -366,10 +363,10 @@ private extension FormView {
                 if let newQuantity = quantitiesByYear[quantity.year] {
                     quantity.quantity = newQuantity
                     quantity.price = pricesByYear[quantity.year] ?? 0
-                    await firestoreManager.updateQuantity(quantity)
+                    firestoreManager.updateQuantity(quantity)
                 } else {
                     modelContext.delete(quantity)
-                    await firestoreManager.deleteQuantity(quantity)
+                    firestoreManager.deleteQuantity(quantity)
                 }
                 remainingQuantites.removeValue(forKey: quantity.year)
             }
@@ -386,8 +383,6 @@ private extension FormView {
                     modelContext.insert(newQuantity)
                 }
             }
-            
-            try? modelContext.save()
         }
     }
     
