@@ -28,16 +28,9 @@ struct InitTabView: View {
             if wines.isEmpty {
                 ContentView(tabType: .region, reload: $reload)
                     .task {
+                        entitlementManager.clearNeeded = false
                         await fetchIfNeeded()
                     }
-                //        } else if !alreadyFetched {
-                //            Image("wallpaper1")
-                //                .resizable()
-                //                .ignoresSafeArea()
-                //                .loader(isPresented: $isLoaderPresented)
-                //                .task {
-                //                    await fetchIfNeeded()
-                //                }
             } else {
                 TabView {
                     ContentView(tabType: .region, reload: $reload)
@@ -75,12 +68,13 @@ struct InitTabView: View {
                 .task {
                     await fetchIfNeeded()
                 }
-                .onChange(of: reload) { _ , newValue in
-                    if newValue {
-                        Task {
-                            await fetchFromServer()
-                        }
-                    }
+            }
+        }
+        .onChange(of: reload) { _ , newValue in
+            if newValue {
+                Task {
+                    isLoaderPresented = true
+                    await fetchFromServer()
                 }
             }
         }
@@ -94,14 +88,18 @@ struct InitTabView: View {
     }
     
     private func fetchFromServer() async {
-        if entitlementManager.clearNeeded {
-            entitlementManager.clearNeeded = false
-            try? modelContext.delete(model: Wine.self)
-            try? modelContext.delete(model: Quantity.self)
-        } else if let userId = users.first?.documentId {
-            async let wines = await firestoreManager.fetchWines(for: userId)
-            async let quantities = await firestoreManager.fetchQuantities(for: userId)
-            updateModel(wines: await wines, quantities: await quantities)
+        if let userId = users.first?.documentId {
+            if entitlementManager.clearNeeded {
+                entitlementManager.clearNeeded = false
+                try? modelContext.delete(model: Wine.self)
+                try? modelContext.delete(model: Quantity.self)
+            } else {
+                async let wines = await firestoreManager.fetchWines(for: userId)
+                async let quantities = await firestoreManager.fetchQuantities(for: userId)
+                updateModel(wines: await wines, quantities: await quantities)
+            }
+        } else {
+            isLoaderPresented = false
         }
     }
     
