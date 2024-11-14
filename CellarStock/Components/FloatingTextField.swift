@@ -24,6 +24,7 @@ struct FloatingTextField: View {
     private let type: TextFieldType
     private let placeHolderText: String
     private let isRequired: Bool
+    private let rightIconString: String?
     private let rightIcon: String?
     private let rightAction: (() -> Void)?
     
@@ -53,12 +54,14 @@ struct FloatingTextField: View {
                 placeHolder: String,
                 text: Binding<String>,
                 isRequired: Bool = false,
+                rightIconString: String? = nil,
                 rightIcon: String? = nil,
                 rightAction: (() -> Void)? = nil) {
         self.type = type
         self.placeHolderText = placeHolder
         _text = text
         self.isRequired = isRequired
+        self.rightIconString = rightIconString
         self.rightIcon = rightIcon
         self.rightAction = rightAction
     }
@@ -79,6 +82,11 @@ struct FloatingTextField: View {
                 } else {
                     rightIconView(rightIcon)
                 }
+            } else if let rightIconString {
+                Text(rightIconString)
+                    .font(.title2)
+                    .foregroundStyle(isRightIconHighlited ? Color.white : CharterConstants.halfWhite)
+                    .animation(.linear, value: shouldPlaceHolderMove)
             }
         }
         .if(!textFiedAllowed) {

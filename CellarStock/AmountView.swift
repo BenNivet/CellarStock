@@ -31,7 +31,7 @@ struct AmountView: View {
     var body: some View {
         NavigationView {
             VStack {
-                FloatingTextField(placeHolder: "Prix", text: $amount, rightIcon: "eurosign")
+                FloatingTextField(placeHolder: String(localized: "Prix"), text: $amount, rightIconString: String(describing: Locale.current.currencySymbol ?? "€"))
                     .keyboardType(.numberPad)
                     .focused($isAmountFocus)
                 
