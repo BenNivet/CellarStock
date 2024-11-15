@@ -13,9 +13,9 @@ struct InitTabView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
     
-    @Query private var users: [User]
-    @Query private var wines: [Wine]
-    @Query private var quantities: [Quantity]
+    @State private var users: [User] = []
+    @State private var wines: Int = 0
+    @State private var quantities: Int = 0
     
     @State private var isLoaderPresented = true
     @State private var reload = false
@@ -24,61 +24,76 @@ struct InitTabView: View {
     private let firestoreManager = FirestoreManager.shared
     
     var body: some View {
-        Group {
-            if wines.isEmpty {
-                ContentView(tabType: .region, reload: $reload)
-                    .task {
-                        entitlementManager.clearNeeded = false
-                        await fetchIfNeeded()
+        main
+            .onChange(of: reload) { _ , newValue in
+                if newValue {
+                    Task {
+                        isLoaderPresented = true
+                        await fetchFromServer()
                     }
-            } else {
-                TabView {
-                    ContentView(tabType: .region, reload: $reload)
-                        .tabItem {
-                            Text("Région")
-                            Image("map")
-                        }
-                    ContentView(tabType: .type, reload: $reload)
-                        .tabItem {
-                            Text("Type")
-                            Image("grape")
-                        }
-                    ContentView(tabType: .year, reload: $reload)
-                        .tabItem {
-                            Text("Année")
-                            Image("calendar")
-                        }
-                    if wines.count > 5 {
-                        RandomView()
-                            .tabItem {
-                                Text("Roulette")
-                                Image("dice")
-                            }
-                    }
-                    StatsView()
-                        .tabItem {
-                            Text("Stats")
-                            Image("stats")
-                        }
                 }
-                .accentColor(.white)
-                .onAppear {
-                    UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
-                }
+            }
+            .loader(isPresented: $isLoaderPresented)
+    }
+    
+    @ViewBuilder
+    private var main: some View {
+        if users.isEmpty {
+            NavigationStack {
+                Image("wallpaper1")
+                    .resizable()
+                    .ignoresSafeArea()
+                    .navigationTitle(String(localized: "Vino Cave"))
+            }
+            .task {
+                wines = (try? modelContext.fetchCount(FetchDescriptor<Wine>())) ?? 0
+                users = (try? modelContext.fetch(FetchDescriptor<User>())) ?? []
+                quantities = (try? modelContext.fetchCount(FetchDescriptor<Quantity>())) ?? 0
+            }
+        } else if wines == 0 {
+            ContentView(tabType: .region, reload: $reload)
                 .task {
+                    entitlementManager.clearNeeded = false
                     await fetchIfNeeded()
                 }
-            }
-        }
-        .onChange(of: reload) { _ , newValue in
-            if newValue {
-                Task {
-                    isLoaderPresented = true
-                    await fetchFromServer()
+        } else {
+            TabView {
+                ContentView(tabType: .region, reload: $reload)
+                    .tabItem {
+                        Text("Région")
+                        Image("map")
+                    }
+                ContentView(tabType: .type, reload: $reload)
+                    .tabItem {
+                        Text("Type")
+                        Image("grape")
+                    }
+                ContentView(tabType: .year, reload: $reload)
+                    .tabItem {
+                        Text("Année")
+                        Image("calendar")
+                    }
+                if wines > 5 {
+                    RandomView()
+                        .tabItem {
+                            Text("Roulette")
+                            Image("dice")
+                        }
                 }
+                StatsView()
+                    .tabItem {
+                        Text("Stats")
+                        Image("stats")
+                    }
+            }
+            .accentColor(.white)
+            .onAppear {
+                UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
+            }
+            .task {
+                await fetchIfNeeded()
             }
         }
-        .loader(isPresented: $isLoaderPresented)
     }
     
     private func fetchIfNeeded() async {
@@ -94,8 +109,8 @@ struct InitTabView: View {
                 try? modelContext.delete(model: Wine.self)
                 try? modelContext.delete(model: Quantity.self)
             } else {
-                async let wines = await firestoreManager.fetchWines(for: userId)
-                async let quantities = await firestoreManager.fetchQuantities(for: userId)
+                async let wines = firestoreManager.fetchWines(for: userId)
+                async let quantities = firestoreManager.fetchQuantities(for: userId)
                 updateModel(wines: await wines, quantities: await quantities)
             }
         } else {
@@ -105,8 +120,7 @@ struct InitTabView: View {
     
     private func updateModel(wines: [Wine], quantities: [Quantity]) {
         do {
-            if self.wines.count != wines.count,
-               self.wines.first(where: { wines.contains($0) }) == nil {
+            if self.wines != wines.count {
                 try modelContext.transaction {
                     try modelContext.delete(model: Wine.self)
                     for wine in wines {
@@ -115,8 +129,7 @@ struct InitTabView: View {
                 }
             }
             
-            if self.quantities.count != quantities.count,
-               self.quantities.first(where: { quantities.contains($0) }) == nil {
+            if self.quantities != quantities.count {
                 try modelContext.transaction {
                     try modelContext.delete(model: Quantity.self)
                     for quantity in quantities {

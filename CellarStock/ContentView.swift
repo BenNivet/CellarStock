@@ -40,7 +40,7 @@ struct ContentView: View {
     @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
     
     private var filteredWines: [Wine] {
-        guard !searchText.isEmpty else { return wines }
+        guard !searchText.isEmpty else { return (try? modelContext.fetch(FetchDescriptor<Wine>())) ?? [] }
         return wines.filter { $0.isMatch(for: searchText) }
     }
     
