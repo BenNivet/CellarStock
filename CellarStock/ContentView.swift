@@ -437,7 +437,6 @@ private extension ContentView {
             let userId = await FirestoreManager.shared.findUser(id: code)
             guard let userId else { return }
             flush()
-            entitlementManager.clearNeeded = false
             modelContext.insert(User(documentId: userId))
             reload = true
             Analytics.logEvent(LogEvent.joinCellar, parameters: nil)

@@ -14,11 +14,12 @@ struct InitTabView: View {
     @EnvironmentObject private var entitlementManager: EntitlementManager
     
     @State private var users: [User] = []
-    @State private var wines: Int = 0
-    @State private var quantities: Int = 0
+    @State private var wines = 0
+    @State private var quantities = 0
     
     @State private var isLoaderPresented = true
     @State private var reload = false
+    @State private var initDone = false
     @State private var alreadyFetched = false
     
     private let firestoreManager = FirestoreManager.shared
@@ -29,6 +30,7 @@ struct InitTabView: View {
                 if newValue {
                     Task {
                         isLoaderPresented = true
+                        initData()
                         await fetchFromServer()
                     }
                 }
@@ -38,7 +40,7 @@ struct InitTabView: View {
     
     @ViewBuilder
     private var main: some View {
-        if users.isEmpty {
+        if users.isEmpty, !initDone {
             NavigationStack {
                 Image("wallpaper1")
                     .resizable()
@@ -46,14 +48,12 @@ struct InitTabView: View {
                     .navigationTitle(String(localized: "Vino Cave"))
             }
             .task {
-                wines = (try? modelContext.fetchCount(FetchDescriptor<Wine>())) ?? 0
-                users = (try? modelContext.fetch(FetchDescriptor<User>())) ?? []
-                quantities = (try? modelContext.fetchCount(FetchDescriptor<Quantity>())) ?? 0
+                initData()
+                initDone = true
             }
         } else if wines == 0 {
             ContentView(tabType: .region, reload: $reload)
                 .task {
-                    entitlementManager.clearNeeded = false
                     await fetchIfNeeded()
                 }
         } else {
@@ -96,6 +96,12 @@ struct InitTabView: View {
         }
     }
     
+    private func initData() {
+        users = (try? modelContext.fetch(FetchDescriptor<User>())) ?? []
+        wines = (try? modelContext.fetchCount(FetchDescriptor<Wine>())) ?? 0
+        quantities = (try? modelContext.fetchCount(FetchDescriptor<Quantity>())) ?? 0
+    }
+    
     private func fetchIfNeeded() async {
         if !alreadyFetched {
             await fetchFromServer()
@@ -104,15 +110,9 @@ struct InitTabView: View {
     
     private func fetchFromServer() async {
         if let userId = users.first?.documentId {
-            if entitlementManager.clearNeeded {
-                entitlementManager.clearNeeded = false
-                try? modelContext.delete(model: Wine.self)
-                try? modelContext.delete(model: Quantity.self)
-            } else {
-                async let wines = firestoreManager.fetchWines(for: userId)
-                async let quantities = firestoreManager.fetchQuantities(for: userId)
-                updateModel(wines: await wines, quantities: await quantities)
-            }
+            async let wines = firestoreManager.fetchWines(for: userId)
+            async let quantities = firestoreManager.fetchQuantities(for: userId)
+            updateModel(wines: await wines, quantities: await quantities)
         } else {
             isLoaderPresented = false
         }
@@ -126,6 +126,7 @@ struct InitTabView: View {
                     for wine in wines {
                         modelContext.insert(wine)
                     }
+                    self.wines = (try? modelContext.fetchCount(FetchDescriptor<Wine>())) ?? 0
                 }
             }
             
@@ -135,6 +136,7 @@ struct InitTabView: View {
                     for quantity in quantities {
                         modelContext.insert(quantity)
                     }
+                    self.quantities = (try? modelContext.fetchCount(FetchDescriptor<Quantity>())) ?? 0
                 }
             }
             

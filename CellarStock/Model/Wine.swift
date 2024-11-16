@@ -515,6 +515,7 @@ enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable 
     case autriche
     case grece
     case suisse
+    case newZealand
     case other
     
     var description: String {
@@ -553,6 +554,8 @@ enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable 
             String(localized: "Grèce")
         case .suisse:
             String(localized: "Suisse")
+        case .newZealand:
+            String(localized: "Nouvelle-Zélande")
         case .other:
             String(localized: "Autre")
         }

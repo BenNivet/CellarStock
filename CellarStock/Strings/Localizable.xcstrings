@@ -825,6 +825,22 @@
         }
       }
     },
+    "Nouvelle-Zélande" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Zealand"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle-Zélande"
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "fr" : {
