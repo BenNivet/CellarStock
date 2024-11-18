@@ -63,7 +63,8 @@ struct CellarStockApp: App {
         ])
         
         Task {
-            if !entitlementManager.isPremium {
+            if !entitlementManager.isPremium,
+                entitlementManager.winesSubmitted > 5 {
                 await GADMobileAds.sharedInstance().start()
             }
             await subscriptionsManager.updatePurchasedProducts()
