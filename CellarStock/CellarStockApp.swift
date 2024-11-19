@@ -11,48 +11,18 @@ import SwiftUI
 import SwiftData
 import TipKit
 
-typealias Wine = SchemaV2.WineV2
-typealias Quantity = SchemaV2.QuantityV2
-typealias User = SchemaV2.User
-
 @main
 struct CellarStockApp: App {
     
     @StateObject private var entitlementManager: EntitlementManager
     @StateObject private var subscriptionsManager: SubscriptionsManager
     @StateObject private var interstitialAdsManager = InterstitialAdsManager()
-    
-    @State private var sharedModelContainer: ModelContainer = {
-        let schema = Schema(versionedSchema: SchemaV2.self)
-        let modelConfiguration = ModelConfiguration(schema: schema)
-        
-        do {
-            return try ModelContainer(for: schema,
-                                      migrationPlan: MigrationPlan.self,
-                                      configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-    
-    enum MigrationPlan: SchemaMigrationPlan {
-        static var schemas: [any VersionedSchema.Type] {
-            [SchemaV1.self,
-             SchemaV2.self]
-        }
-        static var stages: [MigrationStage] {
-            [migrateV1toV2]
-        }
-        
-        static let migrateV1toV2 = MigrationStage.lightweight(
-            fromVersion: SchemaV1.self,
-            toVersion: SchemaV2.self
-        )
-    }
+    @StateObject private var dataManager = DataManager()
     
     init() {
         FirebaseApp.configure()
         let entitlementManager = EntitlementManager()
+        entitlementManager.appLaunched += 1
         let subscriptionsManager = SubscriptionsManager(entitlementManager: entitlementManager)
         
         _entitlementManager = StateObject(wrappedValue: entitlementManager)
@@ -64,7 +34,7 @@ struct CellarStockApp: App {
         
         Task {
             if !entitlementManager.isPremium,
-                entitlementManager.winesSubmitted > 5 {
+               entitlementManager.winesSubmitted > 5 {
                 await GADMobileAds.sharedInstance().start()
             }
             await subscriptionsManager.updatePurchasedProducts()
@@ -73,12 +43,22 @@ struct CellarStockApp: App {
     
     var body: some Scene {
         WindowGroup {
-            InitTabView()
-                .modelContainer(sharedModelContainer)
-                .environmentObject(entitlementManager)
-                .environmentObject(subscriptionsManager)
-                .environmentObject(interstitialAdsManager)
-                .fontDesign(.rounded)
+            if entitlementManager.userId != nil {
+                InitTabView()
+                    .environmentObject(entitlementManager)
+                    .environmentObject(subscriptionsManager)
+                    .environmentObject(interstitialAdsManager)
+                    .environmentObject(dataManager)
+                    .fontDesign(.rounded)
+            } else {
+                InitTabView()
+                    .modelContainer(for: User.self)
+                    .environmentObject(entitlementManager)
+                    .environmentObject(subscriptionsManager)
+                    .environmentObject(interstitialAdsManager)
+                    .environmentObject(dataManager)
+                    .fontDesign(.rounded)
+            }
         }
     }
 }

@@ -10,9 +10,8 @@ import SwiftData
 
 struct RandomView: View {
     
-    @Environment(\.modelContext) private var modelContext
-    @Query private var wines: [Wine]
-    @Query private var quantities: [Quantity]
+    @EnvironmentObject private var dataManager: DataManager
+    
     @State private var rotation: CGFloat = 0.0
     @State private var showingSheet: (Bool, Wine, Quantity) = (false, Wine(), Quantity())
     @State private var filterRegions: [Int] = []
@@ -82,7 +81,7 @@ struct RandomView: View {
     }
     
     private var randomWine: (Wine, Quantity)? {
-        var selectableWines = wines
+        var selectableWines = dataManager.wines
         if !filterRegions.isEmpty {
             selectableWines = selectableWines.filter { $0.country == .france && filterRegions.contains($0.region.rawValue) }
         }
@@ -91,13 +90,13 @@ struct RandomView: View {
         }
         if !filterYears.isEmpty {
             selectableWines = selectableWines.filter { wine in
-                !quantities.filter({ quantity in
+                !dataManager.quantities.filter({ quantity in
                     quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
                 }).isEmpty
             }
         }
         guard let wine = selectableWines.randomElement(),
-              let quantity = quantities.filter({ quantity in
+              let quantity = dataManager.quantities.filter({ quantity in
                   if !filterYears.isEmpty {
                       return quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
                   } else {
@@ -111,7 +110,7 @@ struct RandomView: View {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities where quantity.wineId == wine.wineId {
+        for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

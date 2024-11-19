@@ -8,294 +8,157 @@
 import Foundation
 import SwiftData
 
-enum SchemaV1: VersionedSchema {
-    static var versionIdentifier = Schema.Version(1, 0, 0)
+class Wine: Identifiable, Hashable {
+    var id: String { wineId }
+    var userId: String = ""
+    var wineId: String = ""
+    var type: WineType = WineType.rouge
+    var region: Region = Region.bourgogne
+    var appelation: Appelation = Appelation.other
+    var name: String = ""
+    var owner: String = ""
+    var info: String = ""
+    var country: Country = Country.france
+    var size: Size = Size.bouteille
     
-    static var models: [any PersistentModel.Type] {
-        [
-            WineV2.self,
-            QuantityV2.self,
-            User.self
-        ]
+    init(userId: String = "",
+         wineId: String = "",
+         type: WineType = .rouge,
+         region: Region = .bourgogne,
+         appelation: Appelation = .other,
+         name: String = "",
+         owner: String = "",
+         info: String = "",
+         country: Country = .france,
+         size: Size = .bouteille) {
+        self.userId = userId
+        self.wineId = wineId
+        self.type = type
+        self.region = region
+        self.appelation = appelation
+        self.name = name
+        self.owner = owner
+        self.info = info
+        self.country = country
+        self.size = size
     }
     
-    @Model
-    final class WineV2 {
-        var id: UUID = UUID()
-        var userId: String = ""
-        var wineId: String = ""
-        var type: WineType = WineType.rouge
-        var region: Region = Region.bourgogne
-        var appelation: Appelation = Appelation.other
-        var name: String = ""
-        var owner: String = ""
-        var info: String = ""
-        var country: Country? = Country.france
-        var size: Size? = Size.bouteille
-        
-        init(userId: String = "",
-             wineId: String = "",
-             type: WineType = .rouge,
-             region: Region = .bourgogne,
-             appelation: Appelation = .other,
-             name: String = "",
-             owner: String = "",
-             info: String = "") {
-            self.userId = userId
-            self.wineId = wineId
-            self.type = type
-            self.region = region
-            self.appelation = appelation
-            self.name = name
-            self.owner = owner
-            self.info = info
-        }
-        
-        init?(wineServer: WineServer, documentId: String) {
-            guard let type = WineType(rawValue: wineServer.type),
-                  let region = Region(rawValue: wineServer.region),
-                  let appelation = Appelation(rawValue: wineServer.appelation)
-            else { return nil }
-            self.wineId = documentId
-            self.userId = wineServer.userId
-            self.type = type
-            self.region = region
-            self.appelation = appelation
-            self.name = wineServer.name
-            self.owner = wineServer.owner
-            self.info = wineServer.info
-        }
-        
-        var wineServer: WineServer {
-            WineServer(userId: userId,
-                       type: type.rawValue,
-                       region: region.rawValue,
-                       appelation: appelation.rawValue,
-                       name: name,
-                       owner: owner,
-                       info: info)
-        }
-        
-        func isMatch(for query: String) -> Bool {
-            let queryFormatted = query.queryFormatted
-            return type.description.queryFormatted.contains(queryFormatted)
-            || region.description.queryFormatted.contains(queryFormatted)
-            || (region == .bordeaux && appelation.description.queryFormatted.contains(queryFormatted))
-            || name.queryFormatted.contains(queryFormatted)
-            || owner.queryFormatted.contains(queryFormatted)
-            || info.queryFormatted.contains(queryFormatted)
-        }
+    init?(wineServer: WineServer, documentId: String) {
+        guard let type = WineType(rawValue: wineServer.type),
+              let region = Region(rawValue: wineServer.region),
+              let appelation = Appelation(rawValue: wineServer.appelation),
+              let country = Country(rawValue: wineServer.country ?? Country.france.rawValue),
+              let size = Size(rawValue: wineServer.size ?? Size.bouteille.rawValue)
+        else { return nil }
+        self.wineId = documentId
+        self.userId = wineServer.userId
+        self.type = type
+        self.region = region
+        self.appelation = appelation
+        self.name = wineServer.name
+        self.owner = wineServer.owner
+        self.info = wineServer.info
+        self.country = country
+        self.size = size
     }
     
-    @Model
-    final class QuantityV2 {
-        var id: UUID = UUID()
-        var userId: String = ""
-        var documentId: String = ""
-        var wineId: String = ""
-        var year: Int = 0
-        var quantity: Int = 0
-        var price: Double = 0
-        
-        init(userId: String = "",
-             documentId: String = "",
-             wineId: String = "",
-             year: Int = 0,
-             quantity: Int = 0,
-             price: Double = 0) {
-            self.userId = userId
-            self.documentId = documentId
-            self.wineId = wineId
-            self.year = year
-            self.quantity = quantity
-            self.price = price
-        }
-        
-        init(quantityServer: QuantityServer, documentId: String) {
-            self.documentId = documentId
-            self.userId = quantityServer.userId
-            self.wineId = quantityServer.wineId
-            self.year = quantityServer.year
-            self.quantity = quantityServer.quantity
-            self.price = quantityServer.price
-        }
-        
-        var quantityServer: QuantityServer {
-            QuantityServer(userId: userId,
-                           wineId: wineId,
-                           year: year,
-                           quantity: quantity,
-                           price: price)
-        }
+    var wineServer: WineServer {
+        WineServer(userId: userId,
+                   type: type.rawValue,
+                   region: region.rawValue,
+                   appelation: appelation.rawValue,
+                   name: name,
+                   owner: owner,
+                   info: info,
+                   country: country.rawValue,
+                   size: size.rawValue)
     }
     
-    @Model
-    final class User {
-        var id: UUID = UUID()
-        var documentId: String = ""
-        var name: String = ""
-        
-        init(documentId: String = "", name: String = "") {
-            self.documentId = documentId
-            self.name = name
-        }
-        
-        init(userServer: UserServer) {
-            name = userServer.name
-        }
+    func isMatch(for query: String) -> Bool {
+        let queryFormatted = query.queryFormatted
+        return type.description.queryFormatted.contains(queryFormatted)
+        || region.description.queryFormatted.contains(queryFormatted)
+        || (region == .bordeaux && appelation.description.queryFormatted.contains(queryFormatted))
+        || name.queryFormatted.contains(queryFormatted)
+        || owner.queryFormatted.contains(queryFormatted)
+        || info.queryFormatted.contains(queryFormatted)
+        || (size != .bouteille && size.description.queryFormatted.contains(queryFormatted))
+    }
+    
+    static func == (lhs: Wine, rhs: Wine) -> Bool {
+        lhs.wineId == rhs.wineId
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 
-enum SchemaV2: VersionedSchema {
-    static var versionIdentifier = Schema.Version(2, 0, 0)
+class Quantity: Identifiable, Hashable {
+    var id: String { quantityId }
+    var userId: String = ""
+    var quantityId: String = ""
+    var wineId: String = ""
+    var year: Int = 0
+    var quantity: Int = 0
+    var price: Double = 0
+    var date: String = Helper.shared.creationDate
     
-    static var models: [any PersistentModel.Type] {
-        [
-            WineV2.self,
-            QuantityV2.self,
-            User.self
-        ]
+    init(userId: String = "",
+         quantityId: String = "",
+         wineId: String = "",
+         year: Int = 0,
+         quantity: Int = 0,
+         price: Double = 0,
+         date: String = Helper.shared.creationDate) {
+        self.userId = userId
+        self.quantityId = quantityId
+        self.wineId = wineId
+        self.year = year
+        self.quantity = quantity
+        self.price = price
+        self.date = date
     }
     
-    @Model
-    final class WineV2 {
-        var id: UUID = UUID()
-        var userId: String = ""
-        var wineId: String = ""
-        var type: WineType = WineType.rouge
-        var region: Region = Region.bourgogne
-        var appelation: Appelation = Appelation.other
-        var name: String = ""
-        var owner: String = ""
-        var info: String = ""
-        var country: Country = Country.france
-        var size: Size = Size.bouteille
-        
-        init(userId: String = "",
-             wineId: String = "",
-             type: WineType = .rouge,
-             region: Region = .bourgogne,
-             appelation: Appelation = .other,
-             name: String = "",
-             owner: String = "",
-             info: String = "",
-             country: Country = .france,
-             size: Size = .bouteille) {
-            self.userId = userId
-            self.wineId = wineId
-            self.type = type
-            self.region = region
-            self.appelation = appelation
-            self.name = name
-            self.owner = owner
-            self.info = info
-            self.country = country
-            self.size = size
-        }
-        
-        init?(wineServer: WineServer, documentId: String) {
-            guard let type = WineType(rawValue: wineServer.type),
-                  let region = Region(rawValue: wineServer.region),
-                  let appelation = Appelation(rawValue: wineServer.appelation),
-                  let country = Country(rawValue: wineServer.country ?? Country.france.rawValue),
-                  let size = Size(rawValue: wineServer.size ?? Size.bouteille.rawValue)
-            else { return nil }
-            self.wineId = documentId
-            self.userId = wineServer.userId
-            self.type = type
-            self.region = region
-            self.appelation = appelation
-            self.name = wineServer.name
-            self.owner = wineServer.owner
-            self.info = wineServer.info
-            self.country = country
-            self.size = size
-        }
-        
-        var wineServer: WineServer {
-            WineServer(userId: userId,
-                       type: type.rawValue,
-                       region: region.rawValue,
-                       appelation: appelation.rawValue,
-                       name: name,
-                       owner: owner,
-                       info: info,
-                       country: country.rawValue,
-                       size: size.rawValue)
-        }
-        
-        func isMatch(for query: String) -> Bool {
-            let queryFormatted = query.queryFormatted
-            return type.description.queryFormatted.contains(queryFormatted)
-            || region.description.queryFormatted.contains(queryFormatted)
-            || (region == .bordeaux && appelation.description.queryFormatted.contains(queryFormatted))
-            || name.queryFormatted.contains(queryFormatted)
-            || owner.queryFormatted.contains(queryFormatted)
-            || info.queryFormatted.contains(queryFormatted)
-            || (size != .bouteille && size.description.queryFormatted.contains(queryFormatted))
-        }
+    init(quantityServer: QuantityServer, documentId: String) {
+        self.quantityId = documentId
+        self.userId = quantityServer.userId
+        self.wineId = quantityServer.wineId
+        self.year = quantityServer.year
+        self.quantity = quantityServer.quantity
+        self.price = quantityServer.price
+        self.date = Helper.shared.creationDate
     }
     
-    @Model
-    final class QuantityV2 {
-        var id: UUID = UUID()
-        var userId: String = ""
-        var documentId: String = ""
-        var wineId: String = ""
-        var year: Int = 0
-        var quantity: Int = 0
-        var price: Double = 0
-        var date: String = Helper.shared.creationDate
-        
-        init(userId: String = "",
-             documentId: String = "",
-             wineId: String = "",
-             year: Int = 0,
-             quantity: Int = 0,
-             price: Double = 0,
-             date: String = Helper.shared.creationDate) {
-            self.userId = userId
-            self.documentId = documentId
-            self.wineId = wineId
-            self.year = year
-            self.quantity = quantity
-            self.price = price
-            self.date = date
-        }
-        
-        init(quantityServer: QuantityServer, documentId: String) {
-            self.documentId = documentId
-            self.userId = quantityServer.userId
-            self.wineId = quantityServer.wineId
-            self.year = quantityServer.year
-            self.quantity = quantityServer.quantity
-            self.price = quantityServer.price
-            self.date = Helper.shared.creationDate
-        }
-        
-        var quantityServer: QuantityServer {
-            QuantityServer(userId: userId,
-                           wineId: wineId,
-                           year: year,
-                           quantity: quantity,
-                           price: price)
-        }
+    var quantityServer: QuantityServer {
+        QuantityServer(userId: userId,
+                       wineId: wineId,
+                       year: year,
+                       quantity: quantity,
+                       price: price)
     }
     
-    @Model
-    final class User {
-        var id: UUID = UUID()
-        var documentId: String = ""
-        var name: String = ""
-        
-        init(documentId: String = "", name: String = "") {
-            self.documentId = documentId
-            self.name = name
-        }
-        
-        init(userServer: UserServer) {
-            name = userServer.name
-        }
+    static func == (lhs: Quantity, rhs: Quantity) -> Bool {
+        lhs.quantityId == rhs.quantityId
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+@Model
+class User {
+    var id: UUID = UUID()
+    var documentId: String = ""
+    var name: String = ""
+    
+    init(documentId: String = "", name: String = "") {
+        self.documentId = documentId
+    }
+    
+    init(userServer: UserServer) {
+        name = userServer.name
     }
 }
 

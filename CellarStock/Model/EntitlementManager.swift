@@ -21,4 +21,10 @@ final class EntitlementManager: ObservableObject {
     
     @AppStorage("clearNeeded", store: userDefaults)
     var clearNeeded = true
+    
+    @AppStorage("userId", store: userDefaults)
+    var userId: String?
+    
+    @AppStorage("appLaunched", store: userDefaults)
+    var appLaunched = 0
 }

@@ -24,15 +24,12 @@ enum WinePicker {
 @MainActor
 struct FormView: View {
     
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     @Environment(\.requestReview) var requestReview
+    
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     @EnvironmentObject private var entitlementManager: EntitlementManager
-    
-    @Query private var users: [User]
-    @Query private var wines: [Wine]
-    @Query private var quantities: [Quantity]
+    @EnvironmentObject private var dataManager: DataManager
     
     @Binding var wine: Wine
     @Binding var quantitiesByYear: [Int: Int]
@@ -331,23 +328,27 @@ private extension FormView {
     func save() {
         Task {
             guard !quantitiesByYear.isEmpty else {
-                for quantity in quantities where quantity.wineId == wine.wineId {
-                    modelContext.delete(quantity)
+                for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
+                    if let index = dataManager.quantities.firstIndex(of: quantity) {
+                        dataManager.quantities.remove(at: index)
+                    }
                     firestoreManager.deleteQuantity(quantity)
                 }
-                if wines.contains(wine) {
-                    modelContext.delete(wine)
+                if dataManager.wines.contains(wine) {
+                    if let index = dataManager.wines.firstIndex(of: wine) {
+                        dataManager.wines.remove(at: index)
+                    }
                     firestoreManager.deleteWine(wine)
                 }
                 return
             }
             
-            if let user = users.first {
-                wine.userId = user.documentId
+            if let userId = entitlementManager.userId {
+                wine.userId = userId
             } else {
                 let resultId = await firestoreManager.createUser()
                 if let resultId {
-                    modelContext.insert(User(documentId: resultId))
+                    entitlementManager.userId = resultId
                     wine.userId = resultId
                 }
             }
@@ -356,16 +357,21 @@ private extension FormView {
             let wineId = await firestoreManager.insertOrUpdateWine(wine)
             guard let wineId else { return }
             wine.wineId = wineId
-            modelContext.insert(wine)
+            if let index = dataManager.wines.firstIndex(of: wine) {
+                dataManager.wines.remove(at: index)
+            }
+            dataManager.wines.append(wine)
             
             var remainingQuantites = quantitiesByYear
-            for quantity in quantities where quantity.wineId == wine.wineId {
+            for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
                 if let newQuantity = quantitiesByYear[quantity.year] {
                     quantity.quantity = newQuantity
                     quantity.price = pricesByYear[quantity.year] ?? 0
                     firestoreManager.updateQuantity(quantity)
                 } else {
-                    modelContext.delete(quantity)
+                    if let index = dataManager.quantities.firstIndex(of: quantity) {
+                        dataManager.quantities.remove(at: index)
+                    }
                     firestoreManager.deleteQuantity(quantity)
                 }
                 remainingQuantites.removeValue(forKey: quantity.year)
@@ -379,8 +385,8 @@ private extension FormView {
                                            price: pricesByYear[year] ?? 0)
                 let documentId = await firestoreManager.insertQuantity(newQuantity)
                 if let documentId {
-                    newQuantity.documentId = documentId
-                    modelContext.insert(newQuantity)
+                    newQuantity.quantityId = documentId
+                    dataManager.quantities.append(newQuantity)
                 }
             }
         }
@@ -388,7 +394,7 @@ private extension FormView {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities where quantity.wineId == wine.wineId {
+        for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

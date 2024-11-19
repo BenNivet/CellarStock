@@ -11,7 +11,6 @@ struct YearSelectionListView: View {
     
     let availableYears: [Int]
     
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     
     @Binding var quantities: [Int: Int]

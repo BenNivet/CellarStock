@@ -10,9 +10,10 @@ import SwiftData
 
 struct CongratsView: View {
     
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
-    @Query private var quantities: [Quantity]
+    
+    @EnvironmentObject private var dataManager: DataManager
+    
     @Binding var wine: Wine
     @Binding var quantity: Quantity
     
@@ -67,15 +68,24 @@ struct CongratsView: View {
                     quantity.quantity -= 1
                     Task {
                         if quantity.quantity == 0 {
-                            modelContext.delete(quantity)
+                            if let index = dataManager.quantities.firstIndex(of: quantity) {
+                                dataManager.quantities.remove(at: index)
+                            }
                             firestoreManager.deleteQuantity(quantity)
                         } else {
                             firestoreManager.updateQuantity(quantity)
                         }
                         
                         if quantity(for: wine) == 0 {
-                            modelContext.delete(wine)
+                            if let index = dataManager.wines.firstIndex(of: wine) {
+                                dataManager.wines.remove(at: index)
+                            }
                             firestoreManager.deleteWine(wine)
+                        } else {
+                            if let index = dataManager.wines.firstIndex(of: wine) {
+                                dataManager.wines.remove(at: index)
+                            }
+                            dataManager.wines.append(wine)
                         }
                     }
                     dismiss()
@@ -96,7 +106,7 @@ struct CongratsView: View {
 private extension CongratsView {
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities where quantity.wineId == wine.wineId {
+        for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result

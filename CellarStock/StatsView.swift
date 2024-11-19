@@ -12,29 +12,26 @@ import TipKit
 
 struct StatsView: View {
     
-    @Environment(\.modelContext) private var modelContext
-    
-    @Query private var users: [User]
-    @Query private var wines: [Wine]
-    @Query private var quantities: [Quantity]
+    @EnvironmentObject private var entitlementManager: EntitlementManager
+    @EnvironmentObject private var dataManager: DataManager
     
     @State private var showingSettings = false
     @State private var showingSubscription = false
     
     private var countries: [Country] {
-        Array(Set(wines.compactMap { $0.country }.filter { $0 != .france }))
+        Array(Set(dataManager.wines.compactMap { $0.country }.filter { $0 != .france }))
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var regions: [Region] {
-        Array(Set(wines.filter { $0.country == .france }.compactMap { $0.region }))
+        Array(Set(dataManager.wines.filter { $0.country == .france }.compactMap { $0.region }))
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var types: [WineType] {
-        Array(Set(wines.compactMap { $0.type }))
+        Array(Set(dataManager.wines.compactMap { $0.type }))
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var years: [Int] {
-        Array(Set(quantities.compactMap { $0.year })).sorted(by: >)
+        Array(Set(dataManager.quantities.compactMap { $0.year })).sorted(by: >)
     }
     
     var body: some View {
@@ -64,7 +61,7 @@ struct StatsView: View {
                 ])
             }
             .toolbar {
-                if let userId = users.first?.documentId {
+                if let userId = entitlementManager.userId {
                     ToolbarItem {
                         ShareLink(item: sharedText(id: userId),
                                   preview: SharePreview("Partager ma cave"))
@@ -125,7 +122,7 @@ private extension StatsView {
     var generalInfos: (count: Int, price: Double) {
         var count: Int = 0
         var price: Double = 0
-        for quantity in quantities {
+        for quantity in dataManager.quantities {
             count += quantity.quantity
             price += quantity.price * Double(quantity.quantity)
         }
@@ -134,7 +131,7 @@ private extension StatsView {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        for quantity in quantities where quantity.wineId == wine.wineId {
+        for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result
@@ -142,7 +139,7 @@ private extension StatsView {
     
     func quantity(for country: Country) -> Int {
         var result = 0
-        for wine in wines where wine.country == country {
+        for wine in dataManager.wines where wine.country == country {
             result += quantity(for: wine)
         }
         return result
@@ -150,7 +147,7 @@ private extension StatsView {
     
     func quantity(for region: Region) -> Int {
         var result = 0
-        for wine in wines where wine.country == .france && wine.region == region {
+        for wine in dataManager.wines where wine.country == .france && wine.region == region {
             result += quantity(for: wine)
         }
         return result
@@ -158,7 +155,7 @@ private extension StatsView {
     
     func quantity(for type: WineType) -> Int {
         var result = 0
-        for wine in wines where wine.type == type {
+        for wine in dataManager.wines where wine.type == type {
             result += quantity(for: wine)
         }
         return result
@@ -166,7 +163,7 @@ private extension StatsView {
     
     func quantity(for year: Int) -> Int {
         var result = 0
-        for quantity in quantities where quantity.year == year {
+        for quantity in dataManager.quantities where quantity.year == year {
             result += quantity.quantity
         }
         return result
@@ -185,9 +182,8 @@ private extension StatsView {
     }
     
     func flush() {
-        try? modelContext.delete(model: User.self)
-        try? modelContext.delete(model: Quantity.self)
-        try? modelContext.delete(model: Wine.self)
+        entitlementManager.userId = nil
+        dataManager.reset()
     }
 }
 

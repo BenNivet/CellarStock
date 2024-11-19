@@ -37,26 +37,4 @@ final class Helper {
         }
         return result
     }
-    
-//    func groupImport(data: [(Wine, Quantity)]) -> [(Wine, [Quantity])] {
-//        var result: [(Wine, [Quantity])] = []
-//        var previousWine: Wine?
-//        var quantitiesToAdd: [Quantity] = []
-//        for (wine, quantity) in data {
-//            if wine.name == previousWine?.name {
-//                quantitiesToAdd.append(quantity)
-//            } else {
-//                if let previousWine {
-//                    result.append((previousWine, quantitiesToAdd))
-//                }
-//                previousWine = wine
-//                quantitiesToAdd = [quantity]
-//            }
-//        }
-//        if let previousWine {
-//            result.append((previousWine, quantitiesToAdd))
-//        }
-//        
-//        return result
-//    }
 }

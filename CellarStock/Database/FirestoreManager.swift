@@ -179,13 +179,13 @@ class FirestoreManager {
     
     func updateQuantity(_ quantity: Quantity) {
         try? db?.collection(Table.quantities.rawValue)
-            .document(quantity.documentId)
+            .document(quantity.quantityId)
             .setData(from: quantity.quantityServer)
     }
     
     func deleteQuantity(_ quantity: Quantity) {
         db?.collection(Table.quantities.rawValue)
-            .document(quantity.documentId)
+            .document(quantity.quantityId)
             .delete()
     }
     

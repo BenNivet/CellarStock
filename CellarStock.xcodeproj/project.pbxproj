@@ -17,6 +17,7 @@
 		214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066BB2AF25D8500E1857F /* InitTabView.swift */; };
 		214066BE2AF2793000E1857F /* RandomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066BD2AF2793000E1857F /* RandomView.swift */; };
 		214066C12AF29EEC00E1857F /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214066C02AF29EEC00E1857F /* CongratsView.swift */; };
+		2141B2232CEB7BA5002AB242 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2141B2222CEB7B9D002AB242 /* DataManager.swift */; };
 		214517682CDCED0300752320 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 214517672CDCED0300752320 /* InfoPlist.xcstrings */; };
 		2145176C2CDCEF7D00752320 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 2145176B2CDCEF7D00752320 /* Localizable.xcstrings */; };
 		215745922B1CE49B0021745D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215745912B1CE49A0021745D /* StatsView.swift */; };
@@ -79,6 +80,7 @@
 		214066BB2AF25D8500E1857F /* InitTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitTabView.swift; sourceTree = "<group>"; };
 		214066BD2AF2793000E1857F /* RandomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomView.swift; sourceTree = "<group>"; };
 		214066C02AF29EEC00E1857F /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
+		2141B2222CEB7B9D002AB242 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		214517672CDCED0300752320 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		2145176B2CDCEF7D00752320 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		215745912B1CE49A0021745D /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
@@ -169,6 +171,8 @@
 		214066BF2AF2961200E1857F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2141B2222CEB7B9D002AB242 /* DataManager.swift */,
+				21CD6F532CB2B142008A6893 /* EntitlementManager.swift */,
 				218588B82AC81A6300730A9D /* Wine.swift */,
 				21598CF02B0D13A200E2A177 /* Helper.swift */,
 				21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */,
@@ -207,7 +211,6 @@
 			children = (
 				21AA0A482CB07938005F2434 /* SubscriptionView.swift */,
 				21CD6F512CB2B0FE008A6893 /* SubscriptionManager.swift */,
-				21CD6F532CB2B142008A6893 /* EntitlementManager.swift */,
 			);
 			path = Subscription;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */,
 				2113CEAE2B00D0EC00C9D828 /* SelectionListView.swift in Sources */,
 				2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */,
+				2141B2232CEB7BA5002AB242 /* DataManager.swift in Sources */,
 				21DD02692B2371E200406621 /* FirestoreManager.swift in Sources */,
 				215745952B1D17330021745D /* DocumentScannerView.swift in Sources */,
 				21598CF12B0D13A200E2A177 /* Helper.swift in Sources */,
@@ -603,7 +607,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -631,7 +635,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -654,7 +658,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CellarStock/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -682,7 +686,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";

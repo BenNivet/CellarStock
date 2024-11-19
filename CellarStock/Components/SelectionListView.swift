@@ -13,14 +13,17 @@ struct SelectionListView: View {
     let type: FilterType
     
     @Environment(\.dismiss) var dismiss
-    @Query private var quantities: [Quantity]
+    
+    @EnvironmentObject private var dataManager: DataManager
+    
     @Binding var filteringElements: [Int]
+    
     @State private var initialFilteringElements: [Int] = []
     
     private var isApplyEnabled: Bool { initialFilteringElements != filteringElements }
     
     private var years: [Int] {
-        Array(Set(quantities.compactMap { $0.year })).sorted(by: >)
+        Array(Set(dataManager.quantities.compactMap { $0.year })).sorted(by: >)
     }
     
     init(type: FilterType, filteringElements: Binding<[Int]>) {

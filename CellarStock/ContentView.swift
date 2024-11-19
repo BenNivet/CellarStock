@@ -22,14 +22,10 @@ struct ContentView: View {
     let tabType: TabType
     @Binding var reload: Bool
     
-    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     @EnvironmentObject private var interstitialAdsManager: InterstitialAdsManager
-    
-    @Query private var users: [User]
-    @Query private var wines: [Wine]
-    @Query private var quantities: [Quantity]
+    @EnvironmentObject private var dataManager: DataManager
     
     @State private var showingSheet: (Bool, Wine, [Int: Int], [Int: Double], Bool) = (false, Wine(), [:], [:], false)
     @State private var searchText = ""
@@ -39,8 +35,11 @@ struct ContentView: View {
     @State private var showingSubscription = false
     @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
     
+    private var wines: [Wine] {
+        dataManager.wines
+    }
     private var filteredWines: [Wine] {
-        guard !searchText.isEmpty else { return (try? modelContext.fetch(FetchDescriptor<Wine>())) ?? [] }
+        guard !searchText.isEmpty else { return wines }
         return wines.filter { $0.isMatch(for: searchText) }
     }
     
@@ -74,7 +73,7 @@ struct ContentView: View {
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var years: [Int] {
-        Array(Set(quantities.compactMap { $0.year })).sorted(by: >)
+        Array(Set(dataManager.quantities.compactMap { $0.year })).sorted(by: >)
     }
     
     private var addTip = AddTip()
@@ -89,24 +88,6 @@ struct ContentView: View {
             content
                 .navigationTitle(title)
                 .toolbar {
-//                    ToolbarItem(placement: .topBarLeading) {
-//                        Button {
-//                            importWines()
-//                        } label: {
-//                            Image(systemName: "square.and.arrow.down")
-//                                .font(.title2)
-//                        }
-//                        .foregroundStyle(.white)
-//                    }
-//                    ToolbarItem(placement: .topBarLeading) {
-//                        Button {
-//                            clean()
-//                        } label: {
-//                            Image(systemName: "trash")
-//                                .font(.title2)
-//                        }
-//                        .foregroundStyle(.white)
-//                    }
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             showingCodeAlert = true
@@ -170,7 +151,7 @@ struct ContentView: View {
         .onOpenURL { url in
             handleURL(url: url)
         }
-        .if(!wines.isEmpty) { view in
+        .if(!dataManager.wines.isEmpty) { view in
             view.addSearchIfNeeded(for: tabType, searchText: $searchText, searchIsActive: $searchIsActive)
         }
     }
@@ -291,7 +272,7 @@ struct ContentView: View {
     
     private func yearView(year: Int) -> some View {
         LazyVStack(spacing: CharterConstants.marginSmall) {
-            ForEach(wines(for: year), id: \.0) { wine, quantity in
+            ForEach(wines(for: year), id: \.0.id) { wine, quantity in
                 cellView(wine: wine, yearQuantity: quantity)
             }
         }
@@ -358,7 +339,7 @@ private extension ContentView {
     func quantitiesDict(for wine: Wine) -> ([Int: Int], [Int: Double]) {
         var quantitiesResult: [Int: Int] = [:]
         var pricesResult: [Int: Double] = [:]
-        let array = quantities.filter { $0.wineId == wine.wineId }
+        let array = dataManager.quantities.filter { $0.wineId == wine.wineId }
         for quantity in array {
             quantitiesResult[quantity.year] = quantity.quantity
             pricesResult[quantity.year] = quantity.price
@@ -368,8 +349,7 @@ private extension ContentView {
     
     func quantity(for wine: Wine) -> Int {
         var result = 0
-        let quantitiesFetched = (try? modelContext.fetch(FetchDescriptor<Quantity>())) ?? []
-        for quantity in quantitiesFetched where quantity.wineId == wine.wineId {
+        for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
             result += quantity.quantity
         }
         return result
@@ -409,8 +389,7 @@ private extension ContentView {
     
     func quantity(for year: Int) -> Int {
         var result = 0
-        let quantitiesFetched = (try? modelContext.fetch(FetchDescriptor<Quantity>())) ?? []
-        for quantity in quantitiesFetched where quantity.year == year {
+        for quantity in dataManager.quantities where quantity.year == year {
             result += quantity.quantity
         }
         return result
@@ -418,26 +397,19 @@ private extension ContentView {
     
     func wines(for year: Int) -> [(Wine, Int)] {
         var result: [(Wine, Int)] = []
-        let quantitiesFetched = (try? modelContext.fetch(FetchDescriptor<Quantity>())) ?? []
-        for quantity in quantitiesFetched where quantity.year == year {
+        for quantity in dataManager.quantities where quantity.year == year {
             guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
             result.append((wine, quantity.quantity))
         }
         return result
     }
     
-    func flush() {
-        try? modelContext.delete(model: User.self)
-        try? modelContext.delete(model: Quantity.self)
-        try? modelContext.delete(model: Wine.self)
-    }
-    
     func findCellar(code: String) {
         Task {
             let userId = await FirestoreManager.shared.findUser(id: code)
             guard let userId else { return }
-            flush()
-            modelContext.insert(User(documentId: userId))
+            dataManager.reset()
+            entitlementManager.userId = userId
             reload = true
             Analytics.logEvent(LogEvent.joinCellar, parameters: nil)
         }
@@ -455,53 +427,6 @@ private extension ContentView {
             accordionCollapsedStates[item] = newValue
         }
     }
-    
-//    func importWines() {
-//        let firestoreManager = FirestoreManager.shared
-//        do {
-//            guard let userId = users.first?.documentId,
-//                  let bundlePath = Bundle.main.path(forResource: "wines", ofType: "json"),
-//                  let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8)
-//            else { return }
-//            let winesImport = try JSONDecoder().decode(Import.self, from: jsonData)
-//            let winesDataFlat = winesImport.data.compactMap { $0.data(for: userId) }
-//            let winesData = Helper.shared.groupImport(data: winesDataFlat)
-//            
-//            let dispatch = DispatchGroup()
-//            winesData.forEach { wine, quantities in
-//                dispatch.enter()
-//                firestoreManager.insertOrUpdateWine(wine) { wineId in
-//                    guard let wineId else { return }
-//                    wine.wineId = wineId
-//                    modelContext.insert(wine)
-//                    let dispatchGroup = DispatchGroup()
-//                    for quantity in quantities {
-//                        quantity.wineId = wineId
-//                        dispatchGroup.enter()
-//                        firestoreManager.insertQuantity(quantity) { documentId in
-//                            guard let documentId else { return }
-//                            quantity.documentId = documentId
-//                            modelContext.insert(quantity)
-//                            dispatchGroup.leave()
-//                        }
-//                    }
-//                    dispatchGroup.notify(queue: .main) {
-//                        try? modelContext.save()
-//                        dispatch.leave()
-//                    }
-//                }
-//            }
-//            dispatch.notify(queue: .main) {
-//                try? modelContext.save()
-//            }
-//        } catch {
-//            print(error)
-//        }
-//    }
-//    
-//    func clean() {
-//        FirestoreManager.shared.clean()
-//    }
 }
 
 extension View {
