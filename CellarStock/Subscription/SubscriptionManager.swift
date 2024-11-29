@@ -14,7 +14,7 @@ class SubscriptionsManager: NSObject, ObservableObject {
     
     @Published var products: [Product] = []
     
-    private var entitlementManager: EntitlementManager?
+    private let entitlementManager: EntitlementManager
     private var updates: Task<Void, Never>?
     
     init(entitlementManager: EntitlementManager) {
@@ -40,11 +40,13 @@ class SubscriptionsManager: NSObject, ObservableObject {
 // MARK: - NeedSubscription
 extension SubscriptionsManager {
     var needSubscription: Bool {
-        if let winesPlus = entitlementManager?.winesPlus,
-           winesPlus != 0,
-           winesPlus % CharterConstants.winesCountSubscription == 0,
-           !(entitlementManager?.isPremium ?? false) {
-            entitlementManager?.winesPlus += 1
+        guard !entitlementManager.isPremium,
+              entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
+              entitlementManager.winesPlus > 0
+        else { return false }
+        
+        if entitlementManager.winesPlus % CharterConstants.winesCountSubscription == 0 {
+            entitlementManager.winesPlus += 1
             return true
         } else {
             return false
@@ -54,10 +56,12 @@ extension SubscriptionsManager {
 
 extension SubscriptionsManager {
     var needRating: Bool {
-        if let winesSubmitted = entitlementManager?.winesSubmitted,
-           winesSubmitted != 0,
-           winesSubmitted % CharterConstants.winesCountRatings == 0 {
-            entitlementManager?.winesSubmitted += 1
+        guard entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
+              entitlementManager.winesSubmitted > 0
+        else { return false }
+        
+        if entitlementManager.winesSubmitted % CharterConstants.winesCountRatings == 0 {
+            entitlementManager.winesSubmitted += 1
             return true
         } else {
             return false
@@ -128,7 +132,7 @@ extension SubscriptionsManager {
             }
         }
         
-        entitlementManager?.isPremium = !purchasedProductIDs.isEmpty
+        entitlementManager.isPremium = !purchasedProductIDs.isEmpty
     }
     
     func restorePurchases() async {

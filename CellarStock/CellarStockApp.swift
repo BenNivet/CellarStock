@@ -34,7 +34,7 @@ struct CellarStockApp: App {
         
         Task {
             if !entitlementManager.isPremium,
-               entitlementManager.winesSubmitted > 5 {
+               entitlementManager.appLaunched > CharterConstants.minimumAppLaunch {
                 await GADMobileAds.sharedInstance().start()
             }
             await subscriptionsManager.updatePurchasedProducts()

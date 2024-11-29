@@ -41,6 +41,7 @@ struct CharterConstants {
     static let disabledOpacity: CGFloat = 0.4
     
     // Random
+    static let minimumAppLaunch = 7
     static let winesCountSubscription = 11
     static let winesCountRatings = 17
     
