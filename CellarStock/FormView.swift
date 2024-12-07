@@ -8,9 +8,11 @@
 import Combine
 import FirebaseAnalytics
 import Foundation
+import PhotosUI
 import StoreKit
 import SwiftUI
 import SwiftData
+import Vision
 import VisionKit
 
 enum WinePicker {
@@ -37,12 +39,16 @@ struct FormView: View {
     @Binding var showQuantitiesOnly: Bool
     
     @State private var showingSheet = false
+    @State private var showingActionSheet = false
     @State private var showingCameraSheet = false
+    @State private var showingPhotoPicker = false
     @State private var scannedText = ""
     @State private var showingAmountSheet = false
     @State private var selectedYearAmount = 0
     @State private var showingDeleteAlert = false
     @State private var sensorFeedback = false
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var selectedImage: UIImage?
     
     private let listener = PassthroughSubject<Bool,Never>()
     private let firestoreManager = FirestoreManager.shared
@@ -130,11 +136,11 @@ struct FormView: View {
                                   isRequired: true,
                                   rightIcon: scannerAvailable ? "camera" : nil) {
                     hideKeyboard()
-                    showingCameraSheet = true
+                    showingActionSheet = true
                 }
             }
             
-            section(String(localized: "Années"), isRequired: wine.wineId.isEmpty && quantitiesByYear.isEmpty)
+            section(String(localized: "Millésimes"), isRequired: wine.wineId.isEmpty && quantitiesByYear.isEmpty)
             
             ForEach(quantitiesByYear.keys.sorted(by: >), id: \.self) { year in
                 HStack(spacing: CharterConstants.margin) {
@@ -152,18 +158,34 @@ struct FormView: View {
                     
                     VStack(spacing: CharterConstants.margin) {
                         HStack {
-                            Text("Quantités")
+                            Text("Qté")
                             Spacer()
-                            AnimatedStepper(currentNumber: quantitiesByYear[year] ?? 0) {
-                                quantitiesByYear[year] = (quantitiesByYear[year] ?? 0) + 1
-                            } onDecrement: {
-                                guard let quantity = quantitiesByYear[year] else { return }
-                                if quantity > 1 {
-                                    quantitiesByYear[year] = (quantity - 1)
-                                } else {
-                                    withAnimation {
-                                        quantitiesByYear[year] = nil
+                            HStack(spacing: CharterConstants.margin) {
+                                AnimatedStepper(currentNumber: bindingQuantity(year: year)) {
+                                    quantitiesByYear[year] = (quantitiesByYear[year] ?? 0) + 1
+                                } onDecrement: {
+                                    guard let quantity = quantitiesByYear[year] else { return }
+                                    if quantity > 1 {
+                                        quantitiesByYear[year] = (quantity - 1)
+                                    } else {
+                                        withAnimation {
+                                            quantitiesByYear[year] = nil
+                                        }
                                     }
+                                }
+                                
+                                if !showQuantitiesOnly {
+                                    Button("+6") {
+                                        guard let quantity = quantitiesByYear[year] else { return }
+                                        withAnimation(.linear) {
+                                            if quantity == 1 {
+                                                quantitiesByYear[year] = 6
+                                            } else {
+                                                quantitiesByYear[year] = quantity + 6
+                                            }
+                                        }
+                                    }
+                                    .buttonStyle(CircleButtonStyle())
                                 }
                             }
                         }
@@ -171,6 +193,7 @@ struct FormView: View {
                             Text("Prix")
                             Spacer()
                             Text("\(String(Int(pricesByYear[year] ?? 0))) \(String(describing: Locale.current.currencySymbol ?? "€"))")
+                                .opacity(pricesByYear[year] ?? 0 > 0 ? 1 : 0.6)
                         }
                         .onTapGesture {
                             hideKeyboard()
@@ -192,7 +215,7 @@ struct FormView: View {
             } label: {
                 HStack(spacing: CharterConstants.marginSmall) {
                     Image(systemName: "plus.circle")
-                    Text("Ajouter une année")
+                    Text("Ajouter un millésime")
                 }
             }
             .buttonStyle(SecondaryButtonStyle())
@@ -205,6 +228,8 @@ struct FormView: View {
             }
         }
         .padding(CharterConstants.margin)
+        .onChange(of: selectedPhoto, processPhoto)
+        .onChange(of: selectedImage, processImage)
         .sheet(isPresented: bindingScannedText) {
             NavigationView {
                 let linesText = scannedText.components(separatedBy: "\n")
@@ -252,9 +277,23 @@ struct FormView: View {
                 .padding(.bottom, CharterConstants.margin)
             }
         }
+        .photosPicker(isPresented: $showingPhotoPicker,
+                      selection: $selectedPhoto)
         .fullScreenCover(isPresented: bindingAmount) {
             AmountView(year: $selectedYearAmount, pricesByYear: $pricesByYear)
                 .analyticsScreen(name: ScreenName.addWinePrice, class: ScreenName.addWinePrice)
+        }
+        .confirmationDialog("", isPresented: $showingActionSheet) {
+            Button {
+                showingCameraSheet = true
+            } label: {
+                Text("Prendre une photo")
+            }
+            Button {
+                showingPhotoPicker = true
+            } label: {
+                Text("Photothèque")
+            }
         }
         .alert("Voulez vous supprimer ce vin ?", isPresented: $showingDeleteAlert) {
             Button("Oui", role: .destructive) {
@@ -294,6 +333,14 @@ private extension FormView {
     
     var bindingAmount: Binding<Bool> {
         Binding { selectedYearAmount != 0 } set: { _ in }
+    }
+    
+    func bindingQuantity(year: Int) -> Binding<Int> {
+        Binding {
+            quantitiesByYear[year] ?? 0
+        } set: { newValue in
+            quantitiesByYear[year] = newValue
+        }
     }
     
     func pickerValueBinding(_ value: CustomStringConvertible, type: WinePicker) -> Binding<String> {
@@ -398,5 +445,31 @@ private extension FormView {
             result += quantity.quantity
         }
         return result
+    }
+    
+    private func processPhoto() {
+        guard let selectedPhoto else { return }
+        Task {
+            if let data = try? await selectedPhoto.loadTransferable(type: Data.self),
+               let uiImage = UIImage(data: data) {
+                selectedImage = uiImage
+                self.selectedPhoto = nil
+            } else {
+                self.selectedPhoto = nil
+            }
+        }
+    }
+    
+    private func processImage() {
+        guard let image = selectedImage?.cgImage else { return }
+        let request = VNRecognizeTextRequest { request, error in
+            if let results = request.results as? [VNRecognizedTextObservation] {
+                let lines = results.compactMap { $0.topCandidates(1).first?.string }
+                scannedText = Helper().formatArrayWineName(lines: lines)
+            }
+        }
+
+        let imageRequestHandler = VNImageRequestHandler(cgImage: image)
+        try? imageRequestHandler.perform([request])
     }
 }

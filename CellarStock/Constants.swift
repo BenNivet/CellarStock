@@ -19,6 +19,7 @@ struct CharterConstants {
     static let marginBig: CGFloat = 40
     
     static let buttonSize: CGFloat = 45
+    static let quantitySize: CGFloat = 40
     
     // Radius
     static let radius: CGFloat = 12

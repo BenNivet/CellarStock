@@ -19,7 +19,7 @@ enum FilterType {
         case .type:
             String(localized: "Types")
         case .year:
-            String(localized: "Années")
+            String(localized: "Millésimes")
         }
     }
 }

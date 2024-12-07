@@ -51,6 +51,9 @@
       },
       "shouldTranslate" : false
     },
+    "+6" : {
+      "shouldTranslate" : false
+    },
     "Acceptez vous cette proposition ?" : {
       "localizations" : {
         "en" : {
@@ -99,6 +102,22 @@
         }
       }
     },
+    "Ajouter un millésime" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a vintage"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un millésime"
+          }
+        }
+      }
+    },
     "Ajouter un vin" : {
       "localizations" : {
         "en" : {
@@ -131,22 +150,6 @@
         }
       }
     },
-    "Ajouter une année" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a year"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajouter une année"
-          }
-        }
-      }
-    },
     "Allemagne" : {
       "localizations" : {
         "en" : {
@@ -159,38 +162,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allemagne"
-          }
-        }
-      }
-    },
-    "Année" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Year"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Année"
-          }
-        }
-      }
-    },
-    "Années" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Years"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Années"
           }
         }
       }
@@ -750,6 +721,38 @@
         }
       }
     },
+    "Millésime" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vintage"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Millésime"
+          }
+        }
+      }
+    },
+    "Millésimes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vintages"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Millésimes"
+          }
+        }
+      }
+    },
     "Montant total" : {
       "localizations" : {
         "en" : {
@@ -916,6 +919,22 @@
         }
       }
     },
+    "Photothèque" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo Library"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photothèque"
+          }
+        }
+      }
+    },
     "Populaire" : {
       "localizations" : {
         "en" : {
@@ -948,6 +967,22 @@
         }
       }
     },
+    "Prendre une photo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take Photo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prendre une photo"
+          }
+        }
+      }
+    },
     "Prix" : {
       "localizations" : {
         "en" : {
@@ -964,18 +999,18 @@
         }
       }
     },
-    "Quantités" : {
+    "Qté" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quantities"
+            "value" : "Qty"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quantités"
+            "value" : "Qté"
           }
         }
       }

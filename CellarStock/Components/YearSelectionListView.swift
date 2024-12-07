@@ -26,7 +26,7 @@ struct YearSelectionListView: View {
             .listStyle(.plain)
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Rechercher")
             .keyboardType(.numberPad)
-            .navigationTitle("Année")
+            .navigationTitle("Millésime")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

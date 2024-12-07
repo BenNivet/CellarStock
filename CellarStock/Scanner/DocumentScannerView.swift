@@ -52,8 +52,6 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         private var listener: PassthroughSubject<Bool,Never>
         private var roundBoxMappings: [UUID: UIView] = [:]
         private var transcript: String?
-        private let wineKeywords = ["CHATEAU", "DOMAINE", "CLOS"]
-        private let escapeKeywords = ["DU", "DE", "DES", "LE", "LA", "LES", "UN", "UNE", "ET", "&"]
         
         init(_ parent: DocumentScannerView, listener: PassthroughSubject<Bool,Never>) {
             self.parent = parent
@@ -169,41 +167,8 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         }
         
         func buildScannedText(_ selectedText: String) -> String {
-            var elements: [String] = []
             let lines = selectedText.components(separatedBy: "\n")
-            var isEscaped = false
-            
-            for line in lines {
-                guard var lastElement = elements.last
-                else {
-                    elements.append(line)
-                    continue
-                }
-                if isMatched(line, array: escapeKeywords) {
-                    lastElement.append(" " + line)
-                    elements = elements.dropLast()
-                    elements.append(lastElement)
-                    isEscaped = true
-                } else if isMatched(lastElement, array: wineKeywords) {
-                    elements = elements.dropLast()
-                    elements.append(lastElement + " " + line)
-                    isEscaped = false
-                } else {
-                    if isEscaped {
-                        elements = elements.dropLast()
-                        elements.append(lastElement + " " + line)
-                        isEscaped = false
-                    } else {
-                        elements.append(line)
-                        isEscaped = false
-                    }
-                }
-            }
-            return elements.joined(separator: "\n")
-        }
-        
-        private func isMatched(_ word: String, array: [String]) -> Bool {
-            array.contains { word.compare($0, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }
+            return Helper().formatArrayWineName(lines: lines)
         }
     }
 }

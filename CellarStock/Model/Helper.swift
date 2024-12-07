@@ -8,7 +8,10 @@
 import SwiftUI
 
 final class Helper {
+    
     private let currentYear = Calendar.current.component(.year, from: Date())
+    private let wineKeywords = ["CHATEAU", "DOMAINE", "CLOS"]
+    private let escapeKeywords = ["DU", "DE", "DES", "LE", "LA", "LES", "UN", "UNE", "ET", "&"]
     
     static let shared = Helper()
     
@@ -36,5 +39,42 @@ final class Helper {
             loopYear -= 1
         }
         return result
+    }
+    
+    func formatArrayWineName(lines: [String]) -> String {
+        var elements: [String] = []
+        var isEscaped = false
+        
+        for line in lines {
+            guard var lastElement = elements.last
+            else {
+                elements.append(line)
+                continue
+            }
+            if isMatched(line, array: escapeKeywords) {
+                lastElement.append(" " + line)
+                elements = elements.dropLast()
+                elements.append(lastElement)
+                isEscaped = true
+            } else if isMatched(lastElement, array: wineKeywords) {
+                elements = elements.dropLast()
+                elements.append(lastElement + " " + line)
+                isEscaped = false
+            } else {
+                if isEscaped {
+                    elements = elements.dropLast()
+                    elements.append(lastElement + " " + line)
+                    isEscaped = false
+                } else {
+                    elements.append(line)
+                    isEscaped = false
+                }
+            }
+        }
+        return elements.joined(separator: "\n")
+    }
+    
+    private func isMatched(_ word: String, array: [String]) -> Bool {
+        array.contains { word.compare($0, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }
     }
 }

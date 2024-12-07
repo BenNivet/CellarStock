@@ -61,7 +61,7 @@ struct InitTabView: View {
                     }
                 ContentView(tabType: .year, reload: $reload)
                     .tabItem {
-                        Text("Année")
+                        Text("Millésime")
                         Image("calendar")
                     }
                 if dataManager.wines.count > 5 {

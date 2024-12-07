@@ -9,20 +9,20 @@ import SwiftUI
 
 struct AnimatedStepper: View {
     
-    @State private var currentNumber: Int
+    @Binding var currentNumber: Int
     @State private var dragWidth: CGFloat = 0
     
     var onIncrement: (() -> Void)?
     var onDecrement: (() -> Void)?
     
-    init(currentNumber: Int, onIncrement: (() -> Void)?, onDecrement: (() -> Void)?) {
-        _currentNumber = State(initialValue: currentNumber)
+    init(currentNumber: Binding<Int>, onIncrement: (() -> Void)?, onDecrement: (() -> Void)?) {
+        _currentNumber = currentNumber
         self.onIncrement = onIncrement
         self.onDecrement = onDecrement
     }
     
     var minNumber = 0
-    var size: CGFloat = 40
+    var size: CGFloat = CharterConstants.quantitySize
     
     private func isMin() -> Bool {
         currentNumber == minNumber
@@ -38,13 +38,11 @@ struct AnimatedStepper: View {
     
     private func decrement() {
         if !isMin() {
-            currentNumber -= 1
             onDecrement?()
         }
     }
     
     private func increment() {
-        currentNumber += 1
         onIncrement?()
     }
     
@@ -59,25 +57,26 @@ struct AnimatedStepper: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            icon(systemName: "minus")
-                .opacity(isMin() ? 0.4 : 1)
-                .onTapGesture {
-                    withAnimation(.linear) {
-                        decrement()
-                    }
+            Button {
+                withAnimation(.linear) {
+                    decrement()
                 }
-                .padding(.horizontal, CharterConstants.marginSmall)
+            } label: {
+                icon(systemName: "minus")
+                    .padding(.horizontal, CharterConstants.marginSmall)
+            }
             
             Color.clear
                 .frame(width: size, height: size)
             
-            icon(systemName: "plus")
-                .onTapGesture {
-                    withAnimation(.linear) {
-                        increment()
-                    }
+            Button {
+                withAnimation(.linear) {
+                    increment()
                 }
-                .padding(.horizontal, CharterConstants.marginSmall)
+            } label: {
+                icon(systemName: "plus")
+                    .padding(.horizontal, CharterConstants.marginSmall)
+            }
         }
         .frame(height: size)
         .background(

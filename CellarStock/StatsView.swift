@@ -52,7 +52,7 @@ struct StatsView: View {
                                      index: 1) {
                                          AnyView(ChartsView(data: types.map { StepCount(name: $0.description, count: quantity(for: $0)) }))
                                      },
-                    NeoTabsItemModel(title: String(localized: "Années"),
+                    NeoTabsItemModel(title: String(localized: "Millésime"),
                                      index: 2) {
                                          AnyView(ChartsView(data: years.map {
                                              StepCount(name: $0 == CharterConstants.withoutYear ? String(localized: "Sans millésime"): String($0),

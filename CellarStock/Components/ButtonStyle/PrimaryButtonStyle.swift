@@ -54,3 +54,22 @@ struct DestructiveButtonStyle: ButtonStyle {
             .contentShape(Rectangle())
     }
 }
+
+struct CircleButtonStyle: ButtonStyle {
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration
+            .label
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundColor(.black)
+            .frame(width: CharterConstants.quantitySize, height: CharterConstants.quantitySize)
+            .background(
+                Circle()
+                    .fill(Color.white)
+                    .shadow(color: .black.opacity(0.05), radius: CharterConstants.radius, x: 0, y: 0)
+            )
+            .clipShape(Circle())
+            .opacity(configuration.isPressed ? CharterConstants.disabledOpacity : 1)
+            .contentShape(Circle())
+    }
+}
