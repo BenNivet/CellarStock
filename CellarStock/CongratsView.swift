@@ -40,13 +40,17 @@ struct CongratsView: View {
                         if wine.country == .france {
                             Text(wine.region.description)
                                 .font(.caption)
-                            if wine.region == .bordeaux {
+                            if wine.region == .bordeaux, wine.appelation != .other {
                                 Text(wine.appelation.description)
                                     .font(.caption)
                             }
                         } else {
                             Text(wine.country.description)
                                 .font(.caption)
+                            if wine.country == .usa, wine.usAppelation != .other {
+                                Text(wine.usAppelation.description)
+                                    .font(.caption)
+                            }
                         }
                         Text(wine.type.description)
                             .font(.caption)

@@ -68,6 +68,11 @@ struct ContentView: View {
             .compactMap { $0.appelation }))
             .sorted { $0.description < $1.description }
     }
+    private var usAppelations: [USAppelation] {
+        Array(Set(filteredWines.filter { $0.country == .usa }
+            .compactMap { $0.usAppelation }))
+            .sorted { $0.description < $1.description }
+    }
     private var types: [WineType] {
         Array(Set(filteredWines.compactMap { $0.type }))
             .sorted { $0.rawValue < $1.rawValue }
@@ -194,11 +199,7 @@ struct ContentView: View {
                             Accordion(title: country.description,
                                       subtitle: quantity(for: country).bottlesString,
                                       isCollapsed: isCollapsed(item: country, array: regions + countries)) {
-                                LazyVStack(spacing: CharterConstants.marginSmall) {
-                                    ForEach(filteredWines.filter { $0.country == country }) { wine in
-                                        cellView(wine: wine)
-                                    }
-                                }
+                                countryView(country: country)
                             }
                         }
                     case .type:
@@ -270,6 +271,36 @@ struct ContentView: View {
         }
     }
     
+    @ViewBuilder
+    private func countryView(country: Country) -> some View {
+        if country == .usa {
+            usAppelationView
+        } else {
+            LazyVStack(spacing: CharterConstants.marginSmall) {
+                ForEach(filteredWines.filter { $0.country == country }) { wine in
+                    cellView(wine: wine)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var usAppelationView: some View {
+        LazyVStack(spacing: CharterConstants.margin) {
+            ForEach(usAppelations) { usAppelation in
+                Accordion(title: usAppelation.description,
+                          subtitle: quantity(for: usAppelation).bottlesString,
+                          isCollapsed: isCollapsed(item: usAppelation, array: usAppelations)) {
+                    LazyVStack(spacing: CharterConstants.marginSmall) {
+                        ForEach(filteredWines.filter { $0.country == .usa && $0.usAppelation == usAppelation }) { wine in
+                            cellView(wine: wine)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     private func yearView(year: Int) -> some View {
         LazyVStack(spacing: CharterConstants.marginSmall) {
             ForEach(wines(for: year), id: \.0.id) { wine, quantity in
@@ -288,13 +319,17 @@ struct ContentView: View {
                         if wine.country == .france {
                             Text(wine.region.description)
                                 .font(.caption)
-                            if tabType != .region, wine.region == .bordeaux {
+                            if tabType != .region, wine.region == .bordeaux, wine.appelation != .other {
                                 Text(wine.appelation.description)
                                     .font(.caption)
                             }
                         } else {
                             Text(wine.country.description)
                                 .font(.caption)
+                            if tabType != .region, wine.country == .usa, wine.usAppelation != .other {
+                                Text(wine.usAppelation.description)
+                                    .font(.caption)
+                            }
                         }
                         Text(wine.type.description)
                             .font(.caption)
@@ -374,6 +409,14 @@ private extension ContentView {
     func quantity(for appelation: Appelation) -> Int {
         var result = 0
         for wine in filteredWines where wine.country == .france && wine.region == .bordeaux && wine.appelation == appelation {
+            result += quantity(for: wine)
+        }
+        return result
+    }
+    
+    func quantity(for usAppelation: USAppelation) -> Int {
+        var result = 0
+        for wine in filteredWines where wine.country == .usa && wine.usAppelation == usAppelation {
             result += quantity(for: wine)
         }
         return result

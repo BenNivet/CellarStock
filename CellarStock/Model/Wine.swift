@@ -15,6 +15,7 @@ class Wine: Identifiable, Hashable {
     var type: WineType = WineType.rouge
     var region: Region = Region.bourgogne
     var appelation: Appelation = Appelation.other
+    var usAppelation: USAppelation = USAppelation.other
     var name: String = ""
     var owner: String = ""
     var info: String = ""
@@ -26,6 +27,7 @@ class Wine: Identifiable, Hashable {
          type: WineType = .rouge,
          region: Region = .bourgogne,
          appelation: Appelation = .other,
+         usAppelation: USAppelation = USAppelation.other,
          name: String = "",
          owner: String = "",
          info: String = "",
@@ -36,6 +38,7 @@ class Wine: Identifiable, Hashable {
         self.type = type
         self.region = region
         self.appelation = appelation
+        self.usAppelation = usAppelation
         self.name = name
         self.owner = owner
         self.info = info
@@ -47,6 +50,7 @@ class Wine: Identifiable, Hashable {
         guard let type = WineType(rawValue: wineServer.type),
               let region = Region(rawValue: wineServer.region),
               let appelation = Appelation(rawValue: wineServer.appelation),
+              let usAppelation = USAppelation(rawValue: wineServer.usAppelation ?? USAppelation.other.rawValue),
               let country = Country(rawValue: wineServer.country ?? Country.france.rawValue),
               let size = Size(rawValue: wineServer.size ?? Size.bouteille.rawValue)
         else { return nil }
@@ -55,6 +59,7 @@ class Wine: Identifiable, Hashable {
         self.type = type
         self.region = region
         self.appelation = appelation
+        self.usAppelation = usAppelation
         self.name = wineServer.name
         self.owner = wineServer.owner
         self.info = wineServer.info
@@ -67,6 +72,7 @@ class Wine: Identifiable, Hashable {
                    type: type.rawValue,
                    region: region.rawValue,
                    appelation: appelation.rawValue,
+                   usAppelation: usAppelation.rawValue,
                    name: name,
                    owner: owner,
                    info: info,
@@ -79,6 +85,8 @@ class Wine: Identifiable, Hashable {
         return type.description.queryFormatted.contains(queryFormatted)
         || region.description.queryFormatted.contains(queryFormatted)
         || (region == .bordeaux && appelation.description.queryFormatted.contains(queryFormatted))
+        || (country == .usa && usAppelation.description.queryFormatted.contains(queryFormatted))
+        || (country != .france && country.description.queryFormatted.contains(queryFormatted))
         || name.queryFormatted.contains(queryFormatted)
         || owner.queryFormatted.contains(queryFormatted)
         || info.queryFormatted.contains(queryFormatted)
@@ -229,7 +237,7 @@ enum Region: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
         case .sudOuest:
             "Sud Ouest"
         case .other:
-            "Autre"
+            String(localized: "Autre")
         }
     }
 }
@@ -353,10 +361,111 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
         case .sauternes:
             "Sauternes"
         case .other:
-            "Autre"
+            String(localized: "Autre")
         }
     }
 }
+
+enum USAppelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
+    var id: Self { self }
+    
+    case arizona = 0
+    case californiaCentralCoast
+    case californiaLivermoreValley
+    case californiaPasoRobles
+    case californiaYorkMountain
+    case californiaCentralValley
+    case californiaLodi
+    case californiaNorthCoast
+    case californiaMendocino
+    case californiaNapaValley
+    case californiaSonomaCounty
+    case californiaSierraFoothills
+    case californiaSouthCoast
+    case colorado
+    case idaho
+    case michigan
+    case missouri
+    case newJersey
+    case newMexico
+    case newYorkFingerLakes
+    case newYorkHudsonRiverRegion
+    case newYorkLongIsland
+    case oregonWillametteValley
+    case pennsylvania
+    case texasTexasHighPlains
+    case texasTexasHillCountry
+    case texasTransPecos
+    case virginia
+    case washingtonColumbiaValley
+    case other
+    
+    var description: String {
+        switch self {
+        case .arizona:
+            "Arizona"
+        case .californiaCentralCoast:
+            "California - Central Coast"
+        case .californiaLivermoreValley:
+            "California - Livermore Valley"
+        case .californiaPasoRobles:
+            "California - Paso Robles"
+        case .californiaYorkMountain:
+            "California - York Mountain"
+        case .californiaCentralValley:
+            "California - Central Valley"
+        case .californiaLodi:
+            "California - Lodi"
+        case .californiaNorthCoast:
+            "California - North Coast"
+        case .californiaMendocino:
+            "California - Mendocino"
+        case .californiaNapaValley:
+            "California - Napa Valley"
+        case .californiaSonomaCounty:
+            "California - Sonoma County"
+        case .californiaSierraFoothills:
+            "California - Sierra Foothills"
+        case .californiaSouthCoast:
+            "California - South Coast"
+        case .colorado:
+            "Colorado"
+        case .idaho:
+            "Idaho"
+        case .michigan:
+            "Michigan"
+        case .missouri:
+            "Missouri"
+        case .newJersey:
+            "New Jersey"
+        case .newMexico:
+            "New Mexico"
+        case .newYorkFingerLakes:
+            "New York - Finger Lakes"
+        case .newYorkHudsonRiverRegion:
+            "New York - Hudson River Region"
+        case .newYorkLongIsland:
+            "New York - Long Island"
+        case .oregonWillametteValley:
+            "Oregon - Willamette Valley"
+        case .pennsylvania:
+            "Pennsylvania"
+        case .texasTexasHighPlains:
+            "Texas - Texas High Plains"
+        case .texasTexasHillCountry:
+            "Texas - Texas Hill Country"
+        case .texasTransPecos:
+            "Texas - Trans-Pecos"
+        case .virginia:
+            "Virginia"
+        case .washingtonColumbiaValley:
+            "Washington - Columbia Valley"
+        case .other:
+            String(localized: "Autre")
+        }
+    }
+}
+
 
 enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
@@ -465,6 +574,7 @@ struct WineServer: Codable {
     var type: Int
     var region: Int
     var appelation: Int
+    var usAppelation: Int?
     var name: String
     var owner: String
     var info: String

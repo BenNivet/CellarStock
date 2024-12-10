@@ -19,6 +19,7 @@ enum WinePicker {
     case country
     case region
     case appelation
+    case usAppelation
     case type
     case size
 }
@@ -122,6 +123,11 @@ struct FormView: View {
                                           text: pickerValueBinding(wine.appelation, type: .appelation),
                                           rightIcon: "chevron.right")
                     }
+                } else if wine.country == .usa {
+                    FloatingTextField(type: .picker(rows: USAppelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
+                                      placeHolder: String(localized: "Appelation"),
+                                      text: pickerValueBinding(wine.usAppelation, type: .usAppelation),
+                                      rightIcon: "chevron.right")
                 }
                 FloatingTextField(type: .picker(rows: WineType.allCases.map { $0.description }),
                                   placeHolder: String(localized: "Type"),
@@ -360,6 +366,10 @@ private extension FormView {
                 guard let appelation = Appelation.allCases.first(where: { $0.description == newValue })
                 else { return }
                 wine.appelation = appelation
+            case .usAppelation:
+                guard let usAppelation = USAppelation.allCases.first(where: { $0.description == newValue })
+                else { return }
+                wine.usAppelation = usAppelation
             case .type:
                 guard let type = WineType.allCases.first(where: { $0.description == newValue })
                 else { return }
