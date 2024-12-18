@@ -466,7 +466,6 @@ enum USAppelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Cod
     }
 }
 
-
 enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
     

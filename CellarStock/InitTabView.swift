@@ -5,6 +5,7 @@
 //  Created by CANTE Benjamin on 01/11/2023.
 //
 
+import FirebaseAnalytics
 import SwiftUI
 import SwiftData
 
@@ -106,6 +107,8 @@ struct InitTabView: View {
         dataManager.wines = wines
         dataManager.quantities = quantities
         endFetch()
+        Analytics.logEvent(LogEvent.winesCountTotal, parameters: nil)
+        Analytics.logEvent(LogEvent.winesCount + String(Int(floor(Float(wines.count)/10)*10)), parameters: nil)
     }
     
     private func endFetch() {

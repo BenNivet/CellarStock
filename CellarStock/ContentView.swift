@@ -119,9 +119,6 @@ struct ContentView: View {
                             } else {
                                 showingSheet = (true, Wine(), [:], [:], false)
                             }
-                            if wines.count >= CharterConstants.winesCountSubscription {
-                                Analytics.logEvent(LogEvent.needSubscription, parameters: ["wines": wines.count])
-                            }
                         } label: {
                             Image(systemName: "plus")
                                 .font(.title2)

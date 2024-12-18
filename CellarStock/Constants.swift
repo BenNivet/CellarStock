@@ -45,6 +45,7 @@ struct CharterConstants {
     static let minimumAppLaunch = 7
     static let winesCountSubscription = 11
     static let winesCountRatings = 17
+//    static let maximumFreeWinesSubmitted = 30
     
     static let withoutYear = 9999
 }
@@ -72,7 +73,8 @@ struct LogEvent {
     static let closeSubscription = "Close_subscription"
     static let validateSubscription = "Validate_subscription"
     static let redeemSubscription = "Reedem_subscription"
-    static let needSubscription = "Need_subscription"
+    static let winesCountTotal = "Wines_count_total"
+    static let winesCount = "Wines_count_"
     
     // Ads
     static let adSuccess = "Load_ad_success"
