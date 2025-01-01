@@ -15,15 +15,14 @@ struct SubscriptionView: View {
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     
-    @State private var selectedProduct: Product? = nil
-    @State private var showRedeemCode: Bool = false
+    @State private var selectedProduct: Product?
+    @State private var showRedeemCode = false
+    @State private var showConfetti = false
     
     private let features: [String] = [String(localized: "Ajouter des vins en illimité"),
                                       String(localized: "Partager ma cave"),
                                       String(localized: "Suggestions de vins"),
                                       String(localized: "Aucune publicité")]
-    
-    @State private var showConfetti = false
     
     // MARK: - Layout
     var body: some View {

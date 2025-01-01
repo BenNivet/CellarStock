@@ -107,8 +107,7 @@ struct InitTabView: View {
         dataManager.wines = wines
         dataManager.quantities = quantities
         endFetch()
-        Analytics.logEvent(LogEvent.winesCountTotal, parameters: nil)
-        Analytics.logEvent(LogEvent.winesCount + String(Int(floor(Float(wines.count)/10)*10)), parameters: nil)
+        log(wines: wines, quantities: quantities)
     }
     
     private func endFetch() {
@@ -117,5 +116,21 @@ struct InitTabView: View {
         }
         dataFetched = true
         isLoaderPresented = false
+    }
+    
+    private func log(wines: [Wine], quantities: [Quantity]) {
+        // Wines
+        Analytics.logEvent(LogEvent.winesCountTotal, parameters: nil)
+        Analytics.logEvent(LogEvent.winesCount + String(Int(floor(Float(wines.count)/10)*10)),
+                           parameters: nil)
+        
+        // Bottles
+        var bottles = 0
+        for quantity in dataManager.quantities {
+            bottles += quantity.quantity
+        }
+        Analytics.logEvent(LogEvent.bottlesCountTotal, parameters: nil)
+        Analytics.logEvent(LogEvent.bottlesCount + String(Int(floor(Float(bottles)/10)*10)),
+                           parameters: nil)
     }
 }

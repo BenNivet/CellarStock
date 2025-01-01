@@ -75,13 +75,12 @@ struct LogEvent {
     static let redeemSubscription = "Reedem_subscription"
     static let winesCountTotal = "Wines_count_total"
     static let winesCount = "Wines_count_"
+    static let bottlesCountTotal = "Bottles_count_total"
+    static let bottlesCount = "Bottles_count_"
     
     // Ads
     static let adSuccess = "Load_ad_success"
-    static let adNil = "Load_ad_nil"
     static let adError = "Load_ad_error"
-    static let displayAdSuccess = "Display_ad_success"
-    static let displayAdError = "Display_ad_error"
 }
 
 struct Subscription {

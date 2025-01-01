@@ -41,11 +41,7 @@ class InterstitialAdsManager: NSObject, ObservableObject {
             interstitialAd = ad
             interstitialAd?.fullScreenContentDelegate = self
             interstitialAdLoaded = true
-            if ad != nil {
-                Analytics.logEvent(LogEvent.adSuccess, parameters: nil)
-            } else {
-                Analytics.logEvent(LogEvent.adNil, parameters: nil)
-            }
+            Analytics.logEvent(LogEvent.adSuccess, parameters: nil)
         }
     }
     
@@ -64,13 +60,11 @@ extension InterstitialAdsManager: GADFullScreenContentDelegate {
     
     func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         print("🟡: Failed to display interstitial ad")
-        Analytics.logEvent(LogEvent.displayAdError, parameters: nil)
         loadInterstitialAd()
     }
     
     func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         print("🤩: Displayed an interstitial ad")
-        Analytics.logEvent(LogEvent.displayAdSuccess, parameters: nil)
         self.interstitialAd = nil
     }
     

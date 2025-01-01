@@ -120,7 +120,7 @@ struct StatsView: View {
 private extension StatsView {
     
     var generalInfos: (count: Int, price: Double) {
-        var count: Int = 0
+        var count = 0
         var price: Double = 0
         for quantity in dataManager.quantities {
             count += quantity.quantity
