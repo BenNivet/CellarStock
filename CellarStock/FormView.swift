@@ -24,7 +24,6 @@ enum WinePicker {
     case size
 }
 
-@MainActor
 struct FormView: View {
     
     @Environment(\.dismiss) var dismiss
@@ -261,6 +260,7 @@ struct FormView: View {
                     }
                 }
             }
+            .analyticsScreen(name: ScreenName.selectWineName, class: ScreenName.selectWineName)
         }
         .sheet(isPresented: $showingSheet) {
             YearSelectionListView(
@@ -269,6 +269,7 @@ struct FormView: View {
                 quantities: $quantitiesByYear,
                 prices: $pricesByYear
             )
+            .analyticsScreen(name: ScreenName.yearList, class: ScreenName.yearList)
         }
         .sheet(isPresented: $showingCameraSheet) {
             ZStack(alignment: .bottom) {

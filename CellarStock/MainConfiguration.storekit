@@ -1,4 +1,14 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "169CCCD2",
   "nonRenewingSubscriptions" : [
 
@@ -10,7 +20,7 @@
     "_applicationInternalID" : "6473699835",
     "_developerTeamID" : "WK7T3Z2QPN",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 749995013.46917295,
+    "_lastSynchronizedDate" : 757697016.06999898,
     "_locale" : "fr",
     "_storefront" : "FRA",
     "_storeKitErrors" : [
@@ -80,8 +90,18 @@
           "familyShareable" : false,
           "groupNumber" : 3,
           "internalID" : "6736587260",
-          "introductoryOffer" : null,
+          "introductoryOffer" : {
+            "internalID" : "D5CE9A3D",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1M"
+          },
           "localizations" : [
+            {
+              "description" : "Premium access for 6 months",
+              "displayName" : "6 Months",
+              "locale" : "en_US"
+            },
             {
               "description" : "Accès premium pour 6 mois",
               "displayName" : "6 Mois",
@@ -92,7 +112,10 @@
           "recurringSubscriptionPeriod" : "P6M",
           "referenceName" : "HalfYearly",
           "subscriptionGroupID" : "21554027",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         },
         {
           "adHocOffers" : [
@@ -105,19 +128,32 @@
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6736586856",
-          "introductoryOffer" : null,
+          "introductoryOffer" : {
+            "internalID" : "547B1BE9",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1M"
+          },
           "localizations" : [
             {
               "description" : "Accès premium pour 1 mois",
               "displayName" : "1 Mois",
               "locale" : "fr"
+            },
+            {
+              "description" : "Premium access for 1 month",
+              "displayName" : "1 Month",
+              "locale" : "en_US"
             }
           ],
           "productID" : "Monthly",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly",
           "subscriptionGroupID" : "21554027",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         },
         {
           "adHocOffers" : [
@@ -127,10 +163,10 @@
             {
               "eligibility" : [
                 "existing",
-                "expired",
-                "new"
+                "new",
+                "expired"
               ],
-              "internalID" : "EF34A05F",
+              "internalID" : "7B80BE54",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "free",
@@ -142,10 +178,25 @@
           "familyShareable" : false,
           "groupNumber" : 2,
           "internalID" : "6736587200",
-          "introductoryOffer" : null,
+          "introductoryOffer" : {
+            "internalID" : "0CF63EF1",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1M"
+          },
           "localizations" : [
             {
               "description" : "Accès premium pour 12 mois",
+              "displayName" : "12 Mois",
+              "locale" : "fr"
+            },
+            {
+              "description" : "Premium access for 12 months",
+              "displayName" : "12 Months",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Accès premium pour une 12 mois",
               "displayName" : "12 Mois",
               "locale" : "fr"
             }
@@ -154,13 +205,16 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Yearly",
           "subscriptionGroupID" : "21554027",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     }
   ],
   "version" : {
-    "major" : 3,
+    "major" : 4,
     "minor" : 0
   }
 }

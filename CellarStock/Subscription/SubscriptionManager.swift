@@ -15,10 +15,18 @@ class SubscriptionsManager: NSObject, ObservableObject {
     @Published var products: [Product] = []
     
     private let entitlementManager: EntitlementManager
+    private let dataManager: DataManager
     private var updates: Task<Void, Never>?
     
-    init(entitlementManager: EntitlementManager) {
+    private lazy var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter
+    }()
+    
+    init(entitlementManager: EntitlementManager, dataManager: DataManager) {
         self.entitlementManager = entitlementManager
+        self.dataManager = dataManager
         super.init()
         self.updates = observeTransactionUpdates()
         SKPaymentQueue.default().add(self)
@@ -45,7 +53,16 @@ extension SubscriptionsManager {
               entitlementManager.winesPlus > 0
         else { return false }
         
-        if entitlementManager.winesPlus % CharterConstants.winesCountSubscription == 0 {
+        var bottles = 0
+        for quantity in dataManager.quantities {
+            bottles += quantity.quantity
+        }
+        
+        let modulo = bottles >= CharterConstants.hugeCellarBottlesLimit
+        ? CharterConstants.winesCountSubscriptionHugeCellar
+        : CharterConstants.winesCountSubscription
+        
+        if entitlementManager.winesPlus % modulo == 0 {
             entitlementManager.winesPlus += 1
             return true
         } else {
@@ -62,6 +79,34 @@ extension SubscriptionsManager {
         
         if entitlementManager.winesSubmitted % CharterConstants.winesCountRatings == 0 {
             entitlementManager.winesSubmitted += 1
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+extension SubscriptionsManager {
+    var canDisplayFeaturesView: Bool {
+        guard !entitlementManager.newFeatures1Validated,
+              entitlementManager.newFeatures1DisplayedCount < CharterConstants.featuresViewMaxCountLimit,
+              entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
+              entitlementManager.winesSubmitted > 0
+        else { return false }
+        
+        guard let minumumDate = formatter.date(from: entitlementManager.minumumNewFeatures1DisplayDate),
+              Date() > minumumDate
+        else { return false }
+        
+        var bottles = 0
+        for quantity in dataManager.quantities {
+            bottles += quantity.quantity
+        }
+        
+        if bottles >= CharterConstants.featuresViewBottlesLimit {
+            entitlementManager.newFeatures1DisplayedCount += 1
+            let newDate = CharterConstants.featuresViewDaysInterval.days.fromNow
+            entitlementManager.minumumNewFeatures1DisplayDate = formatter.string(from: newDate)
             return true
         } else {
             return false
@@ -148,4 +193,42 @@ extension SubscriptionsManager: SKPaymentTransactionObserver {
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {}
     
     func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool { true }
+}
+
+extension Int {
+    var days: DateInterval {
+        DateInterval(unit: .day, value: self)
+    }
+}
+
+public struct DateInterval {
+    private typealias Interval = (unit: Calendar.Component, value: Int)
+    private var intervals: [Interval] = []
+    
+    init() {}
+    
+    init(unit: Calendar.Component, value: Int) {
+        intervals.append(Interval(unit: unit, value: value))
+    }
+}
+
+extension DateInterval {
+    private func intervalDate(negative: Bool, fromDate originDate: Date? = nil) -> Date {
+        var date = originDate ?? Date()
+        intervals.forEach { (interval: Interval) in
+            date = Calendar.current.date(byAdding: interval.unit,
+                                         value: negative ? -interval.value : interval.value,
+                                         to: date)!
+        }
+        
+        return date
+    }
+    
+    var ago: Date {
+        intervalDate(negative: true)
+    }
+    
+    var fromNow: Date {
+        intervalDate(negative: false)
+    }
 }

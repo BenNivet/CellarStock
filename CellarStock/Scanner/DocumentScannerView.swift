@@ -9,7 +9,6 @@ import Combine
 import SwiftUI
 import VisionKit
 
-@MainActor
 struct DocumentScannerView: UIViewControllerRepresentable {
     
     @Environment(\.dismiss) var dismiss

@@ -33,6 +33,7 @@ struct ContentView: View {
     @State private var showingCodeAlert = false
     @State private var codeText = ""
     @State private var showingSubscription = false
+    @State private var showingFeatures = false
     @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
     
     private var wines: [Wine] {
@@ -116,6 +117,8 @@ struct ContentView: View {
                             entitlementManager.winesPlus += 1
                             if subscriptionsManager.needSubscription {
                                 showingSubscription = true
+                            } else if subscriptionsManager.canDisplayFeaturesView {
+                                showingFeatures = true
                             } else {
                                 showingSheet = (true, Wine(), [:], [:], false)
                             }
@@ -142,6 +145,9 @@ struct ContentView: View {
                 }
                 .fullScreenCover(isPresented: $showingSubscription) {
                     SubscriptionView()
+                }
+                .fullScreenCover(isPresented: $showingFeatures) {
+                    FeaturesView()
                 }
                 .toolbarBackground(searchIsActive ? .visible : .automatic, for: .navigationBar)
                 .background {

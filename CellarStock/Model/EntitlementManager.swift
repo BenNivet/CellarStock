@@ -24,4 +24,13 @@ final class EntitlementManager: ObservableObject {
     
     @AppStorage("appLaunched", store: userDefaults)
     var appLaunched = 0
+    
+    @AppStorage("newFeatures1Validated", store: userDefaults)
+    var newFeatures1Validated = false
+    
+    @AppStorage("newFeatures1DisplayedCount", store: userDefaults)
+    var newFeatures1DisplayedCount = 0
+    
+    @AppStorage("minumumNewFeatures1DisplayDate", store: userDefaults)
+    var minumumNewFeatures1DisplayDate = "2025/01/10"
 }

@@ -15,17 +15,20 @@ import TipKit
 struct CellarStockApp: App {
     
     @StateObject private var entitlementManager: EntitlementManager
+    @StateObject private var dataManager: DataManager
     @StateObject private var subscriptionsManager: SubscriptionsManager
     @StateObject private var interstitialAdsManager = InterstitialAdsManager()
-    @StateObject private var dataManager = DataManager()
     
     init() {
         FirebaseApp.configure()
         let entitlementManager = EntitlementManager()
         entitlementManager.appLaunched += 1
-        let subscriptionsManager = SubscriptionsManager(entitlementManager: entitlementManager)
+        let dataManager = DataManager()
+        let subscriptionsManager = SubscriptionsManager(entitlementManager: entitlementManager,
+                                                        dataManager: dataManager)
         
         _entitlementManager = StateObject(wrappedValue: entitlementManager)
+        _dataManager = StateObject(wrappedValue: dataManager)
         _subscriptionsManager = StateObject(wrappedValue: subscriptionsManager)
         
         try? Tips.configure([

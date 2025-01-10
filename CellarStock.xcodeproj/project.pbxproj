@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0BBEDC002D28140200E1136E /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBEDBFF2D28140200E1136E /* FeaturesView.swift */; };
 		2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEA92B00CCB700C9D828 /* FilterItem.swift */; };
 		2113CEAC2B00CCDC00C9D828 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEAB2B00CCDC00C9D828 /* Wheel.swift */; };
 		2113CEAE2B00D0EC00C9D828 /* SelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEAD2B00D0EC00C9D828 /* SelectionListView.swift */; };
@@ -70,6 +71,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0BBEDBFF2D28140200E1136E /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		2113CEA92B00CCB700C9D828 /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		2113CEAB2B00CCDC00C9D828 /* Wheel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
 		2113CEAD2B00D0EC00C9D828 /* SelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionListView.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				214066C02AF29EEC00E1857F /* CongratsView.swift */,
 				215745912B1CE49A0021745D /* StatsView.swift */,
 				2188F4682B21D36C0030B596 /* ChartsView.swift */,
+				0BBEDBFF2D28140200E1136E /* FeaturesView.swift */,
 				2162B4802CC512890043A0C0 /* Ads */,
 				2162B4832CC513DC0043A0C0 /* Subscription */,
 				219573B12CBCF7A900BCD488 /* Loader */,
@@ -426,6 +429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BBEDC002D28140200E1136E /* FeaturesView.swift in Sources */,
 				2182E61C2CA8350B0022D98A /* View+extensions.swift in Sources */,
 				2188F4762B21ED980030B596 /* NeoTabsStaticItemsView.swift in Sources */,
 				2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */,
@@ -635,7 +639,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.9;
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -686,7 +690,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.9;
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";

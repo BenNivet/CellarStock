@@ -87,13 +87,18 @@ struct SubscriptionView: View {
     }
     
     private var subscriptionOptionsView: some View {
-        VStack(spacing: CharterConstants.margin) {
+        VStack(spacing: CharterConstants.marginSmall) {
             navView
-            proAccessView
-            featuresView
-            Spacer()
-            productsListView
-            purchaseSection
+            VStack(spacing: CharterConstants.margin) {
+                proAccessView
+                featuresView
+                Spacer()
+                freeView
+                VStack(spacing: CharterConstants.marginXXSmall) {
+                    productsListView
+                    purchaseSection
+                }
+            }
         }
     }
     
@@ -121,7 +126,7 @@ struct SubscriptionView: View {
     }
     
     private var proAccessView: some View {
-        VStack(spacing: CharterConstants.marginMedium) {
+        VStack(spacing: CharterConstants.margin) {
             Image(systemName: "crown.fill")
                 .foregroundStyle(.yellow.gradient)
                 .font(Font.system(size: 80))
@@ -139,27 +144,37 @@ struct SubscriptionView: View {
     }
     
     private var featuresView: some View {
-        VStack(alignment: .center, spacing: CharterConstants.margin) {
+        VStack(alignment: .center, spacing: CharterConstants.marginSmall) {
             ForEach(features, id: \.self) { feature in
-                VStack {
-                    HStack(spacing: CharterConstants.marginSmall) {
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(.yellow.gradient)
-                        
-                        Text(feature)
-                            .font(.system(size: 17, weight: .semibold))
-                            .multilineTextAlignment(.center)
-                        
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(.yellow.gradient)
-                    }
+                HStack(spacing: CharterConstants.marginSmall) {
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(.yellow.gradient)
+                    
+                    Text(feature)
+                        .font(.system(size: 17, weight: .semibold))
+                        .multilineTextAlignment(.center)
+                    
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(.yellow.gradient)
                 }
             }
         }
         .padding(.top, CharterConstants.margin)
-        .padding(.bottom, CharterConstants.marginLarge)
+    }
+    
+    private var freeView: some View {
+        VStack(spacing: CharterConstants.marginXSmall) {
+            Text("30 jours gratuits !")
+                .font(.system(size: 25, weight: .semibold))
+                .multilineTextAlignment(.center)
+            
+            Text("Annulez quand vous voulez.")
+                .font(.system(size: 15, weight: .regular))
+                .multilineTextAlignment(.center)
+        }
+        .padding(.bottom, CharterConstants.marginMedium)
     }
     
     private var productsListView: some View {
@@ -172,8 +187,8 @@ struct SubscriptionView: View {
     }
     
     private var purchaseSection: some View {
-        VStack(spacing: CharterConstants.margin) {
-            VStack(spacing: CharterConstants.marginSmall) {
+        VStack(spacing: CharterConstants.marginSmall) {
+            VStack(spacing: CharterConstants.marginXSmall) {
                 purchaseButtonView
                 HStack(spacing: CharterConstants.marginSmall) {
                     Image(systemName: "lock.shield")
@@ -184,7 +199,7 @@ struct SubscriptionView: View {
                         .multilineTextAlignment(.center)
                 }
             }
-            HStack(spacing: 0) {
+            HStack {
                 Link("Conditions",
                      destination: URL(string: "http://www.apple.com/legal/itunes/appstore/dev/stdeula")!)
                 Spacer()
@@ -211,7 +226,7 @@ struct SubscriptionView: View {
             RoundedRectangle(cornerRadius: CharterConstants.radius)
                 .fill(CharterConstants.mainBlue)
                 .overlay {
-                    Text("Commencer")
+                    Text("Essayer gratuitement")
                         .foregroundStyle(.white)
                         .font(.system(size: 20, weight: .semibold))
                 }
@@ -242,15 +257,27 @@ struct SubscriptionItemView: View {
             VStack(spacing: CharterConstants.marginSmall) {
                 ForEach(product.displayName.components(separatedBy: " "), id: \.self) { word in
                     Text(word)
-                        .font(.system(size: word.isInt ? 24 : 16, weight: .semibold))
+                        .font(.system(size: word.isInt ? 30 : 20, weight: .semibold))
                 }
             }
-            HStack {
-                Spacer()
-                Text("\(product.displayPrice)")
-                    .font(.system(size: 15, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                Spacer()
+            VStack(spacing: CharterConstants.marginXXSmall) {
+                HStack {
+                    Spacer()
+                    Text(product.displayPrice)
+                        .font(.system(size: 15, weight: .semibold))
+                        .multilineTextAlignment(.center)
+                    Spacer()
+                }
+                if let monthsString = product.displayName.components(separatedBy: " ").first,
+                   let months = Int(monthsString),
+                   months > 1 {
+                    let pricePerMonth = product.price / Decimal(months)
+                    let priceText = product.priceFormatStyle.format(pricePerMonth)
+                    Text(priceText + String(localized: " / mois"))
+                        .font(.system(size: 10, weight: .regular))
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(Color(.systemGray))
+                }
             }
             Spacer()
         }

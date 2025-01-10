@@ -42,10 +42,16 @@ struct CharterConstants {
     static let disabledOpacity: CGFloat = 0.4
     
     // Random
-    static let minimumAppLaunch = 7
+    static let minimumAppLaunch = 5
     static let winesCountSubscription = 11
+    static let winesCountSubscriptionHugeCellar = 5
     static let winesCountRatings = 17
-//    static let maximumFreeWinesSubmitted = 30
+    static let hugeCellarBottlesLimit = 30
+    
+    // Features
+    static let featuresViewBottlesLimit = 10
+    static let featuresViewMaxCountLimit = 5
+    static let featuresViewDaysInterval = 10
     
     static let withoutYear = 9999
 }
@@ -55,12 +61,15 @@ struct ScreenName {
     static let emptyWineList = "Wine_list_empty"
     static let addWine = "Add_wine"
     static let addWinePrice = "Add_wine_price"
+    static let yearList = "Year_list"
     static let subscription = "Subscription"
     static let subscriptionSuccess = "Subscription_success"
     static let random = "Random"
     static let randomResult = "Random_result"
     static let stats = "Stats"
     static let scanWine = "Scan_wine"
+    static let selectWineName = "Select_wine_name"
+    static let newFeatures = "New_features"
 }
 
 struct LogEvent {
@@ -77,6 +86,9 @@ struct LogEvent {
     static let winesCount = "Wines_count_"
     static let bottlesCountTotal = "Bottles_count_total"
     static let bottlesCount = "Bottles_count_"
+    static let newFeature = "New_feature_"
+    static let closeFeatures = "Close_features"
+    static let validateFeatures = "Validate_features"
     
     // Ads
     static let adSuccess = "Load_ad_success"

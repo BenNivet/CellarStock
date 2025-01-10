@@ -12,6 +12,22 @@
       },
       "shouldTranslate" : false
     },
+    " / mois" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " / months"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " / mois"
+          }
+        }
+      }
+    },
     "%@" : {
       "localizations" : {
         "fr" : {
@@ -54,6 +70,22 @@
     "+6" : {
       "shouldTranslate" : false
     },
+    "30 jours gratuits !" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 days free trial !"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 jours gratuits !"
+          }
+        }
+      }
+    },
     "Acceptez vous cette proposition ?" : {
       "localizations" : {
         "en" : {
@@ -70,6 +102,22 @@
         }
       }
     },
+    "Accord mets / vins" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Food and Wine Pairing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accord mets / vins"
+          }
+        }
+      }
+    },
     "Afrique du Sud" : {
       "localizations" : {
         "en" : {
@@ -82,6 +130,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Afrique du Sud"
+          }
+        }
+      }
+    },
+    "Ajouter des avis, des notes et des commentaires" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Reviews, Ratings, and Comments"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter des avis, des notes et des commentaires"
           }
         }
       }
@@ -166,6 +230,22 @@
         }
       }
     },
+    "Amelioration du scan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan Improvement"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amelioration du scan"
+          }
+        }
+      }
+    },
     "Annuler" : {
       "localizations" : {
         "en" : {
@@ -178,6 +258,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annuler"
+          }
+        }
+      }
+    },
+    "Annulez quand vous voulez." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel anytime."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annulez quand vous voulez."
           }
         }
       }
@@ -449,6 +545,22 @@
         }
       }
     },
+    "Choisissez les fonctionnalités que vous attendez le plus !" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose the features you are most looking forward to !"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez les fonctionnalités que vous attendez le plus !"
+          }
+        }
+      }
+    },
     "Code" : {
       "localizations" : {
         "en" : {
@@ -477,22 +589,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Code Promo"
-          }
-        }
-      }
-    },
-    "Commencer" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer"
           }
         }
       }
@@ -593,6 +689,22 @@
         }
       }
     },
+    "Essayer gratuitement" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free try"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer gratuitement"
+          }
+        }
+      }
+    },
     "États-Unis" : {
       "localizations" : {
         "en" : {
@@ -605,6 +717,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "États-Unis"
+          }
+        }
+      }
+    },
+    "Export PDF" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export to PDF"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export PDF"
           }
         }
       }
@@ -625,6 +753,38 @@
         }
       }
     },
+    "Filtres de recherche" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Filters"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtres de recherche"
+          }
+        }
+      }
+    },
+    "Fonctionnalités" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Features"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fonctionnalités"
+          }
+        }
+      }
+    },
     "France" : {
       "localizations" : {
         "en" : {
@@ -641,6 +801,22 @@
         }
       }
     },
+    "Gestion multi-cave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multi-wine cellar management"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestion multi-cave"
+          }
+        }
+      }
+    },
     "Grèce" : {
       "localizations" : {
         "en" : {
@@ -653,6 +829,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grèce"
+          }
+        }
+      }
+    },
+    "Historique de consommation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumption History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique de consommation"
           }
         }
       }
@@ -717,6 +909,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La cave est vide"
+          }
+        }
+      }
+    },
+    "Mettre des vins en favoris" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Wines to Favorites"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre des vins en favoris"
           }
         }
       }
@@ -915,6 +1123,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pétillant"
+          }
+        }
+      }
+    },
+    "Phases de vieillissement (jeunesse, maturité, apogée, déclin)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aging phases (youth, maturity, peak, decline)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phases de vieillissement (jeunesse, maturité, apogée, déclin)"
           }
         }
       }
