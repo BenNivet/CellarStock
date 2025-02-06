@@ -88,13 +88,13 @@ extension SubscriptionsManager {
 
 extension SubscriptionsManager {
     var canDisplayFeaturesView: Bool {
-        guard !entitlementManager.newFeatures1Validated,
-              entitlementManager.newFeatures1DisplayedCount < CharterConstants.featuresViewMaxCountLimit,
+        guard !entitlementManager.newFeatures2Validated,
+              entitlementManager.newFeatures2DisplayedCount < CharterConstants.featuresViewMaxCountLimit,
               entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
               entitlementManager.winesSubmitted > 0
         else { return false }
         
-        guard let minumumDate = formatter.date(from: entitlementManager.minumumNewFeatures1DisplayDate),
+        guard let minumumDate = formatter.date(from: entitlementManager.minumumNewFeatures2DisplayDate),
               Date() > minumumDate
         else { return false }
         
@@ -104,9 +104,9 @@ extension SubscriptionsManager {
         }
         
         if bottles >= CharterConstants.featuresViewBottlesLimit {
-            entitlementManager.newFeatures1DisplayedCount += 1
+            entitlementManager.newFeatures2DisplayedCount += 1
             let newDate = CharterConstants.featuresViewDaysInterval.days.fromNow
-            entitlementManager.minumumNewFeatures1DisplayDate = formatter.string(from: newDate)
+            entitlementManager.minumumNewFeatures2DisplayDate = formatter.string(from: newDate)
             return true
         } else {
             return false

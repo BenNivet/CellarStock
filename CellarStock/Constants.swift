@@ -46,7 +46,7 @@ struct CharterConstants {
     static let winesCountSubscription = 11
     static let winesCountSubscriptionHugeCellar = 5
     static let winesCountRatings = 17
-    static let hugeCellarBottlesLimit = 30
+    static let hugeCellarBottlesLimit = 20
     
     // Features
     static let featuresViewBottlesLimit = 10
@@ -69,7 +69,7 @@ struct ScreenName {
     static let stats = "Stats"
     static let scanWine = "Scan_wine"
     static let selectWineName = "Select_wine_name"
-    static let newFeatures = "New_features"
+    static let newFeatures = "New_featuresV2"
 }
 
 struct LogEvent {
@@ -87,8 +87,9 @@ struct LogEvent {
     static let bottlesCountTotal = "Bottles_count_total"
     static let bottlesCount = "Bottles_count_"
     static let newFeature = "New_feature_"
-    static let closeFeatures = "Close_features"
-    static let validateFeatures = "Validate_features"
+    static let closeFeatures = "Close_featuresV2"
+    static let validateFeatures = "Validate_featuresV2"
+    static let unlockPremiumFeature = "Unlock_premium_feature"
     
     // Ads
     static let adSuccess = "Load_ad_success"

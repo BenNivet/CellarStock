@@ -55,9 +55,9 @@ struct InitTabView: View {
                         Text("Région")
                         Image("map")
                     }
-                ContentView(tabType: .type, reload: $reload)
+                ContentView(tabType: .aging, reload: $reload)
                     .tabItem {
-                        Text("Type")
+                        Text("Vieillissement")
                         Image("grape")
                     }
                 ContentView(tabType: .year, reload: $reload)

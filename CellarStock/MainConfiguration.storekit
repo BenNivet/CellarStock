@@ -20,7 +20,7 @@
     "_applicationInternalID" : "6473699835",
     "_developerTeamID" : "WK7T3Z2QPN",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 757697016.06999898,
+    "_lastSynchronizedDate" : 760462838.66361904,
     "_locale" : "fr",
     "_storefront" : "FRA",
     "_storeKitErrors" : [
@@ -91,7 +91,7 @@
           "groupNumber" : 3,
           "internalID" : "6736587260",
           "introductoryOffer" : {
-            "internalID" : "D5CE9A3D",
+            "internalID" : "0882485C",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1M"
@@ -129,7 +129,7 @@
           "groupNumber" : 1,
           "internalID" : "6736586856",
           "introductoryOffer" : {
-            "internalID" : "547B1BE9",
+            "internalID" : "AE124DF7",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1M"
@@ -166,7 +166,7 @@
                 "new",
                 "expired"
               ],
-              "internalID" : "7B80BE54",
+              "internalID" : "ABE02379",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "free",
@@ -179,7 +179,7 @@
           "groupNumber" : 2,
           "internalID" : "6736587200",
           "introductoryOffer" : {
-            "internalID" : "0CF63EF1",
+            "internalID" : "71D23258",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1M"
@@ -194,11 +194,6 @@
               "description" : "Premium access for 12 months",
               "displayName" : "12 Months",
               "locale" : "en_US"
-            },
-            {
-              "description" : "Accès premium pour une 12 mois",
-              "displayName" : "12 Mois",
-              "locale" : "fr"
             }
           ],
           "productID" : "Yearly",

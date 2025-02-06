@@ -27,16 +27,14 @@ struct FeaturesView: View {
                                        Feature(index: 3, name: String(localized: "Mettre des vins en favoris")),
                                        Feature(index: 4, name: String(localized: "Export PDF")),
                                        Feature(index: 5, name: String(localized: "Historique de consommation")),
-                                       Feature(index: 6, name: String(localized: "Filtres de recherche")),
-                                       Feature(index: 7, name: String(localized: "Amelioration du scan")),
-                                       Feature(index: 8, name: String(localized: "Accord mets / vins"))].shuffled()
+                                       Feature(index: 6, name: String(localized: "Amelioration du scan")),
+                                       Feature(index: 7, name: String(localized: "Accord mets / vins"))].shuffled()
     
     var body: some View {
         mainView
             .padding(CharterConstants.margin)
             .addLinearGradientBackground()
             .ignoresSafeArea(edges: .bottom)
-            .analyticsScreen(name: ScreenName.newFeatures, class: ScreenName.newFeatures)
     }
     
     var mainView: some View {
@@ -91,7 +89,7 @@ struct FeaturesView: View {
                     Analytics.logEvent(LogEvent.newFeature + String(feature.index), parameters: nil)
                 }
                 if !selectedFeatures.isEmpty {
-                    entitlementManager.newFeatures1Validated = true
+                    entitlementManager.newFeatures2Validated = true
                 }
                 Analytics.logEvent(LogEvent.validateFeatures, parameters: nil)
                 dismiss()

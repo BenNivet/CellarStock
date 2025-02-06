@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B6385492D415949004E2FE5 /* ChipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6385472D415949004E2FE5 /* ChipModel.swift */; };
+		0B63854B2D415949004E2FE5 /* Chip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6385452D415949004E2FE5 /* Chip.swift */; };
+		0B99E3332D53B2E9008D139B /* BlurVisualEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B99E3322D53B2E9008D139B /* BlurVisualEffect.swift */; };
 		0BBEDC002D28140200E1136E /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBEDBFF2D28140200E1136E /* FeaturesView.swift */; };
 		2113CEAA2B00CCB700C9D828 /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEA92B00CCB700C9D828 /* FilterItem.swift */; };
 		2113CEAC2B00CCDC00C9D828 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113CEAB2B00CCDC00C9D828 /* Wheel.swift */; };
@@ -71,6 +74,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B6385452D415949004E2FE5 /* Chip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
+		0B6385472D415949004E2FE5 /* ChipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipModel.swift; sourceTree = "<group>"; };
+		0B99E3322D53B2E9008D139B /* BlurVisualEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurVisualEffect.swift; sourceTree = "<group>"; };
 		0BBEDBFF2D28140200E1136E /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		2113CEA92B00CCB700C9D828 /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		2113CEAB2B00CCDC00C9D828 /* Wheel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
@@ -149,13 +155,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B6385482D415949004E2FE5 /* Chip */ = {
+			isa = PBXGroup;
+			children = (
+				0B6385452D415949004E2FE5 /* Chip.swift */,
+				0B6385472D415949004E2FE5 /* ChipModel.swift */,
+			);
+			path = Chip;
+			sourceTree = "<group>";
+		};
 		214066B82AF24B6100E1857F /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				214066B22AF2469700E1857F /* Accordion.swift */,
 				2162B4EC2CC7D0230043A0C0 /* AnimatedStepper.swift */,
 				2162B4F42CC96F560043A0C0 /* AutoCompleteSheet.swift */,
+				0B99E3322D53B2E9008D139B /* BlurVisualEffect.swift */,
 				21D1C22E2CCAD0A80061488A /* ButtonStyle */,
+				0B6385482D415949004E2FE5 /* Chip */,
 				21CD6F552CB2BB33008A6893 /* Confetti.swift */,
 				2113CEA92B00CCB700C9D828 /* FilterItem.swift */,
 				2162B4EE2CC908870043A0C0 /* FloatingTextField.swift */,
@@ -455,6 +472,7 @@
 				214066BC2AF25D8500E1857F /* InitTabView.swift in Sources */,
 				21AA0A492CB07938005F2434 /* SubscriptionView.swift in Sources */,
 				21D1C2302CCADAAB0061488A /* KeyboardAvoiding.swift in Sources */,
+				0B99E3332D53B2E9008D139B /* BlurVisualEffect.swift in Sources */,
 				21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */,
 				219573AE2CBAB76E00BCD488 /* AddTip.swift in Sources */,
 				2188F4742B21ED980030B596 /* NeoTabsItemModel.swift in Sources */,
@@ -467,6 +485,8 @@
 				2188F4692B21D36C0030B596 /* ChartsView.swift in Sources */,
 				21CD6F542CB2B142008A6893 /* EntitlementManager.swift in Sources */,
 				218588B92AC81A6300730A9D /* Wine.swift in Sources */,
+				0B6385492D415949004E2FE5 /* ChipModel.swift in Sources */,
+				0B63854B2D415949004E2FE5 /* Chip.swift in Sources */,
 				21D1C22D2CCAD0A10061488A /* PrimaryButtonStyle.swift in Sources */,
 				2162B4EF2CC908870043A0C0 /* FloatingTextField.swift in Sources */,
 				2195741D2CBCFB6B00BCD488 /* LoaderViewModifier.swift in Sources */,
@@ -639,7 +659,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -690,7 +710,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = benjamin.cante.CellarStock;
 				PRODUCT_NAME = "$(TARGET_NAME)";

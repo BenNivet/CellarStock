@@ -195,7 +195,6 @@ enum WineType: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable
     }
 }
 
-
 enum Region: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
     
@@ -564,6 +563,28 @@ enum Size: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
             "Nabuchodonosor (15L)"
         case .salomon:
             "Salomon (18L)"
+        }
+    }
+}
+
+enum AgingPhase: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
+    var id: Self { self }
+    
+    case youth = 0
+    case maturity
+    case peak
+    case decline
+    
+    var description: String {
+        switch self {
+        case .youth:
+            String(localized: "Jeunesse")
+        case .maturity:
+            String(localized: "Maturité")
+        case .peak:
+            String(localized: "Apogée")
+        case .decline:
+            String(localized: "Déclin")
         }
     }
 }

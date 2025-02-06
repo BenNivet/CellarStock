@@ -44,9 +44,7 @@ extension View {
         overlay(RoundedRectangle(cornerRadius: CharterConstants.radius)
             .stroke(.gray, lineWidth: 1))
     }
-}
-
-extension View {
+    
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }

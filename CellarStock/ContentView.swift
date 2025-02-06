@@ -14,7 +14,7 @@ import TipKit
 
 enum TabType {
     case region
-    case type
+    case aging
     case year
 }
 
@@ -35,20 +35,27 @@ struct ContentView: View {
     @State private var showingSubscription = false
     @State private var showingFeatures = false
     @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
+    @State private var selectedTypes: [WineType] = []
     
     private var wines: [Wine] {
         dataManager.wines
     }
     private var filteredWines: [Wine] {
-        guard !searchText.isEmpty else { return wines }
-        return wines.filter { $0.isMatch(for: searchText) }
+        var result = wines
+        if !searchText.isEmpty {
+            result = result.filter { $0.isMatch(for: searchText) }
+        }
+        if !selectedTypes.isEmpty {
+            result = result.filter { selectedTypes.contains($0.type) }
+        }
+        return result
     }
     
     private var backgroundImageName: String {
         switch tabType {
         case .region:
             "wallpaper1"
-        case .type:
+        case .aging:
             "wallpaper2"
         case .year:
             "wallpaper3"
@@ -74,12 +81,59 @@ struct ContentView: View {
             .compactMap { $0.usAppelation }))
             .sorted { $0.description < $1.description }
     }
-    private var types: [WineType] {
-        Array(Set(filteredWines.compactMap { $0.type }))
+    private var allTypes: [WineType] {
+        Array(Set(wines.compactMap { $0.type }))
             .sorted { $0.rawValue < $1.rawValue }
     }
     private var years: [Int] {
-        Array(Set(dataManager.quantities.compactMap { $0.year })).sorted(by: >)
+        Array(Set(
+            dataManager.quantities
+                .filter { filteredWines.map { $0.wineId }
+                .contains($0.wineId) }
+                .compactMap { $0.year })
+        ).sorted(by: >)
+    }
+    
+    private var agingPhases: [(AgingPhase, [(Wine, Int)])] {
+        var youthWines: (AgingPhase, [(Wine, Int)]) = (.youth, [])
+        var maturityWines: (AgingPhase, [(Wine, Int)]) = (.maturity, [])
+        var peakWines: (AgingPhase, [(Wine, Int)]) = (.peak, [])
+        var declineWines: (AgingPhase, [(Wine, Int)]) = (.decline, [])
+        
+        for quantity in dataManager.quantities.filter({ filteredWines.map { $0.wineId }.contains($0.wineId) }) {
+            guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
+            switch phase(type: wine.type, year: quantity.year) {
+            case .youth:
+                if let index = youthWines.1.firstIndex(where: { $0.0 == wine }) {
+                    youthWines.1[index].1 = youthWines.1[index].1 + quantity.quantity
+                } else {
+                    youthWines.1.append((wine, quantity.quantity))
+                }
+            case .maturity:
+                if let index = maturityWines.1.firstIndex(where: { $0.0 == wine }) {
+                    maturityWines.1[index].1 = maturityWines.1[index].1 + quantity.quantity
+                } else {
+                    maturityWines.1.append((wine, quantity.quantity))
+                }
+            case .peak:
+                if let index = peakWines.1.firstIndex(where: { $0.0 == wine }) {
+                    peakWines.1[index].1 = peakWines.1[index].1 + quantity.quantity
+                } else {
+                    peakWines.1.append((wine, quantity.quantity))
+                }
+            case .decline:
+                if let index = declineWines.1.firstIndex(where: { $0.0 == wine }) {
+                    declineWines.1[index].1 = declineWines.1[index].1 + quantity.quantity
+                } else {
+                    declineWines.1.append((wine, quantity.quantity))
+                }
+            }
+        }
+        return [youthWines, maturityWines, peakWines, declineWines].filter { !$0.1.isEmpty }
+    }
+    
+    private var typeChips: [ChipModel] {
+        allTypes.map { ChipModel(isActive: selectedTypeBinding(type: $0), title: $0.description) }
     }
     
     private var addTip = AddTip()
@@ -127,13 +181,6 @@ struct ContentView: View {
                                 .font(.title2)
                         }
                         .foregroundStyle(.white)
-                        .fullScreenCover(isPresented: $showingSheet.0) {
-                            FormView(wine: $showingSheet.1,
-                                     quantitiesByYear: $showingSheet.2,
-                                     pricesByYear: $showingSheet.3,
-                                     showQuantitiesOnly: $showingSheet.4)
-                            .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
-                        }
                         .if(wines.isEmpty) {
                             $0.popoverTip(addTip) { _ in
                                 showingSheet = (true, Wine(), [:], [:], false)
@@ -143,11 +190,19 @@ struct ContentView: View {
                         }
                     }
                 }
+                .fullScreenCover(isPresented: $showingSheet.0) {
+                    FormView(wine: $showingSheet.1,
+                             quantitiesByYear: $showingSheet.2,
+                             pricesByYear: $showingSheet.3,
+                             showQuantitiesOnly: $showingSheet.4)
+                    .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
+                }
                 .fullScreenCover(isPresented: $showingSubscription) {
                     SubscriptionView()
                 }
                 .fullScreenCover(isPresented: $showingFeatures) {
                     FeaturesView()
+                        .analyticsScreen(name: ScreenName.newFeatures, class: ScreenName.newFeatures)
                 }
                 .toolbarBackground(searchIsActive ? .visible : .automatic, for: .navigationBar)
                 .background {
@@ -160,7 +215,10 @@ struct ContentView: View {
             handleURL(url: url)
         }
         .if(!dataManager.wines.isEmpty) { view in
-            view.addSearchIfNeeded(for: tabType, searchText: $searchText, searchIsActive: $searchIsActive)
+            view.addSearchIfNeeded(for: tabType,
+                                   searchText: $searchText,
+                                   searchIsActive: $searchIsActive,
+                                   entitlementManager: entitlementManager)
         }
     }
     
@@ -168,6 +226,18 @@ struct ContentView: View {
     private var content: some View {
         if filteredWines.isEmpty {
             VStack(spacing: CharterConstants.margin) {
+                if allTypes.count > 1 {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: CharterConstants.marginSmall) {
+                            ForEach(typeChips) { chip in
+                                Chip(model: chip)
+                            }
+                        }
+                        .padding(.horizontal, CharterConstants.margin)
+                    }.onAppear {
+                        selectedTypes = selectedTypes.filter { allTypes.contains($0) }
+                    }
+                }
                 Spacer()
                 VStack(spacing: CharterConstants.margin) {
                     if searchText.isEmpty {
@@ -188,6 +258,16 @@ struct ContentView: View {
             .frame(maxWidth: .infinity)
         } else {
             ScrollView {
+                if allTypes.count > 1 {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: CharterConstants.marginSmall) {
+                            ForEach(typeChips) { chip in
+                                Chip(model: chip)
+                            }
+                        }
+                        .padding(.horizontal, CharterConstants.margin)
+                    }
+                }
                 LazyVStack(spacing: CharterConstants.margin) {
                     switch tabType {
                     case .region:
@@ -205,14 +285,14 @@ struct ContentView: View {
                                 countryView(country: country)
                             }
                         }
-                    case .type:
-                        ForEach(types) { type in
-                            Accordion(title: type.description,
-                                      subtitle: quantity(for: type).bottlesString,
-                                      isCollapsed: isCollapsed(item: type, array: types)) {
+                    case .aging:
+                        ForEach(agingPhases, id: \.0) { phase in
+                            Accordion(title: phase.0.description,
+                                      subtitle: phase.1.compactMap { $0.1 }.reduce(0, +).bottlesString,
+                                      isCollapsed: isCollapsed(item: phase.0, array: agingPhases.map { $0.0 })) {
                                 LazyVStack(spacing: CharterConstants.marginSmall) {
-                                    ForEach(filteredWines.filter { $0.type == type }) { wine in
-                                        cellView(wine: wine)
+                                    ForEach(phase.1, id: \.0) { wine, quantity in
+                                        cellView(wine: wine, yearQuantity: quantity)
                                     }
                                 }
                             }
@@ -245,6 +325,9 @@ struct ContentView: View {
             }
             .onChange(of: searchText) {
                 accordionCollapsedStates.removeAll()
+            }
+            .if(tabType == .aging && !entitlementManager.isPremium) {
+                $0.addPremiumBlurEffect(showingSubscription: $showingSubscription)
             }
         }
     }
@@ -287,7 +370,6 @@ struct ContentView: View {
         }
     }
     
-    @ViewBuilder
     private var usAppelationView: some View {
         LazyVStack(spacing: CharterConstants.margin) {
             ForEach(usAppelations) { usAppelation in
@@ -306,7 +388,7 @@ struct ContentView: View {
     
     private func yearView(year: Int) -> some View {
         LazyVStack(spacing: CharterConstants.marginSmall) {
-            ForEach(wines(for: year), id: \.0.id) { wine, quantity in
+            ForEach(wines(for: year), id: \.0) { wine, quantity in
                 cellView(wine: wine, yearQuantity: quantity)
             }
         }
@@ -425,17 +507,9 @@ private extension ContentView {
         return result
     }
     
-    func quantity(for type: WineType) -> Int {
-        var result = 0
-        for wine in filteredWines where wine.type == type {
-            result += quantity(for: wine)
-        }
-        return result
-    }
-    
     func quantity(for year: Int) -> Int {
         var result = 0
-        for quantity in dataManager.quantities where quantity.year == year {
+        for quantity in dataManager.quantities.filter({ filteredWines.map { $0.wineId }.contains($0.wineId) }) where quantity.year == year {
             result += quantity.quantity
         }
         return result
@@ -443,7 +517,7 @@ private extension ContentView {
     
     func wines(for year: Int) -> [(Wine, Int)] {
         var result: [(Wine, Int)] = []
-        for quantity in dataManager.quantities where quantity.year == year {
+        for quantity in dataManager.quantities.filter({ filteredWines.map { $0.wineId }.contains($0.wineId) }) where quantity.year == year {
             guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
             result.append((wine, quantity.quantity))
         }
@@ -473,6 +547,44 @@ private extension ContentView {
             accordionCollapsedStates[item] = newValue
         }
     }
+    
+    private func selectedTypeBinding(type: WineType) -> Binding<Bool> {
+        Binding {
+            selectedTypes.contains(type)
+        } set: { _ in
+            if let index = selectedTypes.firstIndex(of: type) {
+                selectedTypes.remove(at: index)
+            } else {
+                selectedTypes.append(type)
+            }
+        }
+    }
+    
+    private func phase(type: WineType, year: Int) -> AgingPhase {
+        let age = (Calendar.current.dateComponents([.year], from: Date.now).year ?? year) - year
+        return switch type {
+        case .rouge:
+            switch age {
+            case 0...2: .youth
+            case 3...7: .maturity
+            case 8...16: .peak
+            default: .decline
+            }
+        case .blanc:
+            switch age {
+            case 0...1: .youth
+            case 2...3: .maturity
+            case 4...8: .peak
+            default: .decline
+            }
+        case .rose, .other:
+            switch age {
+            case 0...2: .peak
+            default: .decline
+            }
+        case .petillant: .peak
+        }
+    }
 }
 
 extension View {
@@ -487,12 +599,17 @@ extension View {
     }
     
     @ViewBuilder
-    func addSearchIfNeeded(for tabType: TabType, searchText: Binding<String>, searchIsActive: Binding<Bool>) -> some View {
+    func addSearchIfNeeded(for tabType: TabType, searchText: Binding<String>, searchIsActive: Binding<Bool>, entitlementManager: EntitlementManager) -> some View {
         switch tabType {
-        case .region, .type:
-            self
-                .searchable(text: searchText, isPresented: searchIsActive, prompt: "Rechercher")
+        case .region:
+            searchable(text: searchText, isPresented: searchIsActive, prompt: "Rechercher")
                 .autocorrectionDisabled()
+        case .aging:
+            if entitlementManager.isPremium {
+                searchable(text: searchText, isPresented: searchIsActive, prompt: "Rechercher").autocorrectionDisabled()
+            } else {
+                self
+            }
         case .year:
             self
         }

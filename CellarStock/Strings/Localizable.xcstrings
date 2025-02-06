@@ -278,6 +278,22 @@
         }
       }
     },
+    "Apogée" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peak"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apogée"
+          }
+        }
+      }
+    },
     "Appelation" : {
       "localizations" : {
         "en" : {
@@ -625,6 +641,22 @@
         }
       }
     },
+    "Débloquer cette fonctionnalité" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock this feature"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer cette fonctionnalité"
+          }
+        }
+      }
+    },
     "Débloquer toutes les fonctionnalités" : {
       "localizations" : {
         "en" : {
@@ -637,6 +669,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Débloquer toutes les fonctionnalités"
+          }
+        }
+      }
+    },
+    "Déclin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decline"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déclin"
           }
         }
       }
@@ -753,22 +801,6 @@
         }
       }
     },
-    "Filtres de recherche" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search Filters"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Filtres de recherche"
-          }
-        }
-      }
-    },
     "Fonctionnalités" : {
       "localizations" : {
         "en" : {
@@ -781,6 +813,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fonctionnalités"
+          }
+        }
+      }
+    },
+    "Fonctionnalités exclusives" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclusive features"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fonctionnalités exclusives"
           }
         }
       }
@@ -897,6 +945,22 @@
         }
       }
     },
+    "Jeunesse" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Youth"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeunesse"
+          }
+        }
+      }
+    },
     "La cave est vide" : {
       "localizations" : {
         "en" : {
@@ -909,6 +973,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La cave est vide"
+          }
+        }
+      }
+    },
+    "Maturité" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maturity"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maturité"
           }
         }
       }
@@ -1490,22 +1570,6 @@
       },
       "shouldTranslate" : false
     },
-    "Suggestions de vins" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wine suggestions"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suggestions de vins"
-          }
-        }
-      }
-    },
     "Suisse" : {
       "localizations" : {
         "en" : {
@@ -1646,6 +1710,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Veuillez entrer le code de la cave"
+          }
+        }
+      }
+    },
+    "Vieillissement" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aging"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vieillissement"
           }
         }
       }

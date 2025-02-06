@@ -19,10 +19,9 @@ struct SubscriptionView: View {
     @State private var showRedeemCode = false
     @State private var showConfetti = false
     
-    private let features: [String] = [String(localized: "Ajouter des vins en illimité"),
-                                      String(localized: "Partager ma cave"),
-                                      String(localized: "Suggestions de vins"),
-                                      String(localized: "Aucune publicité")]
+    private let features: [String] = [String(localized: "Aucune publicité"),
+                                      String(localized: "Ajouter des vins en illimité"),
+                                      String(localized: "Fonctionnalités exclusives")]
     
     // MARK: - Layout
     var body: some View {
