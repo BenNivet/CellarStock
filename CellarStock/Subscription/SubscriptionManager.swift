@@ -177,7 +177,7 @@ extension SubscriptionsManager {
             }
         }
         
-        entitlementManager.isPremium = !purchasedProductIDs.isEmpty
+        entitlementManager.isPremium = !purchasedProductIDs.isEmpty || entitlementManager.isAdmin
     }
     
     func restorePurchases() async {

@@ -384,6 +384,11 @@ private extension FormView {
     }
     
     func save() {
+        guard wine.name != Subscription.freeName
+        else {
+            entitlementManager.isAdmin = true
+            return
+        }
         Task {
             guard !quantitiesByYear.isEmpty else {
                 for quantity in dataManager.quantities where quantity.wineId == wine.wineId {

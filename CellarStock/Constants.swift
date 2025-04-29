@@ -97,6 +97,7 @@ struct LogEvent {
 }
 
 struct Subscription {
+    static let freeName = "VINOFREEAPP"
     static let popularId = "Yearly"
 }
 
