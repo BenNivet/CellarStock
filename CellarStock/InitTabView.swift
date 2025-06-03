@@ -6,24 +6,23 @@
 //
 
 import FirebaseAnalytics
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct InitTabView: View {
-    
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var dataManager: DataManager
-    
+
     @State private var isLoaderPresented = true
     @State private var reload = false
     @State private var dataFetched = false
-    
+
     private let firestoreManager = FirestoreManager.shared
-    
+
     var body: some View {
         main
-            .onChange(of: reload) { _ , newValue in
+            .onChange(of: reload) { _, newValue in
                 if newValue {
                     Task {
                         isLoaderPresented = true
@@ -33,9 +32,8 @@ struct InitTabView: View {
             }
             .loader(isPresented: $isLoaderPresented)
     }
-    
-    @ViewBuilder
-    private var main: some View {
+
+    @ViewBuilder private var main: some View {
         if !dataFetched {
             NavigationStack {
                 Image("wallpaper1")
@@ -84,7 +82,7 @@ struct InitTabView: View {
             }
         }
     }
-    
+
     private func fetchFromServer() async {
         if let userId = entitlementManager.userId {
             await fetch(userId: userId)
@@ -96,20 +94,20 @@ struct InitTabView: View {
             isLoaderPresented = false
         }
     }
-    
+
     private func fetch(userId: String) async {
         async let wines = firestoreManager.fetchWines(for: userId)
         async let quantities = firestoreManager.fetchQuantities(for: userId)
-        updateModel(wines: await wines, quantities: await quantities)
+        await updateModel(wines: wines, quantities: quantities)
     }
-    
+
     private func updateModel(wines: [Wine], quantities: [Quantity]) {
         dataManager.wines = wines
         dataManager.quantities = quantities
         endFetch()
         log(wines: wines, quantities: quantities)
     }
-    
+
     private func endFetch() {
         if reload {
             reload = false
@@ -117,20 +115,20 @@ struct InitTabView: View {
         dataFetched = true
         isLoaderPresented = false
     }
-    
-    private func log(wines: [Wine], quantities: [Quantity]) {
+
+    private func log(wines: [Wine], quantities _: [Quantity]) {
         // Wines
         Analytics.logEvent(LogEvent.winesCountTotal, parameters: nil)
-        Analytics.logEvent(LogEvent.winesCount + String(Int(floor(Float(wines.count)/10)*10)),
+        Analytics.logEvent(LogEvent.winesCount + String(Int(floor(Float(wines.count) / 10) * 10)),
                            parameters: nil)
-        
+
         // Bottles
         var bottles = 0
         for quantity in dataManager.quantities {
             bottles += quantity.quantity
         }
         Analytics.logEvent(LogEvent.bottlesCountTotal, parameters: nil)
-        Analytics.logEvent(LogEvent.bottlesCount + String(Int(floor(Float(bottles)/10)*10)),
+        Analytics.logEvent(LogEvent.bottlesCount + String(Int(floor(Float(bottles) / 10) * 10)),
                            parameters: nil)
     }
 }

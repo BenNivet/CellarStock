@@ -8,8 +8,8 @@
 import AppTrackingTransparency
 import Combine
 import FirebaseAnalytics
-import SwiftUI
 import SwiftData
+import SwiftUI
 import TipKit
 
 enum TabType {
@@ -21,12 +21,12 @@ enum TabType {
 struct ContentView: View {
     let tabType: TabType
     @Binding var reload: Bool
-    
+
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     @EnvironmentObject private var interstitialAdsManager: InterstitialAdsManager
     @EnvironmentObject private var dataManager: DataManager
-    
+
     @State private var showingSheet: (Bool, Wine, [Int: Int], [Int: Double], Bool) = (false, Wine(), [:], [:], false)
     @State private var searchText = ""
     @State private var searchIsActive = false
@@ -36,10 +36,11 @@ struct ContentView: View {
     @State private var showingFeatures = false
     @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
     @State private var selectedTypes: [WineType] = []
-    
+
     private var wines: [Wine] {
         dataManager.wines
     }
+
     private var filteredWines: [Wine] {
         var result = wines
         if !searchText.isEmpty {
@@ -50,7 +51,7 @@ struct ContentView: View {
         }
         return result
     }
-    
+
     private var backgroundImageName: String {
         switch tabType {
         case .region:
@@ -61,46 +62,50 @@ struct ContentView: View {
             "wallpaper3"
         }
     }
-    
+
     private var title = String(localized: "Vino Cave")
     private var countries: [Country] {
-        Array(Set(filteredWines.compactMap { $0.country }.filter { $0 != .france }))
+        Array(Set(filteredWines.compactMap(\.country).filter { $0 != .france }))
             .sorted { $0.rawValue < $1.rawValue }
     }
+
     private var regions: [Region] {
-        Array(Set(filteredWines.filter { $0.country == .france }.compactMap { $0.region }))
+        Array(Set(filteredWines.filter { $0.country == .france }.compactMap(\.region)))
             .sorted { $0.rawValue < $1.rawValue }
     }
+
     private var appelations: [Appelation] {
         Array(Set(filteredWines.filter { $0.country == .france && $0.region == .bordeaux }
-            .compactMap { $0.appelation }))
+                .compactMap(\.appelation)))
             .sorted { $0.description < $1.description }
     }
+
     private var usAppelations: [USAppelation] {
         Array(Set(filteredWines.filter { $0.country == .usa }
-            .compactMap { $0.usAppelation }))
+                .compactMap(\.usAppelation)))
             .sorted { $0.description < $1.description }
     }
+
     private var allTypes: [WineType] {
-        Array(Set(wines.compactMap { $0.type }))
+        Array(Set(wines.compactMap(\.type)))
             .sorted { $0.rawValue < $1.rawValue }
     }
+
     private var years: [Int] {
-        Array(Set(
-            dataManager.quantities
-                .filter { filteredWines.map { $0.wineId }
-                .contains($0.wineId) }
-                .compactMap { $0.year })
-        ).sorted(by: >)
+        Array(Set(dataManager.quantities
+                .filter { filteredWines.map(\.wineId)
+                    .contains($0.wineId)
+                }
+                .compactMap(\.year))).sorted(by: >)
     }
-    
+
     private var agingPhases: [(AgingPhase, [(Wine, Int)])] {
         var youthWines: (AgingPhase, [(Wine, Int)]) = (.youth, [])
         var maturityWines: (AgingPhase, [(Wine, Int)]) = (.maturity, [])
         var peakWines: (AgingPhase, [(Wine, Int)]) = (.peak, [])
         var declineWines: (AgingPhase, [(Wine, Int)]) = (.decline, [])
-        
-        for quantity in dataManager.quantities.filter({ filteredWines.map { $0.wineId }.contains($0.wineId) }) {
+
+        for quantity in dataManager.quantities.filter({ filteredWines.map(\.wineId).contains($0.wineId) }) {
             guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
             switch phase(type: wine.type, year: quantity.year) {
             case .youth:
@@ -131,18 +136,16 @@ struct ContentView: View {
         }
         return [youthWines, maturityWines, peakWines, declineWines].filter { !$0.1.isEmpty }
     }
-    
+
     private var typeChips: [ChipModel] {
         allTypes.map { ChipModel(isActive: selectedTypeBinding(type: $0), title: $0.description) }
     }
-    
-    private var addTip = AddTip()
-    
+
     init(tabType: TabType, reload: Binding<Bool>) {
         self.tabType = tabType
         _reload = reload
     }
-    
+
     var body: some View {
         NavigationStack {
             content
@@ -181,13 +184,6 @@ struct ContentView: View {
                                 .font(.title2)
                         }
                         .foregroundStyle(.white)
-                        .if(wines.isEmpty) {
-                            $0.popoverTip(addTip) { _ in
-                                showingSheet = (true, Wine(), [:], [:], false)
-                                addTip.invalidate(reason: .actionPerformed)
-                            }
-                            .tipCornerRadius(CharterConstants.radius)
-                        }
                     }
                 }
                 .fullScreenCover(isPresented: $showingSheet.0) {
@@ -195,7 +191,7 @@ struct ContentView: View {
                              quantitiesByYear: $showingSheet.2,
                              pricesByYear: $showingSheet.3,
                              showQuantitiesOnly: $showingSheet.4)
-                    .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
+                        .analyticsScreen(name: ScreenName.addWine, class: ScreenName.addWine)
                 }
                 .fullScreenCover(isPresented: $showingSubscription) {
                     SubscriptionView()
@@ -221,9 +217,8 @@ struct ContentView: View {
                                    entitlementManager: entitlementManager)
         }
     }
-    
-    @ViewBuilder
-    private var content: some View {
+
+    @ViewBuilder private var content: some View {
         if filteredWines.isEmpty {
             VStack(spacing: CharterConstants.margin) {
                 if allTypes.count > 1 {
@@ -288,8 +283,8 @@ struct ContentView: View {
                     case .aging:
                         ForEach(agingPhases, id: \.0) { phase in
                             Accordion(title: phase.0.description,
-                                      subtitle: phase.1.compactMap { $0.1 }.reduce(0, +).bottlesString,
-                                      isCollapsed: isCollapsed(item: phase.0, array: agingPhases.map { $0.0 })) {
+                                      subtitle: phase.1.compactMap(\.1).reduce(0, +).bottlesString,
+                                      isCollapsed: isCollapsed(item: phase.0, array: agingPhases.map(\.0))) {
                                 LazyVStack(spacing: CharterConstants.marginSmall) {
                                     ForEach(phase.1, id: \.0) { wine, quantity in
                                         cellView(wine: wine, yearQuantity: quantity)
@@ -315,7 +310,7 @@ struct ContentView: View {
             }
             .analyticsScreen(name: ScreenName.wineList, class: ScreenName.wineList)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in })
+                ATTrackingManager.requestTrackingAuthorization(completionHandler: { _ in })
             }
             .onReceive(interstitialAdsManager.$interstitialAdLoaded) { isInterstitialAdLoaded in
                 if !entitlementManager.isPremium,
@@ -331,7 +326,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func regionView(region: Region) -> some View {
         if region == .bordeaux {
@@ -341,9 +336,10 @@ struct ContentView: View {
                               subtitle: quantity(for: appelation).bottlesString,
                               isCollapsed: isCollapsed(item: appelation, array: appelations)) {
                         LazyVStack(spacing: CharterConstants.marginSmall) {
-                            ForEach(filteredWines.filter { $0.country == .france && $0.region == region && $0.appelation == appelation }) { wine in
-                                cellView(wine: wine)
-                            }
+                            ForEach(filteredWines
+                                .filter { $0.country == .france && $0.region == region && $0.appelation == appelation }) { wine in
+                                    cellView(wine: wine)
+                                }
                         }
                     }
                 }
@@ -356,7 +352,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func countryView(country: Country) -> some View {
         if country == .usa {
@@ -369,7 +365,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private var usAppelationView: some View {
         LazyVStack(spacing: CharterConstants.margin) {
             ForEach(usAppelations) { usAppelation in
@@ -385,7 +381,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func yearView(year: Int) -> some View {
         LazyVStack(spacing: CharterConstants.marginSmall) {
             ForEach(wines(for: year), id: \.0) { wine, quantity in
@@ -393,7 +389,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func cellView(wine: Wine, yearQuantity: Int? = nil) -> some View {
         ZStack(alignment: .topTrailing) {
             TileView {
@@ -427,7 +423,7 @@ struct ContentView: View {
                                 .font(.caption)
                         }
                     }
-                    Stepper { } onIncrement: { } onDecrement: { }
+                    Stepper {} onIncrement: {} onDecrement: {}
                         .opacity(0)
                 }
             } action: {
@@ -436,9 +432,7 @@ struct ContentView: View {
             HStack(alignment: .top) {
                 Spacer()
                 VStack(alignment: .trailing) {
-                    Stepper {
-                        
-                    } onIncrement: {
+                    Stepper {} onIncrement: {
                         showingSheet = (true, wine, quantitiesDict(for: wine).0, quantitiesDict(for: wine).1, true)
                     } onDecrement: {
                         showingSheet = (true, wine, quantitiesDict(for: wine).0, quantitiesDict(for: wine).1, true)
@@ -455,7 +449,6 @@ struct ContentView: View {
 
 // MARK: - Helper
 private extension ContentView {
-    
     func quantitiesDict(for wine: Wine) -> ([Int: Int], [Int: Double]) {
         var quantitiesResult: [Int: Int] = [:]
         var pricesResult: [Int: Double] = [:]
@@ -466,7 +459,7 @@ private extension ContentView {
         }
         return (quantitiesResult, pricesResult)
     }
-    
+
     func quantity(for wine: Wine) -> Int {
         var result = 0
         for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
@@ -474,7 +467,7 @@ private extension ContentView {
         }
         return result
     }
-    
+
     func quantity(for country: Country) -> Int {
         var result = 0
         for wine in filteredWines where wine.country == country {
@@ -482,7 +475,7 @@ private extension ContentView {
         }
         return result
     }
-    
+
     func quantity(for region: Region) -> Int {
         var result = 0
         for wine in filteredWines where wine.country == .france && wine.region == region {
@@ -490,7 +483,7 @@ private extension ContentView {
         }
         return result
     }
-    
+
     func quantity(for appelation: Appelation) -> Int {
         var result = 0
         for wine in filteredWines where wine.country == .france && wine.region == .bordeaux && wine.appelation == appelation {
@@ -498,7 +491,7 @@ private extension ContentView {
         }
         return result
     }
-    
+
     func quantity(for usAppelation: USAppelation) -> Int {
         var result = 0
         for wine in filteredWines where wine.country == .usa && wine.usAppelation == usAppelation {
@@ -506,24 +499,24 @@ private extension ContentView {
         }
         return result
     }
-    
+
     func quantity(for year: Int) -> Int {
         var result = 0
-        for quantity in dataManager.quantities.filter({ filteredWines.map { $0.wineId }.contains($0.wineId) }) where quantity.year == year {
+        for quantity in dataManager.quantities.filter({ filteredWines.map(\.wineId).contains($0.wineId) }) where quantity.year == year {
             result += quantity.quantity
         }
         return result
     }
-    
+
     func wines(for year: Int) -> [(Wine, Int)] {
         var result: [(Wine, Int)] = []
-        for quantity in dataManager.quantities.filter({ filteredWines.map { $0.wineId }.contains($0.wineId) }) where quantity.year == year {
+        for quantity in dataManager.quantities.filter({ filteredWines.map(\.wineId).contains($0.wineId) }) where quantity.year == year {
             guard let wine = filteredWines.first(where: { $0.wineId == quantity.wineId }) else { break }
             result.append((wine, quantity.quantity))
         }
         return result
     }
-    
+
     func findCellar(code: String) {
         Task {
             let userId = await FirestoreManager.shared.findUser(id: code)
@@ -534,12 +527,16 @@ private extension ContentView {
             Analytics.logEvent(LogEvent.joinCellar, parameters: nil)
         }
     }
-    
+
     func handleURL(url: URL) {
-        guard let codeKey = url.host(), codeKey == "code" else { return }
-        findCellar(code: url.lastPathComponent)
+        guard let host = url.host() else { return }
+        if host == "code" {
+            findCellar(code: url.lastPathComponent)
+        } else if host == Subscription.freeName {
+            entitlementManager.isAdmin = true
+        }
     }
-    
+
     func isCollapsed(item: AnyHashable, array: [any Hashable]) -> Binding<Bool> {
         Binding<Bool> {
             accordionCollapsedStates[item] ?? (array.count > 1 ? true : false)
@@ -547,7 +544,7 @@ private extension ContentView {
             accordionCollapsedStates[item] = newValue
         }
     }
-    
+
     private func selectedTypeBinding(type: WineType) -> Binding<Bool> {
         Binding {
             selectedTypes.contains(type)
@@ -559,27 +556,27 @@ private extension ContentView {
             }
         }
     }
-    
+
     private func phase(type: WineType, year: Int) -> AgingPhase {
         let age = (Calendar.current.dateComponents([.year], from: Date.now).year ?? year) - year
         return switch type {
         case .rouge:
             switch age {
-            case 0...2: .youth
-            case 3...7: .maturity
-            case 8...16: .peak
+            case 0 ... 2: .youth
+            case 3 ... 7: .maturity
+            case 8 ... 16: .peak
             default: .decline
             }
         case .blanc:
             switch age {
-            case 0...1: .youth
-            case 2...3: .maturity
-            case 4...8: .peak
+            case 0 ... 1: .youth
+            case 2 ... 3: .maturity
+            case 4 ... 8: .peak
             default: .decline
             }
         case .rose, .other:
             switch age {
-            case 0...2: .peak
+            case 0 ... 2: .peak
             default: .decline
             }
         case .petillant: .peak
@@ -588,18 +585,18 @@ private extension ContentView {
 }
 
 extension View {
-    
     @ViewBuilder
-    func `if`<Transform: View>(_ condition: Bool, transform: (Self) -> Transform) -> some View {
+    func `if`(_ condition: Bool, transform: (Self) -> some View) -> some View {
         if condition {
             transform(self)
         } else {
             self
         }
     }
-    
+
     @ViewBuilder
-    func addSearchIfNeeded(for tabType: TabType, searchText: Binding<String>, searchIsActive: Binding<Bool>, entitlementManager: EntitlementManager) -> some View {
+    func addSearchIfNeeded(for tabType: TabType, searchText: Binding<String>, searchIsActive: Binding<Bool>,
+                           entitlementManager: EntitlementManager) -> some View {
         switch tabType {
         case .region:
             searchable(text: searchText, isPresented: searchIsActive, prompt: "Rechercher")

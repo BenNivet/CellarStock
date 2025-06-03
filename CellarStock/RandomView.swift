@@ -5,13 +5,12 @@
 //  Created by CANTE Benjamin on 01/11/2023.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct RandomView: View {
-    
     @EnvironmentObject private var dataManager: DataManager
-    
+
     @State private var rotation: CGFloat = 0.0
     @State private var showingSheet: (Bool, Wine, Quantity) = (false, Wine(), Quantity())
     @State private var filterRegions: [Int] = []
@@ -19,9 +18,9 @@ struct RandomView: View {
     @State private var filterYears: [Int] = []
     @State private var showingAlert = false
     @State private var sensorFeedback = false
-    
+
     private var animationDuration: TimeInterval = 2
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: CharterConstants.margin) {
@@ -36,7 +35,7 @@ struct RandomView: View {
                         .symbolRenderingMode(.multicolor)
                         .foregroundColor(.black)
                         .onTapGesture {
-                            let randomAmount = Double(Int.random(in: 7..<15))
+                            let randomAmount = Double(Int.random(in: 7 ..< 15))
                             rotation += randomAmount
                             DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
                                 if let (wine, quantity) = randomWine {
@@ -53,7 +52,7 @@ struct RandomView: View {
                                 .analyticsScreen(name: ScreenName.randomResult, class: ScreenName.randomResult)
                         }
                         .alert("Aucun vin ne correspond à vos critères", isPresented: $showingAlert) {
-                            Button("OK", role: .cancel) { }
+                            Button("OK", role: .cancel) {}
                         }
                 }
                 .padding(CharterConstants.marginMedium)
@@ -68,7 +67,7 @@ struct RandomView: View {
             .sensoryFeedback(.success, trigger: sensorFeedback)
         }
     }
-    
+
     private var filterView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: CharterConstants.margin) {
@@ -79,7 +78,7 @@ struct RandomView: View {
             .padding(CharterConstants.margin)
         }
     }
-    
+
     private var randomWine: (Wine, Quantity)? {
         var selectableWines = dataManager.wines
         if !filterRegions.isEmpty {
@@ -90,24 +89,24 @@ struct RandomView: View {
         }
         if !filterYears.isEmpty {
             selectableWines = selectableWines.filter { wine in
-                !dataManager.quantities.filter({ quantity in
+                !dataManager.quantities.filter { quantity in
                     quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
-                }).isEmpty
+                }.isEmpty
             }
         }
         guard let wine = selectableWines.randomElement(),
               let quantity = dataManager.quantities.filter({ quantity in
                   if !filterYears.isEmpty {
-                      return quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
+                      quantity.wineId == wine.wineId && filterYears.contains(quantity.year)
                   } else {
-                      return quantity.wineId == wine.wineId
+                      quantity.wineId == wine.wineId
                   }
               }).randomElement()
         else { return nil }
-        
+
         return (wine, quantity)
     }
-    
+
     func quantity(for wine: Wine) -> Int {
         var result = 0
         for quantity in dataManager.quantities where quantity.wineId == wine.wineId {

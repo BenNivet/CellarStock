@@ -6,23 +6,25 @@
 //
 
 import FirebaseAnalytics
-import SwiftUI
 import StoreKit
+import SwiftUI
 
 struct SubscriptionView: View {
     // MARK: - Properties
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
-    
+
     @State private var selectedProduct: Product?
     @State private var showRedeemCode = false
     @State private var showConfetti = false
-    
-    private let features: [String] = [String(localized: "Aucune publicité"),
-                                      String(localized: "Ajouter des vins en illimité"),
-                                      String(localized: "Fonctionnalités exclusives")]
-    
+
+    private let features: [String] = [
+        String(localized: "Aucune publicité"),
+        String(localized: "Ajouter des vins en illimité"),
+        String(localized: "Fonctionnalités exclusives")
+    ]
+
     // MARK: - Layout
     var body: some View {
         if entitlementManager.isPremium {
@@ -59,32 +61,32 @@ struct SubscriptionView: View {
                 }
         }
     }
-    
+
     // MARK: - Views
     private var hasSubscriptionView: some View {
         VStack(spacing: CharterConstants.marginBig) {
             navView
-            
+
             Spacer()
             Image(systemName: "crown.fill")
                 .foregroundStyle(.yellow.gradient)
                 .font(Font.system(size: 100))
-            
+
             VStack(spacing: CharterConstants.marginMedium) {
                 Text("Félicitations")
                     .font(.system(size: 33, weight: .bold))
                     .multilineTextAlignment(.center)
-                
+
                 Text("Vous êtes désormais un membre Premium")
                     .font(.system(size: 25, weight: .semibold))
                     .multilineTextAlignment(.center)
             }
-            
+
             Spacer()
             Spacer()
         }
     }
-    
+
     private var subscriptionOptionsView: some View {
         VStack(spacing: CharterConstants.marginSmall) {
             navView
@@ -100,7 +102,7 @@ struct SubscriptionView: View {
             }
         }
     }
-    
+
     private var navView: some View {
         HStack {
             if !entitlementManager.isPremium {
@@ -123,25 +125,25 @@ struct SubscriptionView: View {
             }
         }
     }
-    
+
     private var proAccessView: some View {
         VStack(spacing: CharterConstants.margin) {
             Image(systemName: "crown.fill")
                 .foregroundStyle(.yellow.gradient)
                 .font(Font.system(size: 80))
-            
+
             VStack(spacing: CharterConstants.marginSmall) {
                 Text("Devenir premium")
                     .font(.system(size: 33, weight: .bold))
                     .multilineTextAlignment(.center)
-                
+
                 Text("Débloquer toutes les fonctionnalités")
                     .font(.system(size: 17, weight: .semibold))
                     .multilineTextAlignment(.center)
             }
         }
     }
-    
+
     private var featuresView: some View {
         VStack(alignment: .center, spacing: CharterConstants.marginSmall) {
             ForEach(features, id: \.self) { feature in
@@ -149,11 +151,11 @@ struct SubscriptionView: View {
                     Image(systemName: "star.fill")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.yellow.gradient)
-                    
+
                     Text(feature)
                         .font(.system(size: 17, weight: .semibold))
                         .multilineTextAlignment(.center)
-                    
+
                     Image(systemName: "star.fill")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.yellow.gradient)
@@ -162,20 +164,20 @@ struct SubscriptionView: View {
         }
         .padding(.top, CharterConstants.margin)
     }
-    
+
     private var freeView: some View {
         VStack(spacing: CharterConstants.marginXSmall) {
             Text("30 jours gratuits !")
                 .font(.system(size: 25, weight: .semibold))
                 .multilineTextAlignment(.center)
-            
+
             Text("Annulez quand vous voulez.")
                 .font(.system(size: 15, weight: .regular))
                 .multilineTextAlignment(.center)
         }
         .padding(.bottom, CharterConstants.marginMedium)
     }
-    
+
     private var productsListView: some View {
         HStack(spacing: CharterConstants.marginMedium) {
             ForEach(subscriptionsManager.products, id: \.self) { product in
@@ -184,7 +186,7 @@ struct SubscriptionView: View {
             }
         }
     }
-    
+
     private var purchaseSection: some View {
         VStack(spacing: CharterConstants.marginSmall) {
             VStack(spacing: CharterConstants.marginXSmall) {
@@ -212,7 +214,7 @@ struct SubscriptionView: View {
             .foregroundStyle(CharterConstants.halfWhite)
         }
     }
-    
+
     private var purchaseButtonView: some View {
         Button {
             if let selectedProduct {
@@ -233,7 +235,7 @@ struct SubscriptionView: View {
         .frame(height: 50)
         .disabled(selectedProduct == nil)
     }
-    
+
     private var redeemButtonView: some View {
         Button("Code Promo") {
             showRedeemCode = true
@@ -249,7 +251,7 @@ struct SubscriptionView: View {
 struct SubscriptionItemView: View {
     var product: Product
     @Binding var selectedProduct: Product?
-    
+
     var body: some View {
         VStack(spacing: CharterConstants.margin) {
             Spacer()
@@ -283,23 +285,20 @@ struct SubscriptionItemView: View {
         .overlay(alignment: .top) {
             popularView
         }
-        .background(
-            LinearGradient(colors: [CharterConstants.mainBlue, .black],
-                           startPoint: .top,
-                           endPoint: .bottom)
-            .opacity(selectedProduct == product ? 1: 0.5))
-        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius)
-        )
-        .opacity(selectedProduct == product ? 1: 0.7)
+        .background(LinearGradient(colors: [CharterConstants.mainBlue, .black],
+                                   startPoint: .top,
+                                   endPoint: .bottom)
+                .opacity(selectedProduct == product ? 1 : 0.5))
+        .clipShape(RoundedRectangle(cornerRadius: CharterConstants.radius))
+        .opacity(selectedProduct == product ? 1 : 0.7)
         .onTapGesture {
             withAnimation {
                 selectedProduct = product
             }
         }
     }
-    
-    @ViewBuilder
-    var popularView: some View {
+
+    @ViewBuilder var popularView: some View {
         if product.id == Subscription.popularId {
             HStack {
                 Spacer()

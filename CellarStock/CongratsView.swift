@@ -5,20 +5,19 @@
 //  Created by CANTE Benjamin on 01/11/2023.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct CongratsView: View {
-    
     @Environment(\.dismiss) var dismiss
-    
+
     @EnvironmentObject private var dataManager: DataManager
-    
+
     @Binding var wine: Wine
     @Binding var quantity: Quantity
-    
+
     private let firestoreManager = FirestoreManager.shared
-    
+
     var body: some View {
         VStack(spacing: CharterConstants.margin) {
             Text("Félicitations")
@@ -79,7 +78,7 @@ struct CongratsView: View {
                         } else {
                             firestoreManager.updateQuantity(quantity)
                         }
-                        
+
                         if quantity(for: wine) == 0 {
                             if let index = dataManager.wines.firstIndex(of: wine) {
                                 dataManager.wines.remove(at: index)
@@ -95,12 +94,11 @@ struct CongratsView: View {
                     dismiss()
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                
+
                 Button("Non, rejouer") {
                     dismiss()
                 }
                 .buttonStyle(SecondaryButtonStyle())
-                
             }
         }
         .padding(CharterConstants.margin)

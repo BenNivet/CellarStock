@@ -5,17 +5,16 @@
 //  Created by CANTE Benjamin  on 14/10/2024.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct LoaderView: View {
-    
     let timer: Publishers.Autoconnect<Timer.TimerPublisher>
     let timing: Double
-    
+
     private let maxCounter = 3
     @State private var counter = 0
-    
+
     let frame: CGSize
     let primaryColor: Color
 
@@ -33,7 +32,7 @@ struct LoaderView: View {
                 Spacer()
                 VStack {
                     HStack(spacing: CharterConstants.marginSmall) {
-                        ForEach(0..<maxCounter, id: \.self) { index in
+                        ForEach(0 ..< maxCounter, id: \.self) { index in
                             Circle()
                                 .offset(y: counter == index ? -frame.height / 5 : frame.height / 5)
                                 .fill(primaryColor)

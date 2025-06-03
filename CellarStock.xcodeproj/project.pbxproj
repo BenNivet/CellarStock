@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B20D9C82DEEF3C7003290F4 /* TipsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B20D9C72DEEF3BE003290F4 /* TipsManager.swift */; };
 		0B6385492D415949004E2FE5 /* ChipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6385472D415949004E2FE5 /* ChipModel.swift */; };
 		0B63854B2D415949004E2FE5 /* Chip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6385452D415949004E2FE5 /* Chip.swift */; };
 		0B99E3332D53B2E9008D139B /* BlurVisualEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B99E3322D53B2E9008D139B /* BlurVisualEffect.swift */; };
@@ -49,7 +50,6 @@
 		2188F4782B21ED980030B596 /* NeoTabsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4712B21ED980030B596 /* NeoTabsItemView.swift */; };
 		2188F4792B21ED980030B596 /* NeoTabsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4722B21ED980030B596 /* NeoTabsContentView.swift */; };
 		2188F47A2B21ED980030B596 /* NeoTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188F4732B21ED980030B596 /* NeoTabsView.swift */; };
-		219573AE2CBAB76E00BCD488 /* AddTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219573AD2CBAB76E00BCD488 /* AddTip.swift */; };
 		219573B32CBCF7C100BCD488 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219573B22CBCF7C100BCD488 /* LoaderView.swift */; };
 		2195741D2CBCFB6B00BCD488 /* LoaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2195741C2CBCFB6B00BCD488 /* LoaderViewModifier.swift */; };
 		21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */; };
@@ -74,6 +74,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B20D9C72DEEF3BE003290F4 /* TipsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsManager.swift; sourceTree = "<group>"; };
 		0B6385452D415949004E2FE5 /* Chip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
 		0B6385472D415949004E2FE5 /* ChipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipModel.swift; sourceTree = "<group>"; };
 		0B99E3322D53B2E9008D139B /* BlurVisualEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurVisualEffect.swift; sourceTree = "<group>"; };
@@ -117,7 +118,6 @@
 		2188F4712B21ED980030B596 /* NeoTabsItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsItemView.swift; sourceTree = "<group>"; };
 		2188F4722B21ED980030B596 /* NeoTabsContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsContentView.swift; sourceTree = "<group>"; };
 		2188F4732B21ED980030B596 /* NeoTabsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoTabsView.swift; sourceTree = "<group>"; };
-		219573AD2CBAB76E00BCD488 /* AddTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTip.swift; sourceTree = "<group>"; };
 		219573B22CBCF7C100BCD488 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		2195741C2CBCFB6B00BCD488 /* LoaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderViewModifier.swift; sourceTree = "<group>"; };
 		21989AFC2B2B2BDF00E5637A /* ImportHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportHelper.swift; sourceTree = "<group>"; };
@@ -311,7 +311,7 @@
 		219573AC2CBAB74F00BCD488 /* Tips */ = {
 			isa = PBXGroup;
 			children = (
-				219573AD2CBAB76E00BCD488 /* AddTip.swift */,
+				0B20D9C72DEEF3BE003290F4 /* TipsManager.swift */,
 			);
 			path = Tips;
 			sourceTree = "<group>";
@@ -474,7 +474,7 @@
 				21D1C2302CCADAAB0061488A /* KeyboardAvoiding.swift in Sources */,
 				0B99E3332D53B2E9008D139B /* BlurVisualEffect.swift in Sources */,
 				21989AFD2B2B2BDF00E5637A /* ImportHelper.swift in Sources */,
-				219573AE2CBAB76E00BCD488 /* AddTip.swift in Sources */,
+				0B20D9C82DEEF3C7003290F4 /* TipsManager.swift in Sources */,
 				2188F4742B21ED980030B596 /* NeoTabsItemModel.swift in Sources */,
 				21C794872AC88CDA00398FE9 /* FormView.swift in Sources */,
 				218588B72AC81A6300730A9D /* ContentView.swift in Sources */,

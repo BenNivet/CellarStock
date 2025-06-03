@@ -11,10 +11,10 @@ class RoundedRectLabel: UIView {
     let label = UILabel()
     let padding = CharterConstants.marginSmall
     var text = ""
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         // Configure the label
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 12)
@@ -22,9 +22,9 @@ class RoundedRectLabel: UIView {
         label.numberOfLines = 0
         label.text = text
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+
         addSubview(label)
-        
+
         // Add constraints for the label
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor, constant: padding),
@@ -32,19 +32,19 @@ class RoundedRectLabel: UIView {
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding)
         ])
-        
+
         // Configure the background
         backgroundColor = .gray
         layer.cornerRadius = CharterConstants.radius
         layer.opacity = 0.75
     }
-    
+
     func setText(text: String) {
         label.text = text
         setNeedsDisplay()
     }
-    
-    required init?(coder aDecoder: NSCoder) {
+
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

@@ -14,40 +14,42 @@ struct Feature: Hashable {
 }
 
 struct FeaturesView: View {
-    
     @Environment(\.dismiss) var dismiss
-    
+
     @EnvironmentObject private var entitlementManager: EntitlementManager
-    
+
     @State private var selectedFeatures: [Feature] = []
-    
-    private let features: [Feature] = [Feature(index: 0, name: String(localized: "Gestion multi-cave")),
-                                       Feature(index: 1, name: String(localized: "Phases de vieillissement (jeunesse, maturité, apogée, déclin)")),
-                                       Feature(index: 2, name: String(localized: "Ajouter des avis, des notes et des commentaires")),
-                                       Feature(index: 3, name: String(localized: "Mettre des vins en favoris")),
-                                       Feature(index: 4, name: String(localized: "Export PDF")),
-                                       Feature(index: 5, name: String(localized: "Historique de consommation")),
-                                       Feature(index: 6, name: String(localized: "Amelioration du scan")),
-                                       Feature(index: 7, name: String(localized: "Accord mets / vins"))].shuffled()
-    
+
+    private let features: [Feature] = [
+        Feature(index: 0, name: String(localized: "Gestion multi-cave")),
+        Feature(index: 1,
+                name: String(localized: "Phases de vieillissement (jeunesse, maturité, apogée, déclin)")),
+        Feature(index: 2, name: String(localized: "Ajouter des avis, des notes et des commentaires")),
+        Feature(index: 3, name: String(localized: "Mettre des vins en favoris")),
+        Feature(index: 4, name: String(localized: "Export PDF")),
+        Feature(index: 5, name: String(localized: "Historique de consommation")),
+        Feature(index: 6, name: String(localized: "Amelioration du scan")),
+        Feature(index: 7, name: String(localized: "Accord mets / vins"))
+    ].shuffled()
+
     var body: some View {
         mainView
             .padding(CharterConstants.margin)
             .addLinearGradientBackground()
             .ignoresSafeArea(edges: .bottom)
     }
-    
+
     var mainView: some View {
         VStack(spacing: CharterConstants.margin) {
             navView
             Text("Fonctionnalités")
                 .font(.system(size: 33, weight: .bold))
                 .multilineTextAlignment(.center)
-            
+
             Text("Choisissez les fonctionnalités que vous attendez le plus !")
                 .font(.system(size: 17, weight: .semibold))
                 .multilineTextAlignment(.center)
-            
+
             ScrollView(showsIndicators: false) {
                 VStack(spacing: CharterConstants.margin) {
                     ForEach(selectedFeatures + features.filter { !selectedFeatures.contains($0) }, id: \.self) { feature in
@@ -74,7 +76,7 @@ struct FeaturesView: View {
             }
         }
     }
-    
+
     private var navView: some View {
         HStack {
             Button {

@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct LoaderViewModifier: ViewModifier {
     @Binding var isPresented: Bool
-    
+
     public init(isPresented: Binding<Bool>) {
         _isPresented = isPresented
     }
@@ -18,7 +18,7 @@ public struct LoaderViewModifier: ViewModifier {
         content
             .overlay(presentationView)
     }
-    
+
     @ViewBuilder private var presentationView: some View {
         if isPresented {
             LoaderView()

@@ -19,7 +19,7 @@ struct WineImport: Codable {
     var year: Int
     var quantity: Int
     var price: Double
-    
+
     func data(for userId: String) -> (Wine, Quantity)? {
         guard let wineRegion = Region.allCases.first(where: { $0.description == region }),
               let wineType = WineType.allCases.first(where: { $0.description == type }),
@@ -28,7 +28,7 @@ struct WineImport: Codable {
         return (Wine(userId: userId, type: wineType, region: wineRegion, appelation: wineAppelation, name: name),
                 Quantity(userId: userId, year: year, quantity: quantity, price: price))
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case region = "Region"
         case type = "Type"
@@ -38,7 +38,7 @@ struct WineImport: Codable {
         case quantity = "Quantite"
         case price = "Prix"
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.region = try container.decode(String.self, forKey: .region)

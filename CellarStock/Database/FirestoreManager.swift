@@ -5,8 +5,8 @@
 //  Created by CANTE Benjamin on 08/12/2023.
 //
 
-import Foundation
 import FirebaseFirestore
+import Foundation
 
 @MainActor
 class FirestoreManager {
@@ -15,24 +15,24 @@ class FirestoreManager {
         case wines = "Wines"
         case quantities = "Quantities"
     }
-    
+
     enum Column: String {
         case userId
     }
-    
+
     static let shared = FirestoreManager()
     var db: Firestore?
-    
+
     init() {
         db = Firestore.firestore()
     }
-    
+
     func findUser(id: String) async -> String? {
         guard !id.isEmpty else { return nil }
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 db?.collection(Table.users.rawValue).document(id)
-                    .getDocument { documentSnapshot, error in
+                    .getDocument { documentSnapshot, _ in
                         if let documentSnapshot,
                            documentSnapshot.exists {
                             continuation.resume(returning: documentSnapshot.documentID)
@@ -45,11 +45,11 @@ class FirestoreManager {
             return nil
         }
     }
-    
+
     func createUser(name: String = "") async -> String? {
         do {
             return try await withCheckedThrowingContinuation { continuation in
-                var ref: DocumentReference? = nil
+                var ref: DocumentReference?
                 ref = try? db?.collection(Table.users.rawValue)
                     .addDocument(from: UserServer(name: name)) { _ in
                         continuation.resume(returning: ref?.documentID)
@@ -59,7 +59,7 @@ class FirestoreManager {
             return nil
         }
     }
-    
+
 //    func clean() {
 //        db?.collection(Table.wines.rawValue)
 //            .getDocuments { [weak self] querySnapshot, err in
@@ -76,7 +76,7 @@ class FirestoreManager {
 //                        .delete()
 //                }
 //            }
-//        
+//
 //        db?.collection(Table.quantities.rawValue)
 //            .getDocuments { [weak self] querySnapshot, err in
 //                guard let documents = querySnapshot?.documents
@@ -93,13 +93,13 @@ class FirestoreManager {
 //                }
 //            }
 //    }
-    
+
     func fetchWines(for userId: String) async -> [Wine] {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 db?.collection(Table.wines.rawValue)
                     .whereField(Column.userId.rawValue, isEqualTo: userId)
-                    .getDocuments { querySnapshot, err in
+                    .getDocuments { querySnapshot, _ in
                         guard let documents = querySnapshot?.documents
                         else {
                             continuation.resume(returning: [])
@@ -110,20 +110,21 @@ class FirestoreManager {
                                 guard let wineServer = try? wineData.data(as: WineServer.self)
                                 else { return nil }
                                 return Wine(wineServer: wineServer,
-                                            documentId: wineData.documentID)})
+                                            documentId: wineData.documentID)
+                            })
                     }
             }
         } catch {
             return []
         }
     }
-    
+
     func fetchQuantities(for userId: String) async -> [Quantity] {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 db?.collection(Table.quantities.rawValue)
                     .whereField(Column.userId.rawValue, isEqualTo: userId)
-                    .getDocuments { querySnapshot, err in
+                    .getDocuments { querySnapshot, _ in
                         guard let documents = querySnapshot?.documents
                         else {
                             continuation.resume(returning: [])
@@ -134,18 +135,19 @@ class FirestoreManager {
                                 guard let quantityServer = try? quantityData.data(as: QuantityServer.self)
                                 else { return nil }
                                 return Quantity(quantityServer: quantityServer,
-                                                documentId: quantityData.documentID)})
+                                                documentId: quantityData.documentID)
+                            })
                     }
             }
         } catch {
             return []
         }
     }
-    
+
     func insertQuantity(_ quantity: Quantity) async -> String? {
         do {
             return try await withCheckedThrowingContinuation { continuation in
-                var ref: DocumentReference? = nil
+                var ref: DocumentReference?
                 ref = try? db?.collection(Table.quantities.rawValue)
                     .addDocument(from: quantity.quantityServer) { _ in
                         continuation.resume(returning: ref?.documentID)
@@ -155,12 +157,12 @@ class FirestoreManager {
             return nil
         }
     }
-    
+
     func insertOrUpdateWine(_ wine: Wine) async -> String? {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 if wine.wineId.isEmpty {
-                    var ref: DocumentReference? = nil
+                    var ref: DocumentReference?
                     ref = try? db?.collection(Table.wines.rawValue)
                         .addDocument(from: wine.wineServer) { _ in
                             continuation.resume(returning: ref?.documentID)
@@ -176,19 +178,19 @@ class FirestoreManager {
             return nil
         }
     }
-    
+
     func updateQuantity(_ quantity: Quantity) {
         try? db?.collection(Table.quantities.rawValue)
             .document(quantity.quantityId)
             .setData(from: quantity.quantityServer)
     }
-    
+
     func deleteQuantity(_ quantity: Quantity) {
         db?.collection(Table.quantities.rawValue)
             .document(quantity.quantityId)
             .delete()
     }
-    
+
     func deleteWine(_ wine: Wine) {
         db?.collection(Table.wines.rawValue)
             .document(wine.wineId)

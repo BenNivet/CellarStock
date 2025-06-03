@@ -21,7 +21,7 @@ class Wine: Identifiable, Hashable {
     var info: String = ""
     var country: Country = Country.france
     var size: Size = Size.bouteille
-    
+
     init(userId: String = "",
          wineId: String = "",
          type: WineType = .rouge,
@@ -45,7 +45,7 @@ class Wine: Identifiable, Hashable {
         self.country = country
         self.size = size
     }
-    
+
     init?(wineServer: WineServer, documentId: String) {
         guard let type = WineType(rawValue: wineServer.type),
               let region = Region(rawValue: wineServer.region),
@@ -66,7 +66,7 @@ class Wine: Identifiable, Hashable {
         self.country = country
         self.size = size
     }
-    
+
     var wineServer: WineServer {
         WineServer(userId: userId,
                    type: type.rawValue,
@@ -79,24 +79,24 @@ class Wine: Identifiable, Hashable {
                    country: country.rawValue,
                    size: size.rawValue)
     }
-    
+
     func isMatch(for query: String) -> Bool {
         let queryFormatted = query.queryFormatted
         return type.description.queryFormatted.contains(queryFormatted)
-        || region.description.queryFormatted.contains(queryFormatted)
-        || (region == .bordeaux && appelation.description.queryFormatted.contains(queryFormatted))
-        || (country == .usa && usAppelation.description.queryFormatted.contains(queryFormatted))
-        || (country != .france && country.description.queryFormatted.contains(queryFormatted))
-        || name.queryFormatted.contains(queryFormatted)
-        || owner.queryFormatted.contains(queryFormatted)
-        || info.queryFormatted.contains(queryFormatted)
-        || (size != .bouteille && size.description.queryFormatted.contains(queryFormatted))
+            || region.description.queryFormatted.contains(queryFormatted)
+            || (region == .bordeaux && appelation.description.queryFormatted.contains(queryFormatted))
+            || (country == .usa && usAppelation.description.queryFormatted.contains(queryFormatted))
+            || (country != .france && country.description.queryFormatted.contains(queryFormatted))
+            || name.queryFormatted.contains(queryFormatted)
+            || owner.queryFormatted.contains(queryFormatted)
+            || info.queryFormatted.contains(queryFormatted)
+            || (size != .bouteille && size.description.queryFormatted.contains(queryFormatted))
     }
-    
+
     static func == (lhs: Wine, rhs: Wine) -> Bool {
         lhs.wineId == rhs.wineId
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
@@ -111,7 +111,7 @@ class Quantity: Identifiable, Hashable {
     var quantity: Int = 0
     var price: Double = 0
     var date: String = Helper.shared.creationDate
-    
+
     init(userId: String = "",
          quantityId: String = "",
          wineId: String = "",
@@ -127,7 +127,7 @@ class Quantity: Identifiable, Hashable {
         self.price = price
         self.date = date
     }
-    
+
     init(quantityServer: QuantityServer, documentId: String) {
         self.quantityId = documentId
         self.userId = quantityServer.userId
@@ -137,7 +137,7 @@ class Quantity: Identifiable, Hashable {
         self.price = quantityServer.price
         self.date = Helper.shared.creationDate
     }
-    
+
     var quantityServer: QuantityServer {
         QuantityServer(userId: userId,
                        wineId: wineId,
@@ -145,11 +145,11 @@ class Quantity: Identifiable, Hashable {
                        quantity: quantity,
                        price: price)
     }
-    
+
     static func == (lhs: Quantity, rhs: Quantity) -> Bool {
         lhs.quantityId == rhs.quantityId
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
@@ -160,11 +160,11 @@ class User {
     var id: UUID = UUID()
     var documentId: String = ""
     var name: String = ""
-    
-    init(documentId: String = "", name: String = "") {
+
+    init(documentId: String = "", name _: String = "") {
         self.documentId = documentId
     }
-    
+
     init(userServer: UserServer) {
         name = userServer.name
     }
@@ -172,13 +172,13 @@ class User {
 
 enum WineType: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case rouge = 0
     case blanc
     case rose
     case petillant
     case other
-    
+
     var description: String {
         switch self {
         case .rouge:
@@ -197,7 +197,7 @@ enum WineType: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable
 
 enum Region: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case bourgogne = 0
     case bordeaux
     case alsace
@@ -210,13 +210,13 @@ enum Region: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     case languedocRoussillon
     case sudOuest
     case other
-    
+
     var description: String {
         switch self {
         case .bourgogne:
             "Bourgogne"
         case .bordeaux:
-             "Bordeaux"
+            "Bordeaux"
         case .alsace:
             "Alsace"
         case .loire:
@@ -243,7 +243,7 @@ enum Region: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
 
 enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case pauillac = 0
     case saintEstephe
     case saintJulien
@@ -282,7 +282,7 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
     case sainteCroixduMont
     case sauternes
     case other
-    
+
     var description: String {
         switch self {
         case .pauillac:
@@ -367,7 +367,7 @@ enum Appelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codab
 
 enum USAppelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case arizona = 0
     case californiaCentralCoast
     case californiaLivermoreValley
@@ -398,7 +398,7 @@ enum USAppelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Cod
     case virginia
     case washingtonColumbiaValley
     case other
-    
+
     var description: String {
         switch self {
         case .arizona:
@@ -467,7 +467,7 @@ enum USAppelation: Int, CaseIterable, Identifiable, CustomStringConvertible, Cod
 
 enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case france = 0
     case italie
     case espagne
@@ -487,7 +487,7 @@ enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable 
     case suisse
     case newZealand
     case other
-    
+
     var description: String {
         switch self {
         case .france:
@@ -530,12 +530,11 @@ enum Country: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable 
             String(localized: "Autre")
         }
     }
-
 }
 
 enum Size: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case bouteille = 1
     case magnum = 2
     case jeroboam = 4
@@ -544,7 +543,7 @@ enum Size: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     case balthazar = 16
     case nabuchodonosor = 20
     case salomon = 24
-    
+
     var description: String {
         switch self {
         case .bouteille:
@@ -569,12 +568,12 @@ enum Size: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
 
 enum AgingPhase: Int, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var id: Self { self }
-    
+
     case youth = 0
     case maturity
     case peak
     case decline
-    
+
     var description: String {
         switch self {
         case .youth:

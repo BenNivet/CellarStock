@@ -11,19 +11,19 @@ import StoreKit
 class SubscriptionsManager: NSObject, ObservableObject {
     let productIDs: [String] = ["Monthly", Subscription.popularId, "HalfYearly"]
     var purchasedProductIDs: Set<String> = []
-    
+
     @Published var products: [Product] = []
-    
+
     private let entitlementManager: EntitlementManager
     private let dataManager: DataManager
     private var updates: Task<Void, Never>?
-    
+
     private lazy var formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter
     }()
-    
+
     init(entitlementManager: EntitlementManager, dataManager: DataManager) {
         self.entitlementManager = entitlementManager
         self.dataManager = dataManager
@@ -31,11 +31,11 @@ class SubscriptionsManager: NSObject, ObservableObject {
         self.updates = observeTransactionUpdates()
         SKPaymentQueue.default().add(self)
     }
-    
+
     deinit {
         updates?.cancel()
     }
-    
+
     func observeTransactionUpdates() -> Task<Void, Never> {
         Task(priority: .background) { [unowned self] in
             for await _ in Transaction.updates {
@@ -52,16 +52,16 @@ extension SubscriptionsManager {
               entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
               entitlementManager.winesPlus > 0
         else { return false }
-        
+
         var bottles = 0
         for quantity in dataManager.quantities {
             bottles += quantity.quantity
         }
-        
+
         let modulo = bottles >= CharterConstants.hugeCellarBottlesLimit
-        ? CharterConstants.winesCountSubscriptionHugeCellar
-        : CharterConstants.winesCountSubscription
-        
+            ? CharterConstants.winesCountSubscriptionHugeCellar
+            : CharterConstants.winesCountSubscription
+
         if entitlementManager.winesPlus % modulo == 0 {
             entitlementManager.winesPlus += 1
             return true
@@ -76,7 +76,7 @@ extension SubscriptionsManager {
         guard entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
               entitlementManager.winesSubmitted > 0
         else { return false }
-        
+
         if entitlementManager.winesSubmitted % CharterConstants.winesCountRatings == 0 {
             entitlementManager.winesSubmitted += 1
             return true
@@ -93,16 +93,16 @@ extension SubscriptionsManager {
               entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
               entitlementManager.winesSubmitted > 0
         else { return false }
-        
+
         guard let minumumDate = formatter.date(from: entitlementManager.minumumNewFeatures2DisplayDate),
               Date() > minumumDate
         else { return false }
-        
+
         var bottles = 0
         for quantity in dataManager.quantities {
             bottles += quantity.quantity
         }
-        
+
         if bottles >= CharterConstants.featuresViewBottlesLimit {
             entitlementManager.newFeatures2DisplayedCount += 1
             let newDate = CharterConstants.featuresViewDaysInterval.days.fromNow
@@ -134,11 +134,11 @@ extension SubscriptionsManager {
             print("Failed to fetch products!")
         }
     }
-    
+
     func buyProduct(_ product: Product) async {
         do {
             let result = try await product.purchase()
-            
+
             switch result {
             case let .success(.verified(transaction)):
                 // Successful purhcase
@@ -148,7 +148,6 @@ extension SubscriptionsManager {
                 // Successful purchase but transaction/receipt can't be verified
                 // Could be a jailbroken phone
                 print("Unverified purchase. Might be jailbroken. Error: \(error)")
-                break
             case .pending:
                 // Transaction waiting on SCA (Strong Customer Authentication) or
                 // approval from Ask to Buy
@@ -158,16 +157,15 @@ extension SubscriptionsManager {
                 break
             @unknown default:
                 print("Failed to purchase the product!")
-                break
             }
         } catch {
             print("Failed to purchase the product!")
         }
     }
-    
+
     func updatePurchasedProducts() async {
         for await result in Transaction.currentEntitlements {
-            guard case .verified(let transaction) = result else {
+            guard case let .verified(transaction) = result else {
                 continue
             }
             if transaction.revocationDate == nil {
@@ -176,10 +174,10 @@ extension SubscriptionsManager {
                 purchasedProductIDs.remove(transaction.productID)
             }
         }
-        
+
         entitlementManager.isPremium = !purchasedProductIDs.isEmpty || entitlementManager.isAdmin
     }
-    
+
     func restorePurchases() async {
         do {
             try await AppStore.sync()
@@ -189,10 +187,11 @@ extension SubscriptionsManager {
     }
 }
 
+// MARK: - SKPaymentTransactionObserver
 extension SubscriptionsManager: SKPaymentTransactionObserver {
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {}
-    
-    func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool { true }
+    func paymentQueue(_: SKPaymentQueue, updatedTransactions _: [SKPaymentTransaction]) {}
+
+    func paymentQueue(_: SKPaymentQueue, shouldAddStorePayment _: SKPayment, for _: SKProduct) -> Bool { true }
 }
 
 extension Int {
@@ -204,9 +203,9 @@ extension Int {
 public struct DateInterval {
     private typealias Interval = (unit: Calendar.Component, value: Int)
     private var intervals: [Interval] = []
-    
+
     init() {}
-    
+
     init(unit: Calendar.Component, value: Int) {
         intervals.append(Interval(unit: unit, value: value))
     }
@@ -215,19 +214,19 @@ public struct DateInterval {
 extension DateInterval {
     private func intervalDate(negative: Bool, fromDate originDate: Date? = nil) -> Date {
         var date = originDate ?? Date()
-        intervals.forEach { (interval: Interval) in
+        for interval in intervals {
             date = Calendar.current.date(byAdding: interval.unit,
                                          value: negative ? -interval.value : interval.value,
                                          to: date)!
         }
-        
+
         return date
     }
-    
+
     var ago: Date {
         intervalDate(negative: true)
     }
-    
+
     var fromNow: Date {
         intervalDate(negative: false)
     }

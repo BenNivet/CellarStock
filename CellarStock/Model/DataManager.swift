@@ -10,7 +10,7 @@ import Combine
 final class DataManager: ObservableObject {
     @Published var wines: [Wine] = []
     @Published var quantities: [Quantity] = []
-    
+
     func reset() {
         wines.removeAll()
         quantities.removeAll()

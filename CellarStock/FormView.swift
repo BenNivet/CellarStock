@@ -10,8 +10,8 @@ import FirebaseAnalytics
 import Foundation
 import PhotosUI
 import StoreKit
-import SwiftUI
 import SwiftData
+import SwiftUI
 import Vision
 import VisionKit
 
@@ -25,34 +25,32 @@ enum WinePicker {
 }
 
 struct FormView: View {
-    
     @Environment(\.dismiss) var dismiss
     @Environment(\.requestReview) var requestReview
-    
+
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var dataManager: DataManager
-    
+
     @Binding var wine: Wine
     @Binding var quantitiesByYear: [Int: Int]
     @Binding var pricesByYear: [Int: Double]
     @Binding var showQuantitiesOnly: Bool
-    
+
     @State private var showingSheet = false
     @State private var showingActionSheet = false
     @State private var showingCameraSheet = false
     @State private var showingPhotoPicker = false
     @State private var scannedText = ""
-    @State private var showingAmountSheet = false
     @State private var selectedYearAmount = 0
     @State private var showingDeleteAlert = false
     @State private var sensorFeedback = false
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var selectedImage: UIImage?
-    
-    private let listener = PassthroughSubject<Bool,Never>()
+
+    private let listener = PassthroughSubject<Bool, Never>()
     private let firestoreManager = FirestoreManager.shared
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -71,7 +69,7 @@ struct FormView: View {
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(wine.name.isEmpty || (wine.wineId.isEmpty && quantitiesByYear.isEmpty))
-                    
+
                     if !wine.wineId.isEmpty {
                         Button("Supprimer") {
                             showingDeleteAlert = true
@@ -99,40 +97,41 @@ struct FormView: View {
             }
         }
     }
-    
-    @ViewBuilder
-    private var formView: some View {
+
+    @ViewBuilder private var formView: some View {
         VStack(spacing: CharterConstants.margin) {
             if !showQuantitiesOnly {
                 section(String(localized: "Caractéristiques"))
-                
-                FloatingTextField(type: .picker(rows: Country.allCases.map { $0.description }),
+
+                FloatingTextField(type: .picker(rows: Country.allCases.map(\.description)),
                                   placeHolder: String(localized: "Pays"),
                                   text: pickerValueBinding(wine.country, type: .country),
                                   rightIcon: "chevron.right")
-                
+
                 if wine.country == .france {
-                    FloatingTextField(type: .picker(rows: Region.allCases.map { $0.description }),
+                    FloatingTextField(type: .picker(rows: Region.allCases.map(\.description)),
                                       placeHolder: String(localized: "Région"),
                                       text: pickerValueBinding(wine.region, type: .region),
                                       rightIcon: "chevron.right")
                     if wine.region == .bordeaux {
-                        FloatingTextField(type: .picker(rows: Appelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
-                                          placeHolder: String(localized: "Appelation"),
-                                          text: pickerValueBinding(wine.appelation, type: .appelation),
-                                          rightIcon: "chevron.right")
+                        FloatingTextField(type: .picker(rows: Appelation.allCases.sorted { $0.description < $1.description }
+                                              .map(\.description)),
+                        placeHolder: String(localized: "Appelation"),
+                        text: pickerValueBinding(wine.appelation, type: .appelation),
+                        rightIcon: "chevron.right")
                     }
                 } else if wine.country == .usa {
-                    FloatingTextField(type: .picker(rows: USAppelation.allCases.sorted { $0.description < $1.description }.map { $0.description }),
-                                      placeHolder: String(localized: "Appelation"),
-                                      text: pickerValueBinding(wine.usAppelation, type: .usAppelation),
-                                      rightIcon: "chevron.right")
+                    FloatingTextField(type: .picker(rows: USAppelation.allCases.sorted { $0.description < $1.description }
+                                          .map(\.description)),
+                    placeHolder: String(localized: "Appelation"),
+                    text: pickerValueBinding(wine.usAppelation, type: .usAppelation),
+                    rightIcon: "chevron.right")
                 }
-                FloatingTextField(type: .picker(rows: WineType.allCases.map { $0.description }),
+                FloatingTextField(type: .picker(rows: WineType.allCases.map(\.description)),
                                   placeHolder: String(localized: "Type"),
                                   text: pickerValueBinding(wine.type, type: .type),
                                   rightIcon: "chevron.right")
-                FloatingTextField(type: .picker(rows: Size.allCases.map { $0.description }),
+                FloatingTextField(type: .picker(rows: Size.allCases.map(\.description)),
                                   placeHolder: String(localized: "Taille"),
                                   text: pickerValueBinding(wine.size, type: .size),
                                   rightIcon: "chevron.right")
@@ -144,9 +143,9 @@ struct FormView: View {
                     showingActionSheet = true
                 }
             }
-            
+
             section(String(localized: "Millésimes"), isRequired: wine.wineId.isEmpty && quantitiesByYear.isEmpty)
-            
+
             ForEach(quantitiesByYear.keys.sorted(by: >), id: \.self) { year in
                 HStack(spacing: CharterConstants.margin) {
                     ZStack {
@@ -156,11 +155,11 @@ struct FormView: View {
                             .opacity(0)
                     }
                     .font(.system(size: 18))
-                    
+
                     Divider()
                         .frame(width: 0.5)
                         .background(CharterConstants.halfWhite)
-                    
+
                     VStack(spacing: CharterConstants.margin) {
                         HStack {
                             Text("Qté")
@@ -178,15 +177,15 @@ struct FormView: View {
                                         }
                                     }
                                 }
-                                
+
                                 if !showQuantitiesOnly {
                                     Button("+6") {
                                         guard let quantity = quantitiesByYear[year] else { return }
                                         withAnimation(.linear) {
-                                            if quantity == 1 {
-                                                quantitiesByYear[year] = 6
+                                            quantitiesByYear[year] = if quantity == 1 {
+                                                6
                                             } else {
-                                                quantitiesByYear[year] = quantity + 6
+                                                quantity + 6
                                             }
                                         }
                                     }
@@ -213,7 +212,7 @@ struct FormView: View {
                         .background(CharterConstants.halfWhite)
                 }
             }
-            
+
             Button {
                 hideKeyboard()
                 showingSheet = true
@@ -224,10 +223,10 @@ struct FormView: View {
                 }
             }
             .buttonStyle(SecondaryButtonStyle())
-            
+
             if !showQuantitiesOnly {
                 section(String(localized: "Autres informations"))
-                
+
                 FloatingTextField(placeHolder: String(localized: "Vigneron / Domaine"), text: $wine.owner)
                 FloatingTextField(placeHolder: String(localized: "Infos / Étage clayette"), text: $wine.info)
             }
@@ -263,13 +262,11 @@ struct FormView: View {
             .analyticsScreen(name: ScreenName.selectWineName, class: ScreenName.selectWineName)
         }
         .sheet(isPresented: $showingSheet) {
-            YearSelectionListView(
-                availableYears: Helper.shared.availableYears(for: wine,
-                                                             selectedYears: Array(quantitiesByYear.keys)),
-                quantities: $quantitiesByYear,
-                prices: $pricesByYear
-            )
-            .analyticsScreen(name: ScreenName.yearList, class: ScreenName.yearList)
+            YearSelectionListView(availableYears: Helper.shared.availableYears(for: wine,
+                                                                               selectedYears: Array(quantitiesByYear.keys)),
+                                  quantities: $quantitiesByYear,
+                                  prices: $pricesByYear)
+                .analyticsScreen(name: ScreenName.yearList, class: ScreenName.yearList)
         }
         .sheet(isPresented: $showingCameraSheet) {
             ZStack(alignment: .bottom) {
@@ -314,11 +311,11 @@ struct FormView: View {
         }
         .sensoryFeedback(.success, trigger: sensorFeedback)
     }
-    
+
     func section(_ title: String, isRequired: Bool = false) -> some View {
         var text = AttributedString(title)
         text.foregroundColor = .white
-        
+
         return Text(isRequired ? text + " " + requiredAttributedText(opacity: 0.8) : text)
             .font(.system(size: 23, weight: .bold))
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -328,20 +325,19 @@ struct FormView: View {
 }
 
 private extension FormView {
-    
     var scannerAvailable: Bool {
         DataScannerViewController.isSupported &&
-        DataScannerViewController.isAvailable
+            DataScannerViewController.isAvailable
     }
-    
+
     var bindingScannedText: Binding<Bool> {
         Binding { !scannedText.isEmpty } set: { _ in }
     }
-    
+
     var bindingAmount: Binding<Bool> {
         Binding { selectedYearAmount != 0 } set: { _ in }
     }
-    
+
     func bindingQuantity(year: Int) -> Binding<Int> {
         Binding {
             quantitiesByYear[year] ?? 0
@@ -349,7 +345,7 @@ private extension FormView {
             quantitiesByYear[year] = newValue
         }
     }
-    
+
     func pickerValueBinding(_ value: CustomStringConvertible, type: WinePicker) -> Binding<String> {
         Binding {
             String(describing: value)
@@ -382,13 +378,8 @@ private extension FormView {
             }
         }
     }
-    
+
     func save() {
-        guard wine.name != Subscription.freeName
-        else {
-            entitlementManager.isAdmin = true
-            return
-        }
         Task {
             guard !quantitiesByYear.isEmpty else {
                 for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
@@ -405,7 +396,7 @@ private extension FormView {
                 }
                 return
             }
-            
+
             if let userId = entitlementManager.userId {
                 wine.userId = userId
             } else {
@@ -415,7 +406,7 @@ private extension FormView {
                     wine.userId = resultId
                 }
             }
-            
+
             guard !wine.userId.isEmpty else { return }
             let wineId = await firestoreManager.insertOrUpdateWine(wine)
             guard let wineId else { return }
@@ -424,7 +415,7 @@ private extension FormView {
                 dataManager.wines.remove(at: index)
             }
             dataManager.wines.append(wine)
-            
+
             var remainingQuantites = quantitiesByYear
             for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
                 if let newQuantity = quantitiesByYear[quantity.year] {
@@ -439,7 +430,7 @@ private extension FormView {
                 }
                 remainingQuantites.removeValue(forKey: quantity.year)
             }
-            
+
             for (year, quantity) in remainingQuantites {
                 let newQuantity = Quantity(userId: wine.userId,
                                            wineId: wineId,
@@ -454,7 +445,7 @@ private extension FormView {
             }
         }
     }
-    
+
     func quantity(for wine: Wine) -> Int {
         var result = 0
         for quantity in dataManager.quantities where quantity.wineId == wine.wineId {
@@ -462,7 +453,7 @@ private extension FormView {
         }
         return result
     }
-    
+
     private func processPhoto() {
         guard let selectedPhoto else { return }
         Task {
@@ -475,10 +466,10 @@ private extension FormView {
             }
         }
     }
-    
+
     private func processImage() {
         guard let image = selectedImage?.cgImage else { return }
-        let request = VNRecognizeTextRequest { request, error in
+        let request = VNRecognizeTextRequest { request, _ in
             if let results = request.results as? [VNRecognizedTextObservation] {
                 let lines = results.compactMap { $0.topCandidates(1).first?.string }
                 scannedText = Helper().formatArrayWineName(lines: lines)
