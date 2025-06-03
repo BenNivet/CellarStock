@@ -8,5 +8,5 @@
 import SwiftUI
 
 final class TipsManager: ObservableObject {
-    @Published var isactive = true
+    @Published var isActive = false
 }

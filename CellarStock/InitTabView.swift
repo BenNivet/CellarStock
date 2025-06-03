@@ -13,6 +13,7 @@ struct InitTabView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var entitlementManager: EntitlementManager
     @EnvironmentObject private var dataManager: DataManager
+    @EnvironmentObject private var tipsManager: TipsManager
 
     @State private var isLoaderPresented = true
     @State private var reload = false
@@ -104,6 +105,9 @@ struct InitTabView: View {
     private func updateModel(wines: [Wine], quantities: [Quantity]) {
         dataManager.wines = wines
         dataManager.quantities = quantities
+        if wines.isEmpty {
+            tipsManager.isActive = true
+        }
         endFetch()
         log(wines: wines, quantities: quantities)
     }

@@ -26,6 +26,7 @@ struct ContentView: View {
     @EnvironmentObject private var subscriptionsManager: SubscriptionsManager
     @EnvironmentObject private var interstitialAdsManager: InterstitialAdsManager
     @EnvironmentObject private var dataManager: DataManager
+    @EnvironmentObject private var tipsManager: TipsManager
 
     @State private var showingSheet: (Bool, Wine, [Int: Int], [Int: Double], Bool) = (false, Wine(), [:], [:], false)
     @State private var searchText = ""
@@ -36,6 +37,9 @@ struct ContentView: View {
     @State private var showingFeatures = false
     @State private var accordionCollapsedStates: [AnyHashable: Bool] = [:]
     @State private var selectedTypes: [WineType] = []
+    
+    @State private var moving = false
+    @State private var animationTimer: Timer?
 
     private var wines: [Wine] {
         dataManager.wines
@@ -171,6 +175,7 @@ struct ContentView: View {
                     }
                     ToolbarItem {
                         Button {
+                            tipsManager.isActive = false
                             entitlementManager.winesPlus += 1
                             if subscriptionsManager.needSubscription {
                                 showingSubscription = true
@@ -184,6 +189,11 @@ struct ContentView: View {
                                 .font(.title2)
                         }
                         .foregroundStyle(.white)
+                        .if(tipsManager.isActive) { view in
+                            view
+                                .scaleEffect(moving ? 1.8 : 1)
+                                .animation(.linear(duration: 0.6), value: moving)
+                        }
                     }
                 }
                 .fullScreenCover(isPresented: $showingSheet.0) {
@@ -205,6 +215,17 @@ struct ContentView: View {
                     Image(backgroundImageName)
                         .resizable()
                         .ignoresSafeArea()
+                }
+                .onAppear {
+                    if tipsManager.isActive {
+                        moving.toggle()
+                        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
+                            moving.toggle()
+                        }
+                    } else {
+                        moving = false
+                        animationTimer = nil
+                    }
                 }
         }
         .onOpenURL { url in

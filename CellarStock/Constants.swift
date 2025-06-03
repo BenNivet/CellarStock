@@ -42,11 +42,9 @@ struct CharterConstants {
     static let disabledOpacity: CGFloat = 0.4
     
     // Random
-    static let minimumAppLaunch = 5
-    static let winesCountSubscription = 11
-    static let winesCountSubscriptionHugeCellar = 5
+    static let minimumAppLaunch = 10
     static let winesCountRatings = 17
-    static let hugeCellarBottlesLimit = 20
+    static let cellarBottlesLimitSubscription = 19
     
     // Features
     static let featuresViewBottlesLimit = 10

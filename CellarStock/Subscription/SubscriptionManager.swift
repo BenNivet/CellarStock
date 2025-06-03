@@ -49,7 +49,7 @@ class SubscriptionsManager: NSObject, ObservableObject {
 extension SubscriptionsManager {
     var needSubscription: Bool {
         guard !entitlementManager.isPremium,
-              entitlementManager.appLaunched > CharterConstants.minimumAppLaunch,
+              entitlementManager.newAppLaunched > CharterConstants.minimumAppLaunch,
               entitlementManager.winesPlus > 0
         else { return false }
 
@@ -58,16 +58,7 @@ extension SubscriptionsManager {
             bottles += quantity.quantity
         }
 
-        let modulo = bottles >= CharterConstants.hugeCellarBottlesLimit
-            ? CharterConstants.winesCountSubscriptionHugeCellar
-            : CharterConstants.winesCountSubscription
-
-        if entitlementManager.winesPlus % modulo == 0 {
-            entitlementManager.winesPlus += 1
-            return true
-        } else {
-            return false
-        }
+        return bottles >= CharterConstants.cellarBottlesLimitSubscription
     }
 }
 
