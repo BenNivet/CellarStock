@@ -48,17 +48,10 @@ class SubscriptionsManager: NSObject, ObservableObject {
 // MARK: - NeedSubscription
 extension SubscriptionsManager {
     var needSubscription: Bool {
-        guard !entitlementManager.isPremium,
-              entitlementManager.newAppLaunched > CharterConstants.minimumAppLaunch,
-              entitlementManager.winesPlus > 0
+        guard !entitlementManager.isPremium
         else { return false }
 
-        var bottles = 0
-        for quantity in dataManager.quantities {
-            bottles += quantity.quantity
-        }
-
-        return bottles >= CharterConstants.cellarBottlesLimitSubscription
+        return entitlementManager.winesSubmitted >= CharterConstants.cellarWinesLimitSubscription
     }
 }
 

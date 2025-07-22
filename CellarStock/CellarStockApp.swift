@@ -23,7 +23,6 @@ struct CellarStockApp: App {
         FirebaseApp.configure()
         let entitlementManager = EntitlementManager()
         entitlementManager.appLaunched += 1
-        entitlementManager.newAppLaunched += 1
         let dataManager = DataManager()
         let subscriptionsManager = SubscriptionsManager(entitlementManager: entitlementManager,
                                                         dataManager: dataManager)

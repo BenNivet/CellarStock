@@ -44,7 +44,7 @@ struct CharterConstants {
     // Random
     static let minimumAppLaunch = 10
     static let winesCountRatings = 17
-    static let cellarBottlesLimitSubscription = 19
+    static let cellarWinesLimitSubscription = 10
     
     // Features
     static let featuresViewBottlesLimit = 10
